@@ -1,9 +1,9 @@
 /*
-Ã¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
-Ã¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
-ï¿½ï¿½Ý¾ï¿½
-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
-ï¿½â°£(ï¿½ï¿½ï¿½Û½Ã°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½)
+Ã¿¸°Áö ÀÌ¸§
+Ã¿¸°Áö ±¸ºÐ ¾ÆÀÌµð
+¸ð±Ý¾×
+Âü¿©ÇÑ »ç¶÷
+±â°£(½ÃÀÛ½Ã°£, ¸¶°¨½Ã°£)
 */
 #ifndef __CHALLENGE__
 #define __CHALLENGE__
@@ -17,15 +17,27 @@
 #include "setting.h"
 #include "function.h"
 
+typedef struct PERSON {
+    int idx;
+    char name[10];
+} person;
 
+typedef struct CHALLENGE {
+    int idx;
+    char * name;
+    unsigned int money;
+    person joined[30];
+    time_t startAt;
+    time_t endAt;
+} challenge;
 
 void createChallenge(char name[], unsigned int money, person * joined, time_t startAt, time_t endAt) {
     if (strlen(name) > 30) {
         printf("name length is too long!");
         return;
-    } // ï¿½ï¿½ï¿½ï¿½ Ã¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ 30ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ñ´Â´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    } // ¸¸¾à Ã¿¸°Áö ÀÌ¸§ÀÌ 30±ÛÀÚ°¡ ³Ñ´Â´Ù¸é ¸®ÅÏÇÔ
     challenge asdf;
-    asdf.idx = 1; // ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¼ï¿½ idxï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ idxï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò°ï¿½ï¿½ï¿½
+    asdf.idx = 1; // ÀÓ½Ã·Î Àû¾î³õÀº°Å ÀÌÈÄ¿¡ ÇÔ¼ö¸¦ Ãß°¡ÇØ¼­ idx¸¦ ±¸ºÐÇÏ°Å³ª »õ·Î¿î idx¸¦ »ý¼ºÇÒ°ÍÀÓ
     asdf.name = name;
     asdf.money = money;
     asdf.startAt = startAt;
