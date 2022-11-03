@@ -43,7 +43,6 @@ void createChallenge(char name[], unsigned int money, person * joined, time_t st
     asdf.startAt = startAt;
     asdf.endAt = endAt;
     
-    
 }
 
 #endif
