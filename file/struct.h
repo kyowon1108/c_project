@@ -11,4 +11,18 @@ typedef struct Bookmark {
     COLOR color;
 } bookmark;
 
+typedef struct PERSON {
+    int idx;
+    char name[10];
+} person;
+
+typedef struct CHALLENGE {
+    int idx;
+    char * name;
+    unsigned int money;
+    person joined[30];
+    time_t startAt;
+    time_t endAt;
+} challenge;
+
 #endif
