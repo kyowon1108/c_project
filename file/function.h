@@ -12,7 +12,8 @@
 void setColor(int colorNum);
 void textColor(int colorNum, const char * text);
 void printBlank(int len);
-void printCalendar(int month, int start_day, bookmark * mark, int len);
+int getDay(int year, int month);
+void printCalendar(int year, int month, int start_day, bookmark * mark, int len);
 /*
 setColor : 특정 색깔로 텍스트를 출력하기 위한 함수
     colorNum : 입힐 색깔
@@ -23,6 +24,10 @@ textColor : 텍스트에 색깔을 입히는 함수
 
 printBlank : 주어진 수만큼 공백을 출력하는 함수
     ㄴ len : 출력할 공백의 수
+
+getDay : 월별 일수를 계산하는 함수
+    ㄴ year : 윤년 구분용 년도
+    ㄴ month : 계산할 월
 
 printCalendar : 특정 달의 달력을 출력하는 함수
     ㄴ month : 출력할 달
@@ -45,15 +50,20 @@ void printBlank(int len) {
     for (int i = 0; i < len; ++i) printf(" ");
 }
 
-void printCalendar(int month, int start_day, bookmark * mark, int len) {
-    int day;
+
+
+int getDay(int year, int month) {
+    if (month < 1 || month > 12) return 0;
+    int day[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if ((year % 4) == 0 && (year % 100) != 0 || (year % 400) == 0) day[1] = 29;
+    return day[month - 1];
+}
+
+void printCalendar(int year, int month, int start_day, bookmark * mark, int len) {
+    int day = getDay(year, month);
     if (start_day < 1 || start_day > 7) return;
+    printf("           [ %d년 %d월 ]            \n\n", year, month);
     printf("   일   월   화   수   목   금   토\n\n");
-
-    if (month == 2) day = 28;
-    else if ((month <= 7 && month % 2 == 1) || (8 <= month && month % 2 == 0)) day = 31;
-    else if ((month <= 7 && month % 2 == 0) || (8 <= month && month % 2 == 1)) day = 30;
-
     for(int i = 0; i < start_day - 1; ++i) printBlank(5);
     int count = 0; // 7일이 찰때마다 주를 바꿔줘야 하기 때문에 count를 사용
     for (int j = 1; j <= day; ++j) {
