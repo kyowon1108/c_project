@@ -1,7 +1,7 @@
 #ifndef __SETTING__
 #define __SETTING__
 
-#define DEFAULT_COLOR 7 // ÄÜ¼Ö¿¡ Ãâ·ÂÇÏ´Â °¡Àå ±âº»ÀûÀÎ »ö±ò ( default : White(7) )
+#define DEFAULT_COLOR 7 // ï¿½Ü¼Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ( default : White(7) )
 
 
 
