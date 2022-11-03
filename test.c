@@ -1,10 +1,7 @@
-#include <windows.h>
+//#include <windows.h>
 #include <string.h>
 #include <stdio.h>
-#include "C:\Program Files\MySQL\MySQL Server 8.0\include\mysql.h"
-#include "C:\Program Files\MySQL\MySQL Server 8.0\include\field_types.h"
-#include "C:\Program Files\MySQL\MySQL Server 8.0\include\my_list.h"
-#include "C:\Program Files\MySQL\MySQL Server 8.0\include\mysql_com.h"
+#include "mysql.h"
 
 MYSQL *conn_ptr;
 
