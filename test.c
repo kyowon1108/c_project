@@ -21,7 +21,7 @@ int db_init() {
                 printf("debug1\n");
         }
 
-        conn_ptr = mysql_real_connect(conn_ptr,"localhost","root","kyowon1108","test",0,NULL,0);
+        conn_ptr = mysql_real_connect(conn_ptr,"localhost","kapr","kyowon1108","PFP",0,NULL,0);
         if(conn_ptr) {
                 printf("sucess\n");
         }
