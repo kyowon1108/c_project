@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <Windows.h>
+//#include <Windows.h>
 
 #include "struct.h"
 #include "setting.h"
@@ -36,9 +36,9 @@ printCalendar : 특정 달의 달력을 출력하는 함수
     ㄴ len : mark의 개수
 */
 
-void setColor(int colorNum) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
-}
+// void setColor(int colorNum) {
+//     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
+// }
 
 void textColor(int colorNum, const char * text) {
 	setColor(colorNum);
@@ -68,15 +68,15 @@ void printCalendar(int year, int month, int start_day, bookmark * mark, int len)
     int count = 0; // 7일이 찰때마다 주를 바꿔줘야 하기 때문에 count를 사용
     for (int j = 1; j <= day; ++j) {
         int check = 0;
-        for (int k = 0; k < len; ++k) {
-            if (mark[k].day == j) {
-                printBlank((j > 9) ? 3 : 4); // 색깔을 칠할 날짜가 2자리면 3번 스페이스, 1자리면 4번 스페이스
-                char buff[3]; // int형인 날짜를 char 형으로 바꿔줌
-                sprintf(buff, "%d", j);
-                textColor(mark[k].color, buff); // 특정 날짜를 특정 색깔로 바꿔줌
-                count++, check = 1;
-            }
-        }
+        // for (int k = 0; k < len; ++k) {
+        //     if (mark[k].day == j) {
+        //         printBlank((j > 9) ? 3 : 4); // 색깔을 칠할 날짜가 2자리면 3번 스페이스, 1자리면 4번 스페이스
+        //         char buff[3]; // int형인 날짜를 char 형으로 바꿔줌
+        //         sprintf(buff, "%d", j);
+        //         textColor(mark[k].color, buff); // 특정 날짜를 특정 색깔로 바꿔줌
+        //         count++, check = 1;
+        //     }
+        // }
         if (check == 0) {
             printf("%5d", j);
             count++;

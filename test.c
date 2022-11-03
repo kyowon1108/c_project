@@ -1,53 +1,45 @@
-#include <Windows.h>
+#include <windows.h>
 #include <string.h>
 #include <stdio.h>
- 
-FILE *fp;
- 
-void FindFile(wchar_t* path);
-void main()
-{
-    // 파일리스트를 파일로 저장합니다.
-    fp = _wfopen(L"filelist.txt", L"w+");
-    // 특정경로지정
-    wchar_t path[256] = L"C:\\Patch\\";
- 
-    FindFile(path);
-    fclose(fp);
-    
+#include "C:\Program Files\MySQL\MySQL Server 8.0\include\mysql.h"
+#include "C:\Program Files\MySQL\MySQL Server 8.0\include\field_types.h"
+#include "C:\Program Files\MySQL\MySQL Server 8.0\include\my_list.h"
+#include "C:\Program Files\MySQL\MySQL Server 8.0\include\mysql_com.h"
+
+MYSQL *conn_ptr;
+
+MYSQL_RES *res_ptr;
+
+MYSQL_ROW sqlrow;
+
+
+
+int db_init() {
+        conn_ptr = mysql_init(NULL);
+        if(!conn_ptr) {
+                printf("error");
+                exit(0);
+        }
+        else {
+                printf("debug1\n");
+        }
+
+        conn_ptr = mysql_real_connect(conn_ptr,"localhost","root","kyowon1108","test",0,NULL,0);
+        if(conn_ptr) {
+                printf("sucess\n");
+        }
+        else {
+                printf("connect error!\n");
+        }
+
+        mysql_close(conn_ptr);
+        return 0;
 }
-void FindFile(wchar_t* path)
-{
-    WIN32_FIND_DATA fd;
- 
-    wchar_t path2[256];
-    wsprintf(path2, L"%s%s", path, L"*.*" );
- 
-    HANDLE hFind = ::FindFirstFile(path2, &fd);
- 
-    if( hFind != INVALID_HANDLE_VALUE )
-    {
-        do
-        {
-            if(!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-            {
-                // 콘솔창에서 출력
-                //wprintf(L"%s\n", fd.cFileName);
-                // 파일로 저장
-                fwprintf(fp, L"%s\n", fd.cFileName);
-            }
-            else
-            {
-                if( fd.cFileName[0] != '.')
-                {
- 
-                wchar_t path3[256];
-                wsprintf(path3, L"%s%s\\", path, fd.cFileName );
-                //재귀호출합니다.
-                FindFile(path3);
-                }
-            }
-        }while(::FindNextFile(hFind,&fd));
-        ::FindClose(hFind);
-    }
+
+int main(int argc, char **argv) {
+        printf("main!~~\n");
+
+        int temp = db_init();
+
+        return 0;
 }
