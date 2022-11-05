@@ -35,11 +35,11 @@ int main(void) {
     }
     
     sql_result = mysql_store_result(connection);
-    printf("--------------------------------------");
+    printf("--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s", sql_row[0]);
+        printf("%s : %s\n", sql_row[0], sql_row[1]);
     }
-    printf("--------------------------------------");
+    printf("--------------------------------------\n\n");
 
     mysql_free_result(sql_result);
 
