@@ -35,10 +35,10 @@ int main(void) {
         int argc;
         char **argv;
         int temp = db_init();
-
+        
         char query[255];
         sprintf(query, "insert into User values "
                    "('%s')", "name_test");
-        mysql_querry(temp, query);
+        mysql_querry(conn_ptr, query);
         return 0;
 }
