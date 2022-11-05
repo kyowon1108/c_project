@@ -56,7 +56,7 @@ int main(void)
     CHOP(name);
 
     sprintf(query, "insert into User values "
-                   "('%s')",
+                   "(1, '%s')",
                    name);
 
     query_stat = mysql_query(connection, query);
