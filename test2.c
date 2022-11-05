@@ -1,6 +1,6 @@
-#include "/usr/include/mysql/mysql.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include "/usr/include/mysql/mysql.h"
 
 
 #define HOST "localhost"
@@ -8,30 +8,13 @@
 #define PASSWORD "kyowon1108"
 #define DB "PFP"
 #define CHOP(x) x[strlen(x) - 1] = ' '
-    
-int main(void) {
-    MYSQL *connection = NULL, conn;
-    MYSQL_RES *sql_result;
-    MYSQL_ROW sql_row;
-    int query_stat; 
 
-    char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
-    
-    mysql_init(&conn);
+MYSQL *connection = NULL, conn;
+MYSQL_RES *sql_result;
+MYSQL_ROW sql_row;
 
-    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // 서버와 통신 시작
 
-    if (connection == NULL) // 연결 실패시
-    {
-        fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
-        return 1;
-    }
-
-    char name[30];
-    printf("name : ");
-    fgets(name, 12, stdin);
-    CHOP(name);
-
+int SignUp(char *query, MYSQL connection, MYSQL conn) {
     sprintf(query, "insert into User values (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
@@ -57,4 +40,27 @@ int main(void) {
     printf("--------------------------------------\n\n");
 
     mysql_close(connection);
+}
+
+int main(void) {
+    
+    int query_stat;
+    char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
+    
+    mysql_init(&conn);
+
+    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // 서버와 통신 시작
+
+    if (connection == NULL) // 연결 실패시
+    {
+        fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
+        return 1;
+    }
+
+    char name[30];
+    printf("name : ");
+    fgets(name, 12, stdin);
+    CHOP(name);
+
+    SignUp(query, connection);
 }
