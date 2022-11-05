@@ -31,17 +31,6 @@ int main(void) {
     printf("[sign up]\nname : ");
     int name[30];
     scanf("%s", name);
-    SignUp(name, connection);
-
-
-    mysql_free_result(sql_result);
-    mysql_close(connection);
-    return 0;
-}
-
-int SignUp(char name[], MYSQL connection, MYSQL_RES *sql_result, MYSQL_ROW sql_row) {
-    char query[255];
-
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
@@ -64,5 +53,16 @@ int SignUp(char name[], MYSQL connection, MYSQL_RES *sql_result, MYSQL_ROW sql_r
         printf("%s : %s\n", sql_row[0], sql_row[1]);
     }
     printf("--------------------------------------\n\n");
+
+
+    mysql_free_result(sql_result);
+    mysql_close(connection);
+    return 0;
+}
+
+int SignUp(char name[], MYSQL connection, MYSQL_RES *sql_result, MYSQL_ROW sql_row) {
+    char query[255];
+
+    
 
 }
