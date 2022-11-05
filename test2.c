@@ -89,7 +89,7 @@ endAt
 
 
 int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
-    sprintf(query, "INSERT INTO Plan VALUES (0, '%s', '%s', '%s', '%d', 0, '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
+    sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', 0, '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
     
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
