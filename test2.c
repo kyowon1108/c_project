@@ -34,7 +34,7 @@ int main(void)
         return 1;
     }
 
-    query_stat = mysql_query(connection, "select * from address");
+    query_stat = mysql_query(connection, "select * from User");
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
@@ -43,11 +43,11 @@ int main(void)
     
     sql_result = mysql_store_result(connection);
     
-    printf("%+11s %-30s %-10s", "이름", "주소", "전화번호");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL )
-    {
-        printf("%+11s %-30s %-10s", sql_row[0], sql_row[1], sql_row[2]);
-    }
+    // printf("%+11s %-30s %-10s", "이름", "주소", "전화번호");
+    // while ( (sql_row = mysql_fetch_row(sql_result)) != NULL )
+    // {
+    //     printf("%+11s %-30s %-10s", sql_row[0], sql_row[1], sql_row[2]);
+    // }
 
     mysql_free_result(sql_result);
 
@@ -55,17 +55,9 @@ int main(void)
     fgets(name, 12, stdin);
     CHOP(name);
 
-    printf("주소 :");
-    fgets(address, 80, stdin);
-    CHOP(address);
-
-    printf("전화 :");
-    fgets(tel, 12, stdin);
-    CHOP(tel);
-
-    sprintf(query, "insert into address values "
-                   "('%s', '%s', '%s')",
-                   name, address, tel);
+    sprintf(query, "insert into User values "
+                   "('%s')",
+                   name);
 
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
