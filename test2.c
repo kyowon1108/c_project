@@ -38,13 +38,15 @@ int main(void) {
     fgets(name, 12, stdin);
     CHOP(name);
 
-    //SignUp(query, query_stat, name);
-    int userIdx = 1;
-    char planName[20] = "planTest";
-    char explain[20] = "planExplain";
-    int openLevel = 1;
-    char endAt[20] = "2022-11-10";
-    MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
+    SignUp(query, query_stat, name);
+
+
+    // int userIdx = 1;
+    // char planName[20] = "planTest";
+    // char explain[20] = "planExplain";
+    // int openLevel = 1;
+    // char endAt[20] = "2022-11-10";
+    // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
 }
 
 
