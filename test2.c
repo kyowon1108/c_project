@@ -43,6 +43,7 @@ int main(void) {
 
     mysql_free_result(sql_result);
 
+    char name[30];
     printf("name :");
     fgets(name, 12, stdin);
     CHOP(name);
