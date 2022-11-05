@@ -76,7 +76,7 @@ int SignUp(char *query, int query_stat, char name[]) {
     // }
     // printf("--------------------------------------\n\n");
 
-    // mysql_close(connection);
+    mysql_close(connection);
 }
 
 
