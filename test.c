@@ -1,7 +1,7 @@
 //#include <windows.h>
 #include <string.h>
 #include <stdio.h>
-#include "mysql.h"
+#include "/usr/include/mysql/mysql.h"
 
 MYSQL *conn_ptr;
 
