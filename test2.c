@@ -8,9 +8,10 @@
 #define PASSWORD "kyowon1108"
 #define DB "PFP"
 #define CHOP(x) x[strlen(x) - 1] = ' '
-    
+
+
 int main(void) {
-    MYSQL *connection=NULL, conn;
+    MYSQL *connection = NULL, conn;
     MYSQL_RES *sql_result;
     MYSQL_ROW sql_row;
     int query_stat; 
@@ -27,28 +28,21 @@ int main(void) {
         return 1;
     }
 
-    query_stat = mysql_query(connection, "select * from User"); 
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 1;
-    }
-    
-    sql_result = mysql_store_result(connection);
-    printf("--------------------------------------\n");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s : %s\n", sql_row[0], sql_row[1]);
-    }
-    printf("--------------------------------------\n\n");
+    printf("[sign up]\nname : ");
+    int name[30];
+    scanf("%s", name);
+    SignUp(name, connection);
+
 
     mysql_free_result(sql_result);
+    mysql_close(connection);
+    return 0;
+}
 
-    char name[30];
-    printf("name :");
-    fgets(name, 12, stdin);
-    CHOP(name);
+int SignUp(char name[], MYSQL connection) {
+    char query[255];
 
-    sprintf(query, "insert into User values (0, '%s')", name); // User을 추가하는 명령어
+    sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -57,7 +51,7 @@ int main(void) {
         return 1;
     }
 
-    query_stat = mysql_query(connection, "select * from User"); 
+    query_stat = mysql_query(connection, "select * from User"); // 현재 모든 User을 불러오는 쿼리문
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
@@ -71,5 +65,4 @@ int main(void) {
     }
     printf("--------------------------------------\n\n");
 
-    mysql_close(connection);
 }
