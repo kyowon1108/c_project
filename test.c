@@ -9,7 +9,10 @@ MYSQL_RES *res_ptr;
 
 MYSQL_ROW sqlrow;
 
-
+#define HOST "localhost"
+#define USER "kapr"
+#define PASSWORD "kyowon1108"
+#define DB "PFP"
 
 int db_init() {
         conn_ptr = mysql_init(NULL);
@@ -21,7 +24,7 @@ int db_init() {
                 printf("debug1\n");
         }
 
-        conn_ptr = mysql_real_connect(conn_ptr,"localhost","kapr","kyowon1108","PFP",0,NULL,0);
+        conn_ptr = mysql_real_connect(conn_ptr, HOST, USER, PASSWORD, DB, 0, NULL, 0);
         if(conn_ptr) {
                 printf("sucess\n");
         }
