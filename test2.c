@@ -65,10 +65,10 @@ int main(void) {
 
     //SignUp(query, query_stat, name);
     int userIdx = 1;
-    char * planName = "planTest";
-    char * explain = "planExplain";
+    char planName[20] = "planTest";
+    char explain[20] = "planExplain";
     int openLevel = 1;
-    char * endAt = "2022-11-10";
+    char endAt[20] = "2022-11-10";
     MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
 
 
