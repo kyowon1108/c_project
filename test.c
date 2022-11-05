@@ -39,6 +39,6 @@ int main(void) {
         char query[255];
         sprintf(query, "insert into User values "
                    "('%s')", "name_test");
-        
+        mysql_querry(temp, query);
         return 0;
 }
