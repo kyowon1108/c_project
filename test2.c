@@ -14,7 +14,7 @@ MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;
 
 
-int SignUp(char *query, char name[]) {
+int SignUp(char *query, char name[], int query_stat) {
     sprintf(query, "insert into User values (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
@@ -62,5 +62,5 @@ int main(void) {
     fgets(name, 12, stdin);
     CHOP(name);
 
-    SignUp(query, name);
+    SignUp(query, name, query_stat);
 }
