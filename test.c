@@ -20,26 +20,19 @@ int db_init() {
                 printf("error");
                 exit(0);
         }
-        else {
-                printf("debug1\n");
-        }
+        else printf("debug1\n");
 
         conn_ptr = mysql_real_connect(conn_ptr, HOST, USER, PASSWORD, DB, 0, NULL, 0);
-        if(conn_ptr) {
-                printf("sucess\n");
-        }
-        else {
-                printf("connect error!\n");
-        }
+
+        if(conn_ptr) printf("sucess\n");
+        else printf("connect error!\n");
 
         mysql_close(conn_ptr);
         return 0;
 }
 
-int main(int argc, char **argv) {
-        printf("main!~~\n");
-
+int main(void) {
+        int argc, char **argv;
         int temp = db_init();
-
         return 0;
 }
