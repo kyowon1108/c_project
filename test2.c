@@ -37,7 +37,7 @@ int main(void) {
     sql_result = mysql_store_result(connection);
     printf("--------------------------------------");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%+11d %-30s", sql_row[0], sql_row[1]);
+        printf("%s", sql_row[0]);
     }
     printf("--------------------------------------");
 
