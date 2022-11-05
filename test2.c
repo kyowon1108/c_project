@@ -57,5 +57,19 @@ int main(void) {
         return 1;
     }
 
+    query_stat = mysql_query(connection, "select * from User"); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 1;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s : %s\n", sql_row[0], sql_row[1]);
+    }
+    printf("--------------------------------------\n\n");
+
     mysql_close(connection);
 }
