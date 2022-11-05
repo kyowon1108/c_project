@@ -39,7 +39,7 @@ int main(void) {
     return 0;
 }
 
-int SignUp(char name[], MYSQL connection, MYSQL_RES *sql_result, MYSQL_ROW sql_row;) {
+int SignUp(char name[], MYSQL connection, MYSQL_RES *sql_result, MYSQL_ROW sql_row) {
     char query[255];
 
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
