@@ -27,27 +27,12 @@ int main(void) {
         return 1;
     }
 
-    query_stat = mysql_query(connection, "select * from User"); // 쿼리문이 성공할 경우에는 0을 출력함
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 1;
-    }
-    
-    sql_result = mysql_store_result(connection);
-    // printf("--------------------------------------\n");
-    // while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-    //     printf("%s : %s\n", sql_row[0], sql_row[1]);
-    // }
-    // printf("--------------------------------------\n\n");
-
-    mysql_free_result(sql_result);
-
     char name[30];
-    printf("name :");
+    printf("name : ");
     fgets(name, 12, stdin);
+    CHOP(name);
 
-    sprintf(query, "insert into User values (0, '%s')", name); // User을 추가하는 명령어
+    sprintf(query, "insert into User values (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -56,7 +41,8 @@ int main(void) {
         return 1;
     }
 
-    query_stat = mysql_query(connection, "select * from User"); 
+    sprintf(query, "select * from User"); // User 테이블 안에 있는 모든 값을 가져오는 쿼리문
+    query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
