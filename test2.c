@@ -47,29 +47,12 @@ int SignUp(char *query, int query_stat, char name[]) {
 
 int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
-    
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 1;
     }
-
-    sprintf(query, "SELECT * FROM Plan"); // User 테이블 안에 있는 모든 값을 가져오는 쿼리문
-    query_stat = mysql_query(connection, query); 
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 1;
-    }
-    
-    sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s : %s\n", sql_row[0], sql_row[1]);
-    }
-    printf("--------------------------------------\n\n");
-
     mysql_close(connection);
 }
 
