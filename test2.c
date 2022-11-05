@@ -54,7 +54,7 @@ int SignUp(char *query, int query_stat, char name[]) {
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
 
     query_stat = mysql_query(connection, query);
-    if (query_stat) {
+    if (!query_stat) {
         printf("SignUp successed");
     } else {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
