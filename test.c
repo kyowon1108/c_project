@@ -32,7 +32,8 @@ int db_init() {
 }
 
 int main(void) {
-        int argc, char **argv;
+        int argc;
+        char **argv;
         int temp = db_init();
         return 0;
 }
