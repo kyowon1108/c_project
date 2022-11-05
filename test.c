@@ -35,5 +35,10 @@ int main(void) {
         int argc;
         char **argv;
         int temp = db_init();
+
+        char query[255];
+        sprintf(query, "insert into User values "
+                   "('%s')", "name_test");
+        
         return 0;
 }
