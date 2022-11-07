@@ -110,7 +110,7 @@ int PrintPlan(int userIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%d | %d | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        printf("%d | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     printf("--------------------------------------\n\n");
     return 1;
