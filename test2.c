@@ -13,15 +13,15 @@
 MYSQL *connection = NULL, conn;
 MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;
+int query_stat;
+char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
-int SignUp(char *query, int query_stat, char name[]);
-int printUser(char *query, int query_stat);
-int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
+int SignUp(char name[]);
+int printUser();
+int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
 
 
 int main(void) {
-    int query_stat;
-    char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
     
     mysql_init(&conn);
 
@@ -40,16 +40,17 @@ int main(void) {
     // CHOP(name);
 
     // SignUp(query, query_stat, name);
-    // printUser(query, query_stat);
+    // PrintUser(query, query_stat);
 
 
-    int userIdx = 1;
-    char planName[20] = "plantest";
-    char explain[20] = "explain";
-    int openLevel = 1;
-    char endAt[20] = "2022-11-10";
-    MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
-
+    // int userIdx = 1;
+    // char planName[20] = "plantest";
+    // char explain[20] = "explain";
+    // int openLevel = 1;
+    // char endAt[20] = "2022-11-10";
+    // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
+    
+    PrintPlan(1);
     mysql_close(connection);
 
     return 0;
@@ -68,7 +69,7 @@ int SignUp(char *query, int query_stat, char name[]) {
     }
 }
 
-int printUser(char *query, int query_stat) {
+int PrintUser() {
     sprintf(query, "SELECT * FROM User"); // User 테이블 안에 있는 모든 값을 가져오는 쿼리문
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -86,7 +87,7 @@ int printUser(char *query, int query_stat) {
     return 1;
 }
 
-int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
+int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -94,5 +95,23 @@ int MakePlan(char *query, int query_stat, int userIdx, char planName[], char exp
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
+    return 1;
+}
+
+int PrintPlan(int userIdx) {
+    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%d | %d | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+    }
+    printf("--------------------------------------\n\n");
     return 1;
 }
