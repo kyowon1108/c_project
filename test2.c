@@ -40,7 +40,7 @@ int main(void) {
 
     SignUp(query, query_stat, name);
 
-
+    printUser(query, query_stat);
     // int userIdx = 1;
     // char planName[20] = "planTest";
     // char explain[20] = "planExplain";
