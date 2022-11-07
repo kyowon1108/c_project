@@ -50,7 +50,11 @@ int main(void) {
     // int openLevel = 1;
     // char endAt[20] = "2022-11-10";
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
-    GetPlanLen(1);
+    
+    int userIdx;
+    printf("userIdx : ");
+    scanf("%d", &userIdx);
+    printf("%d", GetPlanLen(userIdx));
     //PrintPlan(1);
     mysql_close(connection);
 
