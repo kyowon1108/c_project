@@ -40,7 +40,8 @@ int main(void) {
     CHOP(name);
 
     SignUp(query, query_stat, name);
-
+    printUser(query, query_stat);
+    mysql_close(connection);
     // printUser(query, query_stat);
     // int userIdx = 1;
     // char planName[20] = "planTest";
@@ -62,7 +63,7 @@ int SignUp(char *query, int query_stat, char name[]) {
         return 0;
     }
 
-    mysql_close(connection);
+    
 }
 
 int printUser(char *query, int query_stat) {
@@ -80,7 +81,7 @@ int printUser(char *query, int query_stat) {
         printf("%s : %s\n", sql_row[0], sql_row[1]);
     }
     printf("--------------------------------------\n\n");
-    mysql_close(connection);
+    //mysql_close(connection);
 }
 
 int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
