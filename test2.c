@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include "/usr/include/mysql/mysql.h"
-
+#include "test2_struct.h"
 
 #define HOST "localhost"
 #define USER "kapr"
@@ -49,8 +49,8 @@ int main(void) {
     // int openLevel = 1;
     // char endAt[20] = "2022-11-10";
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
-    
-    PrintPlan(1);
+    GetPlanLen(1);
+    //PrintPlan(1);
     mysql_close(connection);
 
     return 0;
@@ -94,6 +94,33 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
+    }
+    return 1;
+}
+
+int GetPlanLen(int userIdx) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return sql_row[0];
+}
+
+int GetPlan(int userIdx, plan pl) {
+    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        (sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     return 1;
 }
