@@ -19,6 +19,7 @@ char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 int SignUp(char name[]);
 int printUser();
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
+int GetPlanLen(int userIdx)
 int PrintPlan(int userIdx);
 
 int main(void) {
