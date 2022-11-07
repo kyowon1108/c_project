@@ -107,6 +107,7 @@ int GetPlanLen(int userIdx) {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
+    sql_result = mysql_store_result(connection);
     printf("asdf ");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) printf("%s", sql_row[0]);
     printf(" asdf");
