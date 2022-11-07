@@ -15,6 +15,7 @@ MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;
 
 int SignUp(char *query, int query_stat, char name[]);
+int printUser(char *query, int query_stat);
 int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
 
 
