@@ -108,10 +108,9 @@ int GetPlanLen(int userIdx) {
         return 0;
     }
     sql_result = mysql_store_result(connection);
-    printf("asdf ");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) printf("%s", sql_row[0]);
-    printf(" asdf");
-    return 1;
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return (int)res;
 }
 
 int GetPlan(int userIdx, plan pl) {
