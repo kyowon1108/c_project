@@ -33,37 +33,39 @@ int main(void) {
         return 1;
     }
 
-    char name[30];
-    printf("[ sign up ]\n");
-    printf("name : ");
-    fgets(name, 12, stdin);
-    CHOP(name);
+    // char name[30];
+    // printf("[ sign up ]\n");
+    // printf("name : ");
+    // fgets(name, 12, stdin);
+    // CHOP(name);
 
-    SignUp(query, query_stat, name);
-    printUser(query, query_stat);
-    mysql_close(connection);
+    // SignUp(query, query_stat, name);
     // printUser(query, query_stat);
-    // int userIdx = 1;
-    // char planName[20] = "planTest";
-    // char explain[20] = "planExplain";
-    // int openLevel = 1;
-    // char endAt[20] = "2022-11-10";
-    // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
+
+
+    int userIdx = 1;
+    char planName[20] = "plantest";
+    char explain[20] = "explain";
+    int openLevel = 1;
+    char endAt[20] = "2022-11-10";
+    MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
+
+    mysql_close(connection);
+
+    return 0;
 }
 
 
 int SignUp(char *query, int query_stat, char name[]) {
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
-
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
         printf("SignUp successed");
+        return 1;
     } else {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-
-    
 }
 
 int printUser(char *query, int query_stat) {
@@ -72,7 +74,7 @@ int printUser(char *query, int query_stat) {
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 1;
+        return 0;
     }
     
     sql_result = mysql_store_result(connection);
@@ -81,7 +83,7 @@ int printUser(char *query, int query_stat) {
         printf("%s : %s\n", sql_row[0], sql_row[1]);
     }
     printf("--------------------------------------\n\n");
-    //mysql_close(connection);
+    return 1;
 }
 
 int MakePlan(char *query, int query_stat, int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
@@ -90,7 +92,7 @@ int MakePlan(char *query, int query_stat, int userIdx, char planName[], char exp
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 1;
+        return 0;
     }
-    mysql_close(connection);
+    return 1;
 }
