@@ -58,7 +58,7 @@ int main(void) {
     printf("%d", GetPlanLen(userIdx));
 
     int len = GetPlanLen(userIdx);
-    plan * plarr = malloc(len * sizeof(*plan));
+    plan * plarr = malloc(len * sizeof(*Plan));
     GetPlan(1, plarr);
     printf("%d", plarr.planIdx);
 
