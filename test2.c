@@ -138,7 +138,6 @@ int GetPlan(int userIdx, plan pl) {
         pl.openlevel = atoi(sql_row[4]);
         *pl.createdAt = sql_row[5];
         *pl.endAt = sql_row[6];
-        pl++;
     }
     return 1;
 }
