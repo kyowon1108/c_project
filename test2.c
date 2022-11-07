@@ -110,7 +110,7 @@ int GetPlanLen(int userIdx) {
     sql_result = mysql_store_result(connection);
     char * res;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
-    return res - '0';
+    return atoi(res);
 }
 
 int GetPlan(int userIdx, plan pl) {
