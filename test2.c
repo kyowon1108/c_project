@@ -57,7 +57,7 @@ int main(void) {
 }
 
 
-int SignUp(char *query, int query_stat, char name[]) {
+int SignUp(char name[]) {
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
@@ -110,7 +110,7 @@ int PrintPlan(int userIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%d | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     printf("--------------------------------------\n\n");
     return 1;
