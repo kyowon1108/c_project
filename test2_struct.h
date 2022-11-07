@@ -14,11 +14,11 @@ typedef struct Friend {
 typedef struct Plan {
     int planIdx;
     int userIdx;
-    char planName[30];
-    char explain[100];
+    char * planName[30];
+    char * explain[100];
     int openlevel;
-    char createdAt[20];
-    char endAt[20];
+    char * createdAt[20];
+    char * endAt[20];
 } plan;
 
 typedef struct Plandetail {
