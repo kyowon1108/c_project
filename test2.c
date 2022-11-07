@@ -58,9 +58,9 @@ int main(void) {
     printf("%d", GetPlanLen(userIdx));
 
     int len = GetPlanLen(userIdx);
-    plan * plarr = malloc(len * sizeof(*Plan));
+    plan * plarr[6];
     GetPlan(1, plarr);
-    printf("%d", plarr.planIdx);
+    printf("%d", plarr[0].planIdx);
 
 
     mysql_close(connection);
