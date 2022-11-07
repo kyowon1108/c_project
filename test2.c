@@ -20,6 +20,7 @@ int SignUp(char name[]);
 int printUser();
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
 int GetPlanLen(int userIdx);
+int GetPlan(int userIdx);
 int PrintPlan(int userIdx);
 
 int main(void) {
@@ -59,6 +60,7 @@ int main(void) {
     int len = GetPlanLen(userIdx);
     plan * plarr = malloc(plarr * sizeof(*plan));
     GetPlan(1, plarr);
+    printf("%d", plan.planIdx);
     mysql_close(connection);
 
     return 0;
