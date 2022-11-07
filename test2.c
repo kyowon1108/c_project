@@ -135,13 +135,13 @@ int GetPlan(int userIdx, plan pl) {
     
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        pl.planIdx = atoi(sql_row[0]);
-        pl.userIdx = atoi(sql_row[1]);
-        *pl.planName = sql_row[2];
-        *pl.explain = sql_row[3];
-        pl.openlevel = atoi(sql_row[4]);
-        *pl.createdAt = sql_row[5];
-        *pl.endAt = sql_row[6];
+        pl[0].planIdx = atoi(sql_row[0]);
+        pl[0].userIdx = atoi(sql_row[1]);
+        *pl[0].planName = sql_row[2];
+        *pl[0].explain = sql_row[3];
+        pl[0].openlevel = atoi(sql_row[4]);
+        *pl[0].createdAt = sql_row[5];
+        *pl[0].endAt = sql_row[6];
     }
     return 1;
 }
