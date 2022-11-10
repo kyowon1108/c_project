@@ -137,7 +137,7 @@ char GetPlan(int userIdx) {
     
     sql_result = mysql_store_result(connection);
     int len = GetPlanLen(userIdx);
-    char arr[10][7];
+    char *arr[10][7];
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         for(int i = 0; i < len; ++i) {
             for(int j = 0; j < 7; ++j)
