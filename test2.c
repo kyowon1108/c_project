@@ -58,8 +58,8 @@ int main(void) {
     printf("%d", GetPlanLen(userIdx));
 
     int len = GetPlanLen(userIdx);
-    char **a = GetPlan(1);
-    
+    GetPlan(1);
+
     mysql_close(connection);
 
     return 0;
@@ -137,10 +137,9 @@ int GetPlan(int userIdx) {
         arr[i] = (Plan*)malloc(sizeof(Plan));
     }
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        for (int i = 0; i < len; ++i) {
-            arr[i] = {sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]};
-        }
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
+    printf("--------------------------------------\n\n");
     return 1;
 }
 
