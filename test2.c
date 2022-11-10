@@ -58,8 +58,13 @@ int main(void) {
     printf("%d", GetPlanLen(userIdx));
 
     int len = GetPlanLen(userIdx);
-    GetPlan(1);
-
+    char** a = GetPlan(1);
+    for(int i = 0; i < len; ++i) {
+        for (in j = 0; j < 7; ++j) {
+            printf("%s ", **a++);
+        }
+        printf("\n");
+    }
     mysql_close(connection);
 
     return 0;
@@ -121,7 +126,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlan(int userIdx) {
+char** GetPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -138,7 +143,7 @@ int GetPlan(int userIdx) {
             arr[i] = sql_row;
         }
     }
-    return 1;
+    return arr;
 }
 
 int PrintPlan(int userIdx) {
