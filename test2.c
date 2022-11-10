@@ -60,7 +60,7 @@ int main(void) {
     int len = GetPlanLen(userIdx);
     char** a = GetPlan(1);
     for(int i = 0; i < len; ++i) {
-        for (in j = 0; j < 7; ++j) {
+        for (int j = 0; j < 7; ++j) {
             printf("%s ", **a++);
         }
         printf("\n");
