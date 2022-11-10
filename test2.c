@@ -131,14 +131,12 @@ int GetPlan(int userIdx) {
     }
     
     sql_result = mysql_store_result(connection);
-    // int len = GetPlanLen(userIdx);
-    // char** arr = (char**)malloc(sizeof(char*) * len);
-    // for (int i = 0; i < len; ++i) {
-    //     arr[i] = (Plan*)malloc(sizeof(Plan));
-    // }
+    int len = GetPlanLen(userIdx);
+    char arr[10];
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s", sql_row);
-        //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        for(int i = 0; i < len; ++i) {
+            arr[i] = sql_row;
+        }
     }
     return 1;
 }
