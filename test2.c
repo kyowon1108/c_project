@@ -126,22 +126,21 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-char GetPlan(int userIdx) {
+char GetPlan(int userIdx, char(*arr)[7]) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 0;
+        return;
     }
-    
     sql_result = mysql_store_result(connection);
     int len = GetPlanLen(userIdx);
     char *arr[10][7];
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         for(int i = 0; i < len; ++i) {
             for(int j = 0; j < 7; ++j)
-                arr[i][j] = sql_row[j];
+                *arr++ = sql_row[j];
         }
     }
     return arr;
