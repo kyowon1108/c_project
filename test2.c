@@ -58,11 +58,8 @@ int main(void) {
     printf("%d", GetPlanLen(userIdx));
 
     int len = GetPlanLen(userIdx);
-    plan * plarr[6];
-    GetPlan(1, plarr);
-    printf("%d", plarr[0]->planIdx);
-
-
+    char **a = GetPlan(1);
+    
     mysql_close(connection);
 
     return 0;
@@ -124,7 +121,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlan(int userIdx, plan pl) {
+int GetPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -134,14 +131,15 @@ int GetPlan(int userIdx, plan pl) {
     }
     
     sql_result = mysql_store_result(connection);
+    int len = GetPlanLen(userIdx);
+    char** arr = (char**)malloc(sizeof(char*) * len);
+    for (int i = 0; i < len; ++i) {
+        arr[i] = (Plan*)malloc(sizeof(Plan));
+    }
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        pl[0].planIdx = atoi(sql_row[0]);
-        pl[0].userIdx = atoi(sql_row[1]);
-        *pl[0].planName = sql_row[2];
-        *pl[0].explain = sql_row[3];
-        pl[0].openlevel = atoi(sql_row[4]);
-        *pl[0].createdAt = sql_row[5];
-        *pl[0].endAt = sql_row[6];
+        for (int i = 0; i < len; ++i) {
+            arr[i] = {sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]};
+        }
     }
     return 1;
 }
