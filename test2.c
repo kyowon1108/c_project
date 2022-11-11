@@ -57,7 +57,7 @@ int main(void) {
     
     int userIdx = 1;
     int planIdx = 2;
-    char * date = "2020-11-10";
+    char date[10] = "2020-11-10";
     GetDayPlan(userIdx, date);
 
     mysql_close(connection);
@@ -165,6 +165,7 @@ void GetDayPlan(int userIdx, char date[]) {
     printf("--------------------------------------\n");
     int i = 1;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s", sql_row[0]);
         printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
     }
     printf("--------------------------------------\n\n");
