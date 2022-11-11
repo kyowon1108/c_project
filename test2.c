@@ -172,8 +172,7 @@ void GetDayPlan(int * arr, int userIdx, char date[]) {
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         printf("No.%d - | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
-        *(arr + i) = atoi(sql_row[0]);
-        printf("%d", atoi(sql_row[0]));
+        *(arr + i) = atoi(sql_row[0]); // int* 배열에 result에 관한 planIdx를 담음 > 해당 planIdx를 선택한 후 다른 기능에 사용하기 위함
         ++i;
     }
     printf("--------------------------------------\n\n");
