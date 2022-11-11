@@ -220,7 +220,7 @@ int MakePlanDetail(int planIdx, char startedAt[], char endAt[], char where[]) {
 }
 
 int GetPlanDetail(int planIdx) {
-    sprintf(query, "SELECT detailIdx, startedAt, endAt where FROM Plandetail WHERE planIdx = %d", planIdx);
+    sprintf(query, "SELECT detailIdx, startedAt, endAt, `where` FROM Plandetail WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
