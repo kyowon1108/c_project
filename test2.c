@@ -158,8 +158,10 @@ void GetDayPlan(int userIdx, char date[]) {
         return;
     }
     sql_result = mysql_store_result(connection);
+    printf("--------------------------------------\n");
+    int i = 1;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[1], sql_row[3], sql_row[4], sql_row[6]);
     }
     printf("--------------------------------------\n\n");
 }
