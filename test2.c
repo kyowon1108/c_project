@@ -61,9 +61,11 @@ int main(void) {
     int len = GetPlanLen(userIdx);
     int *arr = (int*)malloc(sizeof(int) * len);
     GetDayPlan(arr, userIdx, date);
-    for(int i = 0; i < GetPlanLen(userIdx); ++i) {
+    for(int i = 0; i < len; ++i) {
         printf("%d : %d\n", i, *(arr+i));
     }
+
+
     mysql_close(connection);
 
     return 0;
@@ -167,11 +169,11 @@ void GetDayPlan(int * arr, int userIdx, char date[]) {
     }
     sql_result = mysql_store_result(connection);
     printf("--------------------------------------\n");
-    int len = GetPlanLen(userIdx);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         printf("No.%d - | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
         *(arr + i) = atoi(sql_row[0]);
+        printf("%d", atoi(sql_row[0]));
         ++i;
     }
     printf("--------------------------------------\n\n");
