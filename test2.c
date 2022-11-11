@@ -56,7 +56,7 @@ int main(void) {
     int userIdx = 1;
     char * date;
     printf("Date : ");
-    scanf("%s", aSdate);
+    scanf("%s", date);
     GetDayPlan(userIdx, date);
     mysql_close(connection);
 
