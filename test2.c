@@ -58,9 +58,10 @@ int main(void) {
     int userIdx = 1;
     int planIdx = 2;
     char date[10] = "2022-11-10";
-    int a[30] = GetDayPlan(userIdx, date);
+    int *arr = (int*)malloc(sizeof(int) * len);
+    GetDayPlan(arr, userIdx, date);
     for(int i = 0; i < GetPlanLen(userIdx); ++i) {
-        printf("%d : %d\n", i, a[i]);
+        printf("%d : %d\n", i, *(a+i));
     }
     mysql_close(connection);
 
@@ -155,7 +156,7 @@ int PrintPlan(int userIdx) {
     return 1;
 }
 
-int * GetDayPlan(int userIdx, char date[]) {
+int * GetDayPlan(int * arr, int userIdx, char date[]) {
     sprintf(query, "SELECT planIdx, planName, createdAt, endAt FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -166,7 +167,6 @@ int * GetDayPlan(int userIdx, char date[]) {
     sql_result = mysql_store_result(connection);
     printf("--------------------------------------\n");
     int len = GetPlanLen(userIdx);
-    int *arr = (int*)malloc(sizeof(int) * len);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         printf("No.%d - | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
