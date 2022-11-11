@@ -209,7 +209,7 @@ void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
 }
 
 int MakePlanDetail(int planIdx, char startedAt[], char endAt[], char where[]) {
-    sprintf(query, "INSERT INTO Plandetail VALUES(planIdx, startedAt, endAt, where) (%d, '%s', '%s', '%s')", planIdx, startedAt, endAt, where);
+    sprintf(query, "INSERT INTO Plandetail (planIdx, startedAt, endAt, where) VALUES (%d, '%s', '%s', '%s')", planIdx, startedAt, endAt, where);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
