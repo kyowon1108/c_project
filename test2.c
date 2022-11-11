@@ -54,9 +54,7 @@ int main(void) {
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
     int userIdx = 1;
-    char * date;
-    printf("Date : ");
-    scanf("%s", date);
+    char * date = "2022-11-10";
     GetDayPlan(userIdx, date);
     mysql_close(connection);
 
