@@ -17,21 +17,21 @@ MYSQL_ROW sql_row;
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
-int SignUp(char name[]);
-int printUser();
+int SignUp(char name[]); // 회원가입
+int printUser(); // 유저 리스트 출력
 
-int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
-int GetPlanLen(int userIdx);
-int GetPlan(int userIdx);
-int PrintPlan(int userIdx);
-void GetDayPlan(int * arr, int userIdx, char date[]);
-void DeletePlan(int userIdx, int planIdx);
+int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
+int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
+int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
+void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
+void DeletePlan(int userIdx, int planIdx); // 계획 삭제
+void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 계획 수정
 
-int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]);
-int GetPlanDetailLen(int planIdx);
-int GetPlanDetail(int planIdx);
-void DeletePlandetail(int plandetailIdx, int planIdx);
-void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]);
+int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 생성
+int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
+int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
+void DeletePlandetail(int plandetailIdx, int planIdx); // 계획 디테일 삭제
+void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
 
 
 int main(void) {
