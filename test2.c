@@ -28,7 +28,11 @@ void GetDayPlan(int * arr, int userIdx, char date[]);
 void DeletePlan(int userIdx, int planIdx);
 
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]);
+int GetPlanDetailLen(int planIdx);
 int GetPlanDetail(int planIdx);
+void DeletePlandetail(int plandetailIdx, int planIdx);
+void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]);
+
 
 int main(void) {
     
@@ -108,6 +112,7 @@ int PrintUser() {
     return 1;
 }
 
+
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
@@ -133,21 +138,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-// void GetPlan(int userIdx) {
-//     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
-//     query_stat = mysql_query(connection, query); 
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return;
-//     }
-//     sql_result = mysql_store_result(connection);
-//     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-
-//     }
-// }
-
-int PrintPlan(int userIdx) {
+int GetPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -208,6 +199,7 @@ void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
     printf("successfully modified.");
 }
 
+
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]) {
     sprintf(query, "INSERT INTO Plandetail VALUES (0, %d, '%s', '%s', '%s', '%s', now())", planIdx, detailName, startedAt, endAt, where);
     query_stat = mysql_query(connection, query);
@@ -217,6 +209,20 @@ int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[
         return 0;
     }
     return 1;
+}
+
+int GetPlanDetailLen(int planIdx) {
+    sprintf(query, "SELECT COUNT(planIdx) FROM Plandetail WHERE planIdx = %d", planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
 }
 
 int GetPlanDetail(int planIdx) {
@@ -239,26 +245,26 @@ int GetPlanDetail(int planIdx) {
     return 1;
 }
 
-// void DeletePlandetail(int plandetailIdx, int planIdx) {
-//     sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", userIdx, planIdx);
-//     query_stat = mysql_query(connection, query);
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return;
-//     }
-//     sql_result = mysql_store_result(connection);
-//     printf("successfully deleted.");
-// }
+void DeletePlandetail(int plandetailIdx, int planIdx) {
+    sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", userIdx, planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully deleted.");
+}
 
-// void ModifyPlanDetail(char planName[], char explain[], char endAt[], int planIdx) {
-//     sprintf(query, "UPDATE Plandetail SET ", planName, explain, endAt, planIdx);
-//     query_stat = mysql_query(connection, query);
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return;
-//     }
-//     sql_result = mysql_store_result(connection);
-//     printf("successfully modified.");
-// }
+void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]) {
+    sprintf(query, "UPDATE Plandetail SET detailName = '%s', startedAt = '%s', endAt = '%s', `where` = '%s'", detailName, startedAt, endAt, where);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully modified.");
+}
