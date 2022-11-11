@@ -23,7 +23,7 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
 int GetPlanLen(int userIdx);
 int GetPlan(int userIdx);
 int PrintPlan(int userIdx);
-
+void GetDayPlan(int userIdx, char date[]);
 int main(void) {
     
     mysql_init(&conn);
@@ -117,19 +117,19 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-void GetPlan(int userIdx) {
-    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
-    query_stat = mysql_query(connection, query); 
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
-    }
-    sql_result = mysql_store_result(connection);
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+// void GetPlan(int userIdx) {
+//     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
+//     query_stat = mysql_query(connection, query); 
+//     if (query_stat != 0)
+//     {
+//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+//         return;
+//     }
+//     sql_result = mysql_store_result(connection);
+//     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
 
-    }
-}
+//     }
+// }
 
 int PrintPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
