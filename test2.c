@@ -171,7 +171,7 @@ void GetDayPlan(int userIdx, char date[]) {
 }
 
 void DeletePlan(int userIdx, int planIdx) {
-    sprintf(query, "DELETE FROM Plan WHERE userIdx = %d AND planIdx = %s", userIdx, planIdx);
+    sprintf(query, "DELETE FROM Plan WHERE userIdx = %d AND planIdx = %d", userIdx, planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
