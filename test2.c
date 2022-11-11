@@ -58,10 +58,11 @@ int main(void) {
     int userIdx = 1;
     int planIdx = 2;
     char date[10] = "2022-11-10";
+    int len = GetPlanLen(userIdx);
     int *arr = (int*)malloc(sizeof(int) * len);
     GetDayPlan(arr, userIdx, date);
     for(int i = 0; i < GetPlanLen(userIdx); ++i) {
-        printf("%d : %d\n", i, *(a+i));
+        printf("%d : %d\n", i, *(arr+i));
     }
     mysql_close(connection);
 
