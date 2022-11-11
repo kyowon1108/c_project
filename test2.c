@@ -19,12 +19,16 @@ char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 int SignUp(char name[]);
 int printUser();
+
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]);
 int GetPlanLen(int userIdx);
 int GetPlan(int userIdx);
 int PrintPlan(int userIdx);
 void GetDayPlan(int * arr, int userIdx, char date[]);
 void DeletePlan(int userIdx, int planIdx);
+
+int MakePlanDetail(int planIdx, char startedAt[], char endAt[], char where[]);
+int GetPlanDetail(int planIdx);
 
 int main(void) {
     
@@ -55,17 +59,19 @@ int main(void) {
     // char endAt[20] = "2022-11-10";
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
-    int userIdx = 1;
-    int planIdx = 2;
-    char date[10] = "2022-11-10";
-    int len = GetPlanLen(userIdx);
-    int *arr = (int*)malloc(sizeof(int) * len);
-    GetDayPlan(arr, userIdx, date);
-    for(int i = 0; i < len; ++i) {
-        printf("%d : %d\n", i, *(arr+i));
-    }
+    // int userIdx = 1;
+    // int planIdx = 2;
+    // char date[10] = "2022-11-10";
+    // int len = GetPlanLen(userIdx);
+    // int *arr = (int*)malloc(sizeof(int) * len);
+    // GetDayPlan(arr, userIdx, date);
+    // for(int i = 0; i < len; ++i) {
+    //     printf("%d : %d\n", i, *(arr+i));
+    // }
 
-
+    MakePlanDetail(1, "2022-11-06", "2022-11-20", "PlaceTest1");
+    MakePlanDetail(1, "2022-11-20", "2022-11-22", "PlaceTest2");
+    GetPlanDetail(1);
     mysql_close(connection);
 
     return 0;
@@ -200,4 +206,33 @@ void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
     }
     sql_result = mysql_store_result(connection);
     printf("successfully modified.");
+}
+
+int MakePlanDetail(int planIdx, char startedAt[], char endAt[], char where[]) {
+    sprintf(query, "INSERT INTO Plandetail VALUES(planIdx, startedAt, endAt, where) (%d, %s, %s, %s)", planIdx, startedAt, endAt, where);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return 1;
+}
+
+int GetPlanDetail(int planIdx) {
+    sprintf(query, "SELECT detailIdx, startedAt, endAt, where FROM Plandetail WHERE planIdx = %d", planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    int i = 0;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%d번 - | %s | %s | %s | %s \n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+    }
+    printf("--------------------------------------\n\n");
+    return 1;
 }
