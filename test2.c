@@ -57,7 +57,7 @@ int main(void) {
     
     int userIdx = 1;
     int planIdx = 2;
-    char date[10] = "2020-11-10";
+    char * date = "2020-11-10";
     GetDayPlan(userIdx, date);
 
     mysql_close(connection);
