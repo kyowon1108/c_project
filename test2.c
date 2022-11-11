@@ -154,7 +154,7 @@ int PrintPlan(int userIdx) {
 }
 
 void GetDayPlan(int userIdx, char date[]) {
-    sprintf(query, "SELECT (planIdx, planName, createdAt, endAt) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
+    sprintf(query, "SELECT planIdx, planName, createdAt, endAt FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
