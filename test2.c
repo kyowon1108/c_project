@@ -57,8 +57,8 @@ int main(void) {
     
     int userIdx = 1;
     int planIdx = 2;
-    DeletePlan(userIdx, planIdx);
-
+    char date[10] = "2020-11-10";
+    GetDayPlan(userIdx, date);
 
     mysql_close(connection);
 
@@ -154,7 +154,7 @@ int PrintPlan(int userIdx) {
 }
 
 void GetDayPlan(int userIdx, char date[]) {
-    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
+    sprintf(query, "SELECT (planIdx, name, createdAt, endAt) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -165,7 +165,7 @@ void GetDayPlan(int userIdx, char date[]) {
     printf("--------------------------------------\n");
     int i = 1;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[1], sql_row[2], sql_row[5], sql_row[6]);
+        printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
     }
     printf("--------------------------------------\n\n");
 }
