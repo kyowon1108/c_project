@@ -24,6 +24,8 @@ int GetPlanLen(int userIdx);
 int GetPlan(int userIdx);
 int PrintPlan(int userIdx);
 void GetDayPlan(int userIdx, char date[]);
+void DeletePlan(int userIdx, int planIdx);
+
 int main(void) {
     
     mysql_init(&conn);
@@ -54,8 +56,10 @@ int main(void) {
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
     int userIdx = 1;
-    char * date = "2022-11-10";
-    GetDayPlan(userIdx, date);
+    int planIdx = 2;
+    DeletePlan(userIdx, planIdx);
+
+
     mysql_close(connection);
 
     return 0;
@@ -164,4 +168,16 @@ void GetDayPlan(int userIdx, char date[]) {
         printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[1], sql_row[2], sql_row[5], sql_row[6]);
     }
     printf("--------------------------------------\n\n");
+}
+
+void DeletePlan(int userIdx, int planIdx) {
+    sprintf(query, "DELETE FROM Plan WHERE userIdx = %d AND planIdx = %s", userIdx, planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully deleted.");
 }
