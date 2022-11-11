@@ -58,8 +58,10 @@ int main(void) {
     int userIdx = 1;
     int planIdx = 2;
     char date[10] = "2022-11-10";
-    GetDayPlan(userIdx, date);
-
+    int a[30] = GetDayPlan(userIdx, date);
+    for(int i = 0; i < GetPlanLen(userIdx); ++i) {
+        printf("%d : %d\n", i, a[i]);
+    }
     mysql_close(connection);
 
     return 0;
@@ -153,7 +155,7 @@ int PrintPlan(int userIdx) {
     return 1;
 }
 
-void GetDayPlan(int userIdx, char date[]) {
+char * GetDayPlan(int userIdx, char date[]) {
     sprintf(query, "SELECT planIdx, planName, createdAt, endAt FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -163,11 +165,16 @@ void GetDayPlan(int userIdx, char date[]) {
     }
     sql_result = mysql_store_result(connection);
     printf("--------------------------------------\n");
-    int i = 1;
+    int len = GetPlanLen(userIdx);
+    int *arr = (int*)malloc(sizeof(int) * len);
+    int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%d¹ø - | %s | %s | %s | %s |\n", i++, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        printf("No.%d - | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        *(arr + i) = atoi(sql_row[0]);
+        ++i;
     }
     printf("--------------------------------------\n\n");
+    return arr;
 }
 
 void DeletePlan(int userIdx, int planIdx) {
@@ -180,4 +187,16 @@ void DeletePlan(int userIdx, int planIdx) {
     }
     sql_result = mysql_store_result(connection);
     printf("successfully deleted.");
+}
+
+void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
+    sprintf(query, "UPDATE Plan SET planName = %s, explain = %s, endAt = %s WHERE planIdx = %d", planName, explain, endAt, planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully modified.");
 }
