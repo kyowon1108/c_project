@@ -23,7 +23,7 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
 int GetPlanLen(int userIdx);
 int GetPlan(int userIdx);
 int PrintPlan(int userIdx);
-void GetDayPlan(int userIdx, char date[]);
+void GetDayPlan(int * arr, int userIdx, char date[]);
 void DeletePlan(int userIdx, int planIdx);
 
 int main(void) {
@@ -156,7 +156,7 @@ int PrintPlan(int userIdx) {
     return 1;
 }
 
-int * GetDayPlan(int * arr, int userIdx, char date[]) {
+void GetDayPlan(int * arr, int userIdx, char date[]) {
     sprintf(query, "SELECT planIdx, planName, createdAt, endAt FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -174,7 +174,6 @@ int * GetDayPlan(int * arr, int userIdx, char date[]) {
         ++i;
     }
     printf("--------------------------------------\n\n");
-    return arr;
 }
 
 void DeletePlan(int userIdx, int planIdx) {
