@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 #include "/usr/include/mysql/mysql.h"
 #include "test2_struct.h"
@@ -52,20 +53,9 @@ int main(void) {
     // char endAt[20] = "2022-11-10";
     // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
-    int userIdx;
-    printf("userIdx : ");
-    scanf("%d", &userIdx);
-    printf("%d", GetPlanLen(userIdx));
-
-    int len = GetPlanLen(userIdx);
-    char a[10][7];
-    GetPlan(1, a);
-    for(int i = 0; i < len; ++i) {
-        for (int j = 0; j < 7; ++j) {
-            printf("%s ", a[i][j]);
-        }
-        printf("\n");
-    }
+    int userIdx = 1;
+    char * date = "2022-11-05";
+    GetDayPlan(userIdx, date);
     mysql_close(connection);
 
     return 0;
@@ -127,7 +117,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-void GetPlan(int userIdx, char(*arr)[7]) {
+void GetPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -136,13 +126,8 @@ void GetPlan(int userIdx, char(*arr)[7]) {
         return;
     }
     sql_result = mysql_store_result(connection);
-    int len = GetPlanLen(userIdx);
-    char *arr[10][7];
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        for(int i = 0; i < len; ++i) {
-            for(int j = 0; j < 7; ++j)
-                *arr++ = sql_row[j];
-        }
+
     }
 }
 
@@ -162,4 +147,19 @@ int PrintPlan(int userIdx) {
     }
     printf("--------------------------------------\n\n");
     return 1;
+}
+
+void GetDayPlan(int userIdx, char date[]) {
+    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d AND DATE(eDate) = '%s'", userIdx, date);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+    }
+    printf("--------------------------------------\n\n");
 }
