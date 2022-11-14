@@ -283,7 +283,7 @@ int GetPlanDetail(int planIdx) {
 }
 
 void DeletePlandetail(int plandetailIdx, int planIdx) {
-    sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", userIdx, planIdx);
+    sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
