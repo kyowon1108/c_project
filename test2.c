@@ -19,7 +19,8 @@ char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 int SignUp(char name[]); // 회원가입
 int printUser(); // 유저 리스트 출력
-int isFriend(int userIdx, int friendIdx);
+int MakeFriend(int userIdx, int friendIdx);
+int IsFriend(int userIdx, int friendIdx);
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
@@ -121,7 +122,7 @@ int PrintUser() {
 }
 
 int MakeFriend(int userIdx, int friendIdx) {
-    sprintf(query, "INSERT INTO User VALUES (%d, %d), (%d, %d)", userIdx, friendIdx, friendIdx, userIdx);
+    sprintf(query, "INSERT INTO User VALUES (%d, %d)", userIdx, friendIdx);
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
         return 1;
