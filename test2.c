@@ -79,10 +79,11 @@ int main(void) {
     // MakePlanDetail(1, "DetailName1", "2022-11-06", "2022-11-20", "PlaceTest1");
     // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
     // GetPlanDetail(1);
-    GetFriendPlan(2, 1);
-    printf("\n");
-    GetFriendPlan(3, 1);
-    printf("\n");
+    
+    // GetFriendPlan(2, 1);
+    // printf("\n");
+    // GetFriendPlan(3, 1);
+    // printf("\n");
     GetFriendPlan(4, 2);
     printf("\n");
 
