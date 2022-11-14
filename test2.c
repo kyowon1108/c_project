@@ -19,8 +19,8 @@ char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 int SignUp(char name[]); // 회원가입
 int printUser(); // 유저 리스트 출력
-int MakeFriend(int userIdx, int friendIdx);
-int IsFriend(int userIdx, int friendIdx);
+int MakeFriend(int userIdx, int friendIdx); // 친구 추가
+int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
@@ -80,11 +80,6 @@ int main(void) {
     // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
     // GetPlanDetail(1);
     
-    // MakeFriend(1, 2);
-    // MakeFriend(3, 4);
-    printf("%d", IsFriend(1, 2));
-    printf("%d", IsFriend(4, 2));
-    printf("%d", IsFriend(4, 3));
     
     mysql_close(connection);
 
@@ -193,7 +188,14 @@ int GetPlan(int userIdx) {
 }
 
 int GetFriendPlan(int userIdx, int friendIdx) {
-    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", friendIdx);
+    int access = IsFriend(userIdx, friendIdx);
+    if (!access) return 0;
+    /*
+    1 : 전체 공개
+    2 : 친구 공개
+    3 : 나만 공개
+    */
+    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
