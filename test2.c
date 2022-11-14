@@ -66,11 +66,11 @@ int main(void) {
     char endAt[20] = "2022-11-10";
     MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
-    int userIdx = 2;
-    char planName[20] = "plantest2";
-    char explain[20] = "explain2";
-    int openLevel = 3;
-    char endAt[20] = "2022-11-12";
+    userIdx = 2;
+    planName[20] = "plantest2";
+    explain[20] = "explain2";
+    openLevel = 3;
+    endAt[20] = "2022-11-12";
     MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     // int userIdx = 1;
     // int planIdx = 2;
