@@ -59,19 +59,10 @@ int main(void) {
     // PrintUser(query, query_stat);
 
 
-    int userIdx = 2;
-    char planName[20] = "plantest1";
-    char explain[20] = "explain1";
-    int openLevel = 2;
-    char endAt[20] = "2022-11-10";
-    MakePlan(userIdx, planName, explain, openLevel, endAt);
-    
-    userIdx = 2;
-    planName = "plantest2";
-    explain = "explain2";
-    openLevel = 3;
-    endAt = "2022-11-12";
-    MakePlan(userIdx, planName, explain, openLevel, endAt);
+    MakePlan(2, "planname1", "explain1", 2, "2022-11-10");
+
+    MakePlan(2, "planname2", "explain2", 3, "2022-11-11");
+
     // int userIdx = 1;
     // int planIdx = 2;
     // char date[10] = "2022-11-10";
