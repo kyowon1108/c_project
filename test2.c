@@ -122,7 +122,7 @@ int PrintUser() {
 }
 
 int MakeFriend(int userIdx, int friendIdx) {
-    sprintf(query, "INSERT INTO User VALUES (%d, %d)", userIdx, friendIdx);
+    sprintf(query, "INSERT INTO Friend VALUES (%d, %d), (%d, %d)", userIdx, friendIdx, friendIdx, userIdx);
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
         return 1;
