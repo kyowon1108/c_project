@@ -80,8 +80,8 @@ int main(void) {
     // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
     // GetPlanDetail(1);
     
-    MakeFriend(1, 2);
-    MakeFriend(3, 4);
+    // MakeFriend(1, 2);
+    // MakeFriend(3, 4);
     IsFriend(1, 2);
     IsFriend(2, 4);
     IsFriend(3, 4);
@@ -143,7 +143,7 @@ int IsFriend(int userIdx, int friendIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s", sql_row);
+        printf("%s", sql_row[0]);
     }
     printf("--------------------------------------\n\n");
     return 1;
