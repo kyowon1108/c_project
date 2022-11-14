@@ -59,13 +59,19 @@ int main(void) {
     // PrintUser(query, query_stat);
 
 
-    // int userIdx = 1;
-    // char planName[20] = "plantest";
-    // char explain[20] = "explain";
-    // int openLevel = 1;
-    // char endAt[20] = "2022-11-10";
-    // MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
+    int userIdx = 2;
+    char planName[20] = "plantest1";
+    char explain[20] = "explain1";
+    int openLevel = 2;
+    char endAt[20] = "2022-11-10";
+    MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     
+    int userIdx = 2;
+    char planName[20] = "plantest2";
+    char explain[20] = "explain2";
+    int openLevel = 3;
+    char endAt[20] = "2022-11-12";
+    MakePlan(query, query_stat, userIdx, planName, explain, openLevel, endAt);
     // int userIdx = 1;
     // int planIdx = 2;
     // char date[10] = "2022-11-10";
@@ -79,7 +85,7 @@ int main(void) {
     // MakePlanDetail(1, "DetailName1", "2022-11-06", "2022-11-20", "PlaceTest1");
     // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
     // GetPlanDetail(1);
-    
+
     // GetFriendPlan(2, 1);
     // printf("\n");
     // GetFriendPlan(3, 1);
