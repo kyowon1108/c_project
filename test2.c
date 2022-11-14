@@ -81,7 +81,7 @@ int main(void) {
     // printf("\n");
     // GetFriendPlan(3, 1);
     // printf("\n");
-    GetFriendPlan(4, 2);
+    GetFriendPlan(1, 2);
     printf("\n");
 
     mysql_close(connection);
