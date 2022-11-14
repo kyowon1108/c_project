@@ -19,10 +19,12 @@ char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 int SignUp(char name[]); // 회원가입
 int printUser(); // 유저 리스트 출력
+int isFriend(int userIdx, int friendIdx);
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
+int GetFriendPlan(int userIdx, int friendIdx);
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 void DeletePlan(int userIdx, int planIdx); // 계획 삭제
 void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 계획 수정
@@ -73,9 +75,11 @@ int main(void) {
     //     printf("%d : %d\n", i, *(arr+i));
     // }
 
-    MakePlanDetail(1, "DetailName1", "2022-11-06", "2022-11-20", "PlaceTest1");
-    MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
-    GetPlanDetail(1);
+    // MakePlanDetail(1, "DetailName1", "2022-11-06", "2022-11-20", "PlaceTest1");
+    // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
+    // GetPlanDetail(1);
+    
+    
     mysql_close(connection);
 
     return 0;
@@ -112,7 +116,22 @@ int PrintUser() {
     return 1;
 }
 
-
+int isFriend(int userIdx, int friendIdx) {
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d) as isFriend", userIdx, friendIdx);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%sn", sql_row[0]);
+    }
+    printf("--------------------------------------\n\n");
+    return 1;
+}
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
@@ -140,6 +159,24 @@ int GetPlanLen(int userIdx) {
 
 int GetPlan(int userIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+    }
+    printf("--------------------------------------\n\n");
+    return 1;
+}
+
+int GetFriendPlan(int userIdx, int friendIdx) {
+    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", friendIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
