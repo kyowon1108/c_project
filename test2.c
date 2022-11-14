@@ -133,8 +133,8 @@ int MakeFriend(int userIdx, int friendIdx) {
 }
 
 int IsFriend(int userIdx, int friendIdx) {
-    sprintf(query, "SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d", userIdx, friendIdx);
-    //sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
+    query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
@@ -144,9 +144,10 @@ int IsFriend(int userIdx, int friendIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s |\n", sql_row[0], sql_row[1]);
+        printf("%s\n", sql_row[0]);
     }
     printf("--------------------------------------\n\n");
+    return 1;
 }
 
 
