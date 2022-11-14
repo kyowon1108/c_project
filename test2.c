@@ -79,7 +79,11 @@ int main(void) {
     // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
     // GetPlanDetail(1);
     
-    
+    MakeFriend(1, 2);
+    MakeFriend(3, 4);
+    IsFriend(1, 2);
+    IsFriend(2, 4);
+    IsFriend(3, 4);
     mysql_close(connection);
 
     return 0;
@@ -116,7 +120,18 @@ int PrintUser() {
     return 1;
 }
 
-int isFriend(int userIdx, int friendIdx) {
+int MakeFriend(int userIdx, int friendIdx) {
+    sprintf(query, "INSERT INTO User VALUES (%d, %d), (%d, %d)", userIdx, friendIdx, friendIdx, userIdx);
+    query_stat = mysql_query(connection, query);
+    if (!query_stat) {
+        return 1;
+    } else {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+}
+
+int IsFriend(int userIdx, int friendIdx) {
     sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d) as isFriend", userIdx, friendIdx);
     if (query_stat != 0)
     {
@@ -127,11 +142,13 @@ int isFriend(int userIdx, int friendIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%sn", sql_row[0]);
+        printf("%s", sql_row[0]);
     }
     printf("--------------------------------------\n\n");
     return 1;
 }
+
+
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
