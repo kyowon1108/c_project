@@ -63,14 +63,14 @@ int main(void) {
     char planName[20] = "plantest1";
     char explain[20] = "explain1";
     int openLevel = 2;
-    char endAt[20] = "2022-11-10";
+    char *endAt = "2022-11-10";
     MakePlan(userIdx, planName, explain, openLevel, endAt);
     
     userIdx = 2;
     planName[20] = "plantest2";
     explain[20] = "explain2";
     openLevel = 3;
-    endAt[20] = "2022-11-12";
+    endAt = "2022-11-12";
     MakePlan(userIdx, planName, explain, openLevel, endAt);
     // int userIdx = 1;
     // int planIdx = 2;
