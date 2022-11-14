@@ -143,12 +143,9 @@ int IsFriend(int userIdx, int friendIdx) {
     }
     
     sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s\n", sql_row[0]);
+        return sql_row[0];
     }
-    printf("--------------------------------------\n\n");
-    return 1;
 }
 
 
