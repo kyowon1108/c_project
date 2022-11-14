@@ -133,7 +133,7 @@ int MakeFriend(int userIdx, int friendIdx) {
 }
 
 int IsFriend(int userIdx, int friendIdx) {
-    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d) as isFriend", userIdx, friendIdx);
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
