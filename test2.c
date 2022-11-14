@@ -85,7 +85,7 @@ int main(void) {
     IsFriend(1, 2);
     IsFriend(2, 4);
     IsFriend(3, 4);
-    a
+    
     mysql_close(connection);
 
     return 0;
