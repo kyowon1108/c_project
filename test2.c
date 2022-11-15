@@ -382,7 +382,7 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
 
 //reviewIdx, planIdx, userIdx, content, score, createdAt
 int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
-    sprintf(query, "INSERT INTO Planreview planIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", planIdx, userIdx, content, score)
+    sprintf(query, "INSERT INTO Planreview planIdx, userIdx, content, score VALUES %d, %d, '%s', %d", planIdx, userIdx, content, score)
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -437,7 +437,7 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
 
 //detailreviewIdx, detailIdx, userIdx, content, score, createdAt
 int MakeDetailReview(int detailIdx, int userIdx, char content[], int score) {
-    sprintf(query, "INSERT INTO Plandetailreview detailIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score)
+    sprintf(query, "INSERT INTO Plandetailreview detailIdx, userIdx, content, score VALUES %d, %d, '%s', %d", detailIdx, userIdx, content, score)
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
