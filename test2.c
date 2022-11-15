@@ -17,6 +17,12 @@ MYSQL_ROW sql_row;
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
+
+int IsLeafYear(int year); // 윤년인지 체크
+int getDay(int year, int month); // 월별 날짜 수가 몇인지 리턴
+int getStartDay(int year, int month); // 달력에서 1일인 요일 리턴
+void printCalendar(int year, int month); // 달력 출력
+
 int SignUp(char name[]); // 회원가입
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
@@ -25,7 +31,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
-int GetFriendPlan(int userIdx, int friendIdx);
+int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 void DeletePlan(int userIdx, int planIdx); // 계획 삭제
 void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 계획 수정
@@ -35,6 +41,16 @@ int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
 void DeletePlandetail(int plandetailIdx, int planIdx); // 계획 디테일 삭제
 void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
+
+int MakePlanReview(int planIdx, int userIdx, char content[], int score);
+int GetPlanReview(int planreviewIdx);
+void DeletePlanReview(int planreviewIdx);
+void ModifyPlanReview(int planreviewIdx, char content[], int score)
+
+int MakePlanDetailReview(int detailIdx, int userIdx, char content[], int score);
+int GetPlanDetailReview(int detailreviewIdx);
+void DeleteDetailReview(int detailreviewIdx);
+void ModifyPlanDetailReview(int detailreviewIdx, char content[], int score);
 
 
 int main(void) {
@@ -49,44 +65,60 @@ int main(void) {
         return 1;
     }
 
-    // char name[30];
-    // printf("[ sign up ]\n");
-    // printf("name : ");
-    // fgets(name, 12, stdin);
-    // CHOP(name);
+    struct *tm t;
+    time_t base = time(NULL);
+    t = localtime(&base);
 
-    // SignUp(query, query_stat, name);
-    // PrintUser(query, query_stat);
-
-
-    MakePlan(2, "planname1", "explain1", 2, "2022-11-10");
-
-    MakePlan(2, "planname2", "explain2", 3, "2022-11-11");
-
-    // int userIdx = 1;
-    // int planIdx = 2;
-    // char date[10] = "2022-11-10";
-    // int len = GetPlanLen(userIdx);
-    // int *arr = (int*)malloc(sizeof(int) * len);
-    // GetDayPlan(arr, userIdx, date);
-    // for(int i = 0; i < len; ++i) {
-    //     printf("%d : %d\n", i, *(arr+i));
-    // }
-
-    // MakePlanDetail(1, "DetailName1", "2022-11-06", "2022-11-20", "PlaceTest1");
-    // MakePlanDetail(1, "DetailName2", "2022-11-20", "2022-11-22", "PlaceTest2");
-    // GetPlanDetail(1);
-
-    // GetFriendPlan(2, 1);
-    // printf("\n");
-    // GetFriendPlan(3, 1);
-    // printf("\n");
-    GetFriendPlan(1, 2);
-    printf("\n");
+    printCalendar(t->tm_year + 1900, t->tm_mon + 1)
 
     mysql_close(connection);
 
     return 0;
+}
+
+
+int IsLeafYear(int year) {
+	if(year % 400 == 0)
+		return 1;
+	if((year % 100 != 0) && (year % 4 == 0))
+		return 1;
+	return 0;
+}
+
+int getDay(int year, int month) {
+    if (month < 1 || month > 12) return 0;
+    int day[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    if ((year % 4) == 0 && (year % 100) != 0 || (year % 400) == 0) day[1] = 29;
+    return day[month - 1];
+}
+
+int getStartDay(int year, int month) {
+	int past = 0;
+	for(int y = 1; y < year; ++y)
+		past = past + 365 + IsLeafYear(y);
+	for(int m = 1; m < month; ++m)
+		past = past + getDay(year, m);
+	return (1 + past) % 7;
+}
+
+void printCalendar(int year, int month) {
+    int day = getDay(year, month);
+    int start_day = getStartDay(year, month);
+    printf("           [ %d년 %d월 ]            \n\n", year, month);
+    printf("   일   월   화   수   목   금   토\n\n");
+    for(int i = 0; i < start_day; ++i) printf("     ");
+    int count = start_day; // 7일이 찰때마다 주를 바꿔줘야 하기 때문에 count를 사용
+    for (int j = 1; j <= day; ++j) {
+        int check = 0;
+        if (check == 0) {
+            printf("%5d", j);
+            count++;
+        }
+        if (count == 7) { // 카운트가 7이 되는 순간 다음주로 넘어감
+            printf("\n\n");
+            count = 0;
+        }
+    }
 }
 
 
@@ -327,3 +359,113 @@ void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char wh
     sql_result = mysql_store_result(connection);
     printf("successfully modified.");
 }
+
+
+int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
+    //reviewIdx, planIdx, userIdx, content, score, createdAt
+    sprintf(query, "INSERT INTO Planreview planIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", planIdx, userIdx, content, score)
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return 1;
+}
+
+int GetPlanReview(int planreviewIdx) {
+    sprintf(query, "SELECT * FROM Planreview WHERE planreviewIdx = %d", planreviewIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+    }
+    printf("--------------------------------------\n\n");
+    return 1;
+}
+
+void DeletePlanReview(int planreviewIdx) {
+    sprintf(query, "DELETE FROM Planreview WHERE planreviewIdx = %d", planreviewIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully deleted.");
+}
+
+void ModifyPlanReview(int planreviewIdx, char content[], int score) {
+    sprintf(query, "UPDATE Planreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, planreviewIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully modified.");
+}
+
+int MakePlanDetailReview(int detailIdx, int userIdx, char content[], int score) {
+    //detailreviewIdx, detailIdx, userIdx, content, score, createdAt
+    sprintf(query, "INSERT INTO Plandetailreview detailIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score)
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return 1;
+}
+
+int GetPlanDetailReview(int detailreviewIdx) {
+    sprintf(query, "SELECT * FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    printf("\n--------------------------------------\n");
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+    }
+    printf("--------------------------------------\n\n");
+    return 1;
+}
+
+void DeleteDetailReview(int detailreviewIdx) {
+    sprintf(query, "DELETE FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully deleted.");
+}
+
+void ModifyPlanDetailReview(int detailreviewIdx, char content[], int score) {
+    sprintf(query, "UPDATE Plandetailreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, detailreviewIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return;
+    }
+    sql_result = mysql_store_result(connection);
+    printf("successfully modified.");
+}
+
