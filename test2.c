@@ -49,7 +49,7 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
 int MakePlanReview(int planIdx, int userIdx, char content[], int score);
 int GetPlanReview(int planreviewIdx);
 void DeletePlanReview(int planreviewIdx);
-void ModifyPlanReview(int planreviewIdx, char content[], int score)
+void ModifyPlanReview(int planreviewIdx, char content[], int score);
 
 // [ 技何 拌裙 府轰 包访 窃荐]
 int MakeDetailReview(int detailIdx, int userIdx, char content[], int score);
