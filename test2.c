@@ -17,17 +17,19 @@ MYSQL_ROW sql_row;
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
-
+// [ 달력 출력 관련 함수]
 int IsLeafYear(int year); // 윤년인지 체크
 int getDay(int year, int month); // 월별 날짜 수가 몇인지 리턴
 int getStartDay(int year, int month); // 달력에서 1일인 요일 리턴
 void printCalendar(int year, int month); // 달력 출력
 
+// [ 유저 관련 함수 ]
 int SignUp(char name[]); // 회원가입
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
+// [ 계획 관련 함수 ]
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
@@ -36,21 +38,24 @@ void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 �
 void DeletePlan(int userIdx, int planIdx); // 계획 삭제
 void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 계획 수정
 
+// [ 세부 계획 관련 함수 ]
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 생성
 int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
-void DeletePlandetail(int plandetailIdx, int planIdx); // 계획 디테일 삭제
-void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
+void DeletePlandetail(int detailIdx); // 계획 디테일 삭제
+void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
 
+// [ 계획 리뷰 관련 함수 ]
 int MakePlanReview(int planIdx, int userIdx, char content[], int score);
 int GetPlanReview(int planreviewIdx);
 void DeletePlanReview(int planreviewIdx);
 void ModifyPlanReview(int planreviewIdx, char content[], int score)
 
-int MakePlanDetailReview(int detailIdx, int userIdx, char content[], int score);
-int GetPlanDetailReview(int detailreviewIdx);
+// [ 세부 계획 리뷰 관련 함수]
+int MakeDetailReview(int detailIdx, int userIdx, char content[], int score);
+int GetDetailReview(int detailreviewIdx);
 void DeleteDetailReview(int detailreviewIdx);
-void ModifyPlanDetailReview(int detailreviewIdx, char content[], int score);
+void ModifyDetailReview(int detailreviewIdx, char content[], int score);
 
 
 int main(void) {
@@ -65,11 +70,25 @@ int main(void) {
         return 1;
     }
 
-    struct *tm t;
+    struct tm* t;
     time_t base = time(NULL);
     t = localtime(&base);
 
-    printCalendar(t->tm_year + 1900, t->tm_mon + 1)
+    printCalendar(t->tm_year + 1900, t->tm_mon + 1);
+
+    printf("\n\n");
+    int isRoof = 1;
+    int function;
+    while(isRoof) {
+        printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 |\n 실행할 번호 : ");
+        scanf("%d", &function);
+        if (function > 7 || function < 0) {
+            printf("올바른 번호를 입력해주세요.\n\n");
+            continue;
+        }
+        printf("%d번을 선택했습니다.", function);
+        break;
+    }
 
     mysql_close(connection);
 
@@ -336,8 +355,8 @@ int GetPlanDetail(int planIdx) {
     return 1;
 }
 
-void DeletePlandetail(int plandetailIdx, int planIdx) {
-    sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", planIdx);
+void DeletePlandetail(int detailIdx) {
+    sprintf(query, "DELETE FROM Plandetail WHERE detailIdx = %d", detailIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -348,8 +367,8 @@ void DeletePlandetail(int plandetailIdx, int planIdx) {
     printf("successfully deleted.");
 }
 
-void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char where[]) {
-    sprintf(query, "UPDATE Plandetail SET detailName = '%s', startedAt = '%s', endAt = '%s', `where` = '%s'", detailName, startedAt, endAt, where);
+void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]) {
+    sprintf(query, "UPDATE Plandetail SET detailName = '%s', startedAt = '%s', endAt = '%s', `where` = '%s' WHERE detailIdx = %d", detailName, startedAt, endAt, where, detailIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -361,8 +380,8 @@ void ModifyPlanDetail(char detailName[], char startedAt[], char endAt[], char wh
 }
 
 
+//reviewIdx, planIdx, userIdx, content, score, createdAt
 int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
-    //reviewIdx, planIdx, userIdx, content, score, createdAt
     sprintf(query, "INSERT INTO Planreview planIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", planIdx, userIdx, content, score)
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -415,8 +434,9 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
     printf("successfully modified.");
 }
 
-int MakePlanDetailReview(int detailIdx, int userIdx, char content[], int score) {
-    //detailreviewIdx, detailIdx, userIdx, content, score, createdAt
+
+//detailreviewIdx, detailIdx, userIdx, content, score, createdAt
+int MakeDetailReview(int detailIdx, int userIdx, char content[], int score) {
     sprintf(query, "INSERT INTO Plandetailreview detailIdx, userIdx, content, score VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score)
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -427,7 +447,7 @@ int MakePlanDetailReview(int detailIdx, int userIdx, char content[], int score) 
     return 1;
 }
 
-int GetPlanDetailReview(int detailreviewIdx) {
+int GetDetailReview(int detailreviewIdx) {
     sprintf(query, "SELECT * FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -457,7 +477,7 @@ void DeleteDetailReview(int detailreviewIdx) {
     printf("successfully deleted.");
 }
 
-void ModifyPlanDetailReview(int detailreviewIdx, char content[], int score) {
+void ModifyDetailReview(int detailreviewIdx, char content[], int score) {
     sprintf(query, "UPDATE Plandetailreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, detailreviewIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
