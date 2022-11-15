@@ -104,6 +104,9 @@ int main() {
             continue;
         }
         printf("%d번을 선택했습니다.", function);
+        /*
+        추가로 코드를 작성해야할 곳
+        */
         break;
     }
     return 0;
