@@ -47,7 +47,7 @@ int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[
 int CheckLastDetailIdx();
 int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
-int DeletAllePlandetail(int planIdx)
+int DeletAllePlandetail(int planIdx);
 void DeletePlandetail(int detailIdx); // 계획 디테일 삭제
 void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
 
