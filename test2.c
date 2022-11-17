@@ -404,7 +404,8 @@ int GetPlanIdx(int userIdx, char ** arr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        *(arr+i)[0] = sql_row[0], *(arr+i)[1] = sql_row[1];
+        strcpy(arr[i][0], sql_row[0]), strcpy(arr[i][1], sql_row[1]);
+        // *(arr+i)[0] = sql_row[0], *(arr+i)[1] = sql_row[1];
         ++i;
     }
     return 1;
