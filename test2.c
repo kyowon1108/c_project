@@ -47,6 +47,7 @@ int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[
 int CheckLastDetailIdx();
 int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
+int DeletAllePlandetail(int planIdx)
 void DeletePlandetail(int detailIdx); // 계획 디테일 삭제
 void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 수정
 
@@ -205,6 +206,7 @@ int main(void) {
                         continue;
                     }
                     --num;
+                    DeletAllePlandetail(*(idxArr + num));
                     DeletePlan(userIdx, *(idxArr + num));
                     printf("계획을 삭제했습니다.\n\n");
                 }
@@ -569,6 +571,18 @@ int GetPlanDetail(int planIdx) {
         ++i;
     }
     printf("--------------------------------------\n\n");
+    return 1;
+}
+
+int DeletAllePlandetail(int planIdx) {
+    sprintf(query, "DELETE FROM Plandetail WHERE planIdx = %d", planIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
     return 1;
 }
 
