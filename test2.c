@@ -182,11 +182,17 @@ int main(void) {
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
                 int planLen = GetPlanLen(userIdx);
-                int * planArr = (int*)malloc(sizeof(char) * planLen);
-                GetPlanIdx(userIdx, planArr);
-                for(int i = 0; i < planLen; ++i) {
-                    printf("%d : %d\n", i, *(planArr + i));
+                char ** planArr = (char**)malloc(sizeof(char*) * planLen);
+                for (int i = 0; i < planLen; ++i) {
+                    *(planArr + i) = (char*)malloc(sizeof(char) * 2);
                 }
+                GetPlanIdx(userIdx, planArr); 
+                printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
+                for(int i = 0; i < planLen; ++i) {
+                    //int planIdx = *(planArr + i);
+                    printf("%d번 : %s, %s\n", i + 1, *(planArr + i), *(*(planArr + i) + 1));
+                }
+                printf("\n--------------------------------------\n");
                 break;
             case 3 :
                 printf("계획 수정을 선택했습니다.\n\n");
@@ -387,7 +393,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, int * arr) {
+int GetPlanIdx(int userIdx, int ** arr) {
     sprintf(query, "SELECT planIdx FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -398,7 +404,7 @@ int GetPlanIdx(int userIdx, int * arr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        *(arr + i) = atoi(sql_row[0]);
+        *(arr + i) = sql_row[0], *(*(arr + i) + 1) = sql_row[1];
         ++i;
     }
     return 1;
@@ -416,6 +422,7 @@ int GetPlan(int userIdx) {
     sql_result = mysql_store_result(connection);
     printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+
         printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     printf("--------------------------------------\n\n");
