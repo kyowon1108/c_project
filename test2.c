@@ -206,6 +206,12 @@ int SignUp(char name[]) {
 int CheckLastIdx() {
     sprintf(query, "SELECT MAX(userIdx) FROM User");
     query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
     char * res;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
