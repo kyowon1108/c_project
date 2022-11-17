@@ -202,7 +202,7 @@ int main(void) {
                     int num;
                     scanf("%d", &num);
                     if (num < 0 || num > planLen) {
-                        printf("유효한 번호를 입력해주세요.");
+                        printf("유효한 번호를 입력해주세요.\n삭제할 계획의 번호 : ");
                         continue;
                     }
                     --num;
@@ -211,6 +211,7 @@ int main(void) {
                     printf("계획을 삭제했습니다.\n\n");
                 }
                 break;
+                
             case 3 :
                 printf("계획 수정을 선택했습니다.\n\n");
 
