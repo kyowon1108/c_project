@@ -401,7 +401,7 @@ int GetPlanIdx(int userIdx, int * idxArr, char * nameArr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = atoi(sql_row[0]), strcpy(nameArr[i], sql_row[1]);
+        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1];
         ++i;
     }
     return 1;
