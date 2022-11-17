@@ -35,6 +35,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
+int GetPlanIdx(int userIdx, int * arr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
@@ -127,8 +128,12 @@ int main(void) {
     int isRoof = 1;
     int function;
     while(isRoof) {
-        printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 |\n 실행할 번호 : ");
+        printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 | 8 : 종료 |\n 실행할 번호 : ");
         scanf("%d", &function);
+        if (function == 8) {
+            printf("프로그램을 종료합니다.");
+            break;
+        }
         switch (function) {
             case 1 :
                 printf("계획 추가를 선택했습니다.\n\n");
@@ -153,7 +158,7 @@ int main(void) {
                 int planIdx = CheckLastPlanIdx();
                 printf("계획을 저장했습니다.\n");
                 while (1) {
-                    printf("세부계획명을 입력해주세요. (종료 : end)");
+                    printf("세부계획명을 입력해주세요(종료 : end) : ");
                     char input[20];
                     scanf("%s", input);
                     if (!strcmp(input, "end")) {
@@ -176,7 +181,13 @@ int main(void) {
                 break;
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
-                
+                int planLen = GetPlanLen(userIdx);
+                char * planArr = (char*)malloc(sizeof(char) * planLen);
+                GetPlanIdx(userIdx, planArr);
+                for(int i = 0; i < planLen; ++i) {
+                    printf("%d : %d\n", i, *(planArr + i));
+                }
+                break;
             case 3 :
                 printf("계획 수정을 선택했습니다.\n\n");
 
@@ -196,7 +207,7 @@ int main(void) {
                 printf("번호를 확인해주세요.");
                 continue;
         }
-        break;
+        continue;
     }
 
     mysql_close(connection);
@@ -374,6 +385,23 @@ int GetPlanLen(int userIdx) {
     char * res;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
+}
+
+int GetPlanIdx(int userIdx, int * arr) {
+    sprintf(query, "SELECT planIdx FROM Plan WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    int i = 0;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        *(arr + i) = atoi(sql_row[0]);
+        ++i;
+    }
+    return 1;
 }
 
 int GetPlan(int userIdx) {
