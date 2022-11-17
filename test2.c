@@ -209,9 +209,10 @@ int main(void) {
                     DeletAllePlandetail(*(idxArr + num));
                     DeletePlan(userIdx, *(idxArr + num));
                     printf("계획을 삭제했습니다.\n\n");
+                    break;
                 }
                 break;
-                
+
             case 3 :
                 printf("계획 수정을 선택했습니다.\n\n");
 
