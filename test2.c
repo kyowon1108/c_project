@@ -182,15 +182,12 @@ int main(void) {
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
                 int planLen = GetPlanLen(userIdx);
-                char ** planArr = (char**)malloc(sizeof(char*) * planLen);
-                for (int i = 0; i < planLen; ++i) {
-                    *(planArr + i) = (char*)malloc(sizeof(char) * 2);
-                }
-                GetPlanIdx(userIdx, planArr); 
+                char * idxArr = (char*)malloc(sizeof(char) * planLen);
+                char * nameArr = (char*)malloc(sizeof(char) * planLen);
+                GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
-                for(int i = 0; i < planLen; i+=2) {
-                    //int planIdx = *(planArr + i);
-                    printf("%s, %s\n", *(planArr+i), *(planArr+i+1));
+                for(int i = 0; i < planLen; ++i) {
+                    printf("%s, %s\n", *(idxArr+i), *(nameArr+i));
                 }
                 printf("\n--------------------------------------\n");
                 break;
@@ -393,7 +390,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, char ** arr) {
+int GetPlanIdx(int userIdx, char * idxArr, char * nameArr) {
     sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -404,10 +401,8 @@ int GetPlanIdx(int userIdx, char ** arr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        strcpy(*(arr+i), sql_row[0]), strcpy(*(arr+i+1), sql_row[1]);
-        printf("%s, %s\n", *(arr+i), *(arr+i+1));
-        // *(arr+i)[0] = sql_row[0], *(arr+i)[1] = sql_row[1];
-        i+=2;
+        strcpy(*(idxArr+i), sql_row[0]), strcpy(*(nameArr+i), sql_row[1]);
+        ++i;
     }
     return 1;
 }
