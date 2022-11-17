@@ -140,7 +140,7 @@ int main(void) {
                 scanf("%s", explain);
                 while (1) {
                     printf("계획을 오픈할 레벨을 입력해주세요(1 : 전체공개, 2 : 친구공개, 3 : 나만공개) : ");
-                    scanf("%d", openLevel);
+                    scanf("%d", &openLevel);
                     if (openLevel > 0 && openLevel < 4) break;
                     else {
                         printf("1부터 3까지의 숫자만 입력해주세요.\n");
