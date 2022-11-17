@@ -76,9 +76,9 @@ int main(void) {
     printf("이름을 입력해주세요 : ");
     char name[30];
     scanf("%s", name);
-    int sign = SignUp(name);
+    int sign = SignUp("asdf");
     printf("[ %d ]", CheckLastIdx());
-    
+
     // while (1) {
     //     printf("| 1. 로그인 | 2. 회원가입 |\n실행할 번호 : ");
     //     int func, a;
