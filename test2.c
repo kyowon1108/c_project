@@ -393,8 +393,8 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, int ** arr) {
-    sprintf(query, "SELECT planIdx FROM Plan WHERE userIdx = %d", userIdx);
+int GetPlanIdx(int userIdx, char ** arr) {
+    sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
