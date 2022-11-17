@@ -77,8 +77,8 @@ int main(void) {
     char name[30];
     scanf("%s", name);
     int sign = SignUp("asdf");
-    printf("Asdf");
-    //printf("[ %d ]", CheckLastIdx());
+    int a = CheckLastIdx();
+    printf("[ %d ]", a);
 
     // while (1) {
     //     printf("| 1. 로그인 | 2. 회원가입 |\n실행할 번호 : ");
@@ -205,13 +205,12 @@ int SignUp(char name[]) {
 
 int CheckLastIdx() {
     sprintf(query, "SELECT MAX(userIdx) FROM User");
-        query_stat = mysql_query(connection, query);
-        char * a;
-        while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-            a = sql_row[0];
-        }
-        return atoi(a);
+    query_stat = mysql_query(connection, query);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
 }
+
 int CheckUser(int userIdx) {
     sprintf(query, "SELECT EXISTS (SELECT id FROM User USER userIdx = %d limit 1) AS success", userIdx);
     query_stat = mysql_query(connection, query); 
