@@ -25,6 +25,7 @@ void printCalendar(int year, int month); // 달력 출력
 
 // [ 유저 관련 함수 ]
 int SignUp(char name[]); // 회원가입
+int CheckLastIdx();
 int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
@@ -97,7 +98,8 @@ int main(void) {
                 scanf("%s", name);
                 int sign = SignUp(name);
                 if (sign) {
-                    printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", sign);
+                    int idx = CheckLastIdx();
+                    printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", idx);
                     continue;
                 } else {
                     printf("오류가 발생했습니다.");
@@ -188,19 +190,22 @@ int SignUp(char name[]) {
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
-        sprintf(query, "SELECT MAX(userIdx) FROM User");
-        query_stat = mysql_query(connection, query);
-        char * a;
-        while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-            a = sql_row[0];
-        }
-        return atoi(a);
+        return 1;
     } else {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
 }
 
+int CheckLastIdx() {
+    sprintf(query, "SELECT MAX(userIdx) FROM User");
+        query_stat = mysql_query(connection, query);
+        char * a;
+        while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+            a = sql_row[0];
+        }
+        return atoi(a);
+}
 int CheckUser(int userIdx) {
     sprintf(query, "SELECT EXISTS (SELECT id FROM User USER userIdx = %d limit 1) AS success", userIdx);
     query_stat = mysql_query(connection, query); 
