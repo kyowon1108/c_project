@@ -155,6 +155,7 @@ int main(void) {
                 while (1) {
                     printf("세부계획명을 입력해주세요. (종료 : end)");
                     char input[20];
+                    scanf("%s", input);
                     if (!strcmp(input, "end")) {
                         printf("세부계획 등록을 종료합니다.\n");
                         break;
