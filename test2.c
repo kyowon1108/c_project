@@ -39,7 +39,7 @@ int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr); // ¿Ø¿˙∞° ª˝º∫«— ∞Ë»
 int GetPlan(int userIdx); // ¿Ø¿˙∞° ª˝º∫«— ∞Ë»π ∏ÆΩ∫∆Æ √‚∑¬
 int GetFriendPlan(int userIdx, int friendIdx); // ƒ£±∏∞° ª˝º∫«— ∞Ë»π ∏ÆΩ∫∆Æ √‚∑¬
 void GetDayPlan(int * arr, int userIdx, char date[]); // ∆Ø¡§ ≥Ø¿« ∞Ë»π ∏ÆΩ∫∆Æ √‚∑¬ π◊ ¿Œµ¶Ω∫ ∏Æ≈œ
-void DeletePlan(int userIdx, int planIdx); // ∞Ë»π ªË¡¶
+int DeletePlan(int userIdx, int planIdx); // ∞Ë»π ªË¡¶
 void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // ∞Ë»π ºˆ¡§
 
 // [ ºº∫Œ ∞Ë»π ∞¸∑√ «‘ºˆ ]
@@ -79,7 +79,7 @@ int main(void) {
 
 
     while (1) {
-        printf("| 1. ∑Œ±◊¿Œ | 2. »∏ø¯∞°¿‘ |\nΩ««‡«“ π¯»£ : ");
+        printf("| 1. SignIn | 2. SignUp |\nNumber to Execute : ");
         int func, a;
         scanf("%d", &func);
         switch (func) {
@@ -88,30 +88,30 @@ int main(void) {
                 scanf("%d", &a);
                 if (CheckUser(a)) {
                     userIdx = a;
-                    printf("%d∑Œ ∑Œ±◊¿Œ«ﬂΩ¿¥œ¥Ÿ.\n", userIdx);
+                    printf("Success Signin userIdx : %d\n", userIdx);
                     break;
                 }
                 else {
-                    printf("«ÿ¥Á æ∆¿Ãµ¥¬ ¡∏¿Á«œ¡ˆ æ Ω¿¥œ¥Ÿ. userIdx∏¶ »Æ¿Œ«ÿ¡÷ººø‰.\n");
+                    printf("This userIdx does not exist. Please check userIdx.\n");
                     continue;
                 }
 
             case 2 :
-                printf("¿Ã∏ß¿ª ¿‘∑¬«ÿ¡÷ººø‰ : ");
+                printf("Please enter a name : ");
                 char name[30];
                 scanf("%s", name);
                 int sign = SignUp(name);
                 if (sign) {
                     int idx = CheckLastUserIdx();
-                    printf("»∏ø¯∞°¿‘¿ª º∫∞¯«ﬂΩ¿¥œ¥Ÿ.\nuserIdx : %d (userIdx∑Œ ∑Œ±◊¿Œ«ÿ¡÷ººø‰)\n", idx);
+                    printf(" successfully registered.\nuserIdx : %d (SignIn to userIdx)\n", idx);
                     continue;
                 } else {
-                    printf("ø¿∑˘∞° πﬂª˝«ﬂΩ¿¥œ¥Ÿ.");
+                    printf("error");
                     continue;
                 }
 
             default :
-                printf("π¯»£∏¶ »Æ¿Œ«ÿ¡÷ººø‰.\n");
+                printf("Please check the number.\n");
                 continue;
         }
         break;
@@ -129,62 +129,62 @@ int main(void) {
     int isRoof = 1;
     int function;
     while(isRoof) {
-        printf("| 1 : ∞Ë»π √ﬂ∞° | 2 : ∞Ë»π ªË¡¶ | 3 : ∞Ë»π ºˆ¡§ | 4 : ∞Ë»π »Æ¿Œ |\n| 5 : ∆Ú∞° »Æ¿Œ | 6 : ƒ£±∏ ∞Ë»π »Æ¿Œ | 7 : ƒ£±∏ √ﬂ∞° | 8 : ¡æ∑· |\n Ω««‡«“ π¯»£ : ");
+        printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
         scanf("%d", &function);
         if (function == 8) {
-            printf("«¡∑Œ±◊∑•¿ª ¡æ∑·«’¥œ¥Ÿ.");
+            printf("Bye.");
             break;
         }
         switch (function) {
             case 1 :
-                printf("∞Ë»π √ﬂ∞°∏¶ º±≈√«ﬂΩ¿¥œ¥Ÿ.\n\n");
+                printf("Selected Add Plan.\n\n");
                 char planName[20], explain[1024], endAt[20];
                 int openLevel;
-                printf("∞Ë»π∏Ì¿ª ¿‘∑¬«ÿ¡÷ººø‰(√÷¥Î 20¿⁄) : ");
+                printf("Please enter a plan name(20 char maximum) : ");
                 scanf("%s", planName);
-                printf("∞Ë»π º≥∏Ì¿ª ¿‘∑¬«ÿ¡÷ººø‰(√÷¥Î 1024¿⁄) : ");
+                printf("Please enter a description of the plan (1024 char maximum) : ");
                 scanf("%s", explain);
                 while (1) {
-                    printf("∞Ë»π¿ª ø¿«¬«“ ∑π∫ß¿ª ¿‘∑¬«ÿ¡÷ººø‰(1 : ¿¸√º∞¯∞≥, 2 : ƒ£±∏∞¯∞≥, 3 : ≥™∏∏∞¯∞≥) : ");
+                    printf("Please enter the openLevel of the plan (1 : Full disclosure, 2 : Friend disclosure, 3 : Only me) : ");
                     scanf("%d", &openLevel);
                     if (openLevel > 0 && openLevel < 4) break;
                     else {
-                        printf("1∫Œ≈Õ 3±Ó¡ˆ¿« º˝¿⁄∏∏ ¿‘∑¬«ÿ¡÷ººø‰.\n");
+                        printf("Please enter only numbers from 1 to 3.\n");
                         continue;
                     }
                 }
-                printf("∞Ë»π ∏∂∞® ≥Ø¬•∏¶ ¿‘∑¬«ÿ¡÷ººø‰(«¸Ωƒ : yyyy-mm-dd) : ");
+                printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
                 scanf("%s", endAt);
                 MakePlan(userIdx, planName, explain, openLevel, endAt);
                 int planIdx = CheckLastPlanIdx();
-                printf("∞Ë»π¿ª ¿˙¿Â«ﬂΩ¿¥œ¥Ÿ.\n");
+                printf("Plan has been saved.\n");
                 while (1) {
-                    printf("ºº∫Œ∞Ë»π∏Ì¿ª ¿‘∑¬«ÿ¡÷ººø‰(¡æ∑· : end) : ");
+                    printf("Please enter a detail plan name(if want end enter 'end') : ");
                     char input[20];
                     scanf("%s", input);
                     if (!strcmp(input, "end")) {
-                        printf("ºº∫Œ∞Ë»π µÓ∑œ¿ª ¡æ∑·«’¥œ¥Ÿ.\n");
+                        printf("Ends detail plan registration.\n");
                         break;
                     }
                     char detailName[20], startedAt[20], endAt[20], where[20];
                     strcpy(detailName, input);
-                    printf("Ω√¿€«“ ≥Ø¬•∏¶ ¿‘∑¬«ÿ¡÷ººø‰(«¸Ωƒ : yyyy-mm-dd) : ");
+                    printf("Please enter a date to start (format: yyyy-mm-dd) : ");
                     scanf("%s", startedAt);
-                    printf("∏∂∞® ≥Ø¬•∏¶ ¿‘∑¬«ÿ¡÷ººø‰(«¸Ωƒ : yyyy-mm-dd) : ");
+                    printf("Please enter the deadline (format: yyyy-mm-dd) : ");
                     scanf("%s", endAt);
-                    printf("Ω««‡«“ ¿Âº“∏¶ ¿‘∑¬«ÿ¡÷ººø‰ : ");
+                    printf("Please enter a place to run : ");
                     scanf("%s", where);
                     MakePlanDetail(planIdx, detailName, startedAt, endAt, where);
-                    printf("ºº∫Œ∞Ë»π¿ª √ﬂ∞°«ﬂΩ¿¥œ¥Ÿ.\n\n");
+                    printf("successfully added a detail plan.\n\n");
                     continue;
                 }
-                printf("%sø° %s∞° √ﬂ∞°µ«æ˙Ω¿¥œ¥Ÿ.", endAt, planName);
+                printf("%s has been added to %s.", planName, endAt);
                 break;
             case 2 :
-                printf("∞Ë»π ªË¡¶∏¶ º±≈√«ﬂΩ¿¥œ¥Ÿ.\n\n");
+                printf("Selected Delete plan.\n\n");
                 int planLen = GetPlanLen(userIdx);
                 if (!planLen) {
-                    printf("∞Ë»π¿Ã ¡∏¿Á«œ¡ˆ æ Ω¿¥œ¥Ÿ. π¯»£ º±≈√√¢¿∏∑Œ µπæ∆∞©¥œ¥Ÿ.\n\n");
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
@@ -193,7 +193,7 @@ int main(void) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 1024);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
-                printf("ªË¡¶«“ ∞Ë»π¿« π¯»£∏¶ º±≈√«ÿ¡÷ººø‰.\n--------------------------------------\n");
+                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     printf("%dπ¯ : %s\n", i + 1, *(nameArr+i));
                 }
@@ -202,13 +202,13 @@ int main(void) {
                     int num;
                     scanf("%d", &num);
                     if (num < 0 || num > planLen) {
-                        printf("¿Ø»ø«— π¯»£∏¶ ¿‘∑¬«ÿ¡÷ººø‰.\nªË¡¶«“ ∞Ë»π¿« π¯»£ : ");
+                        printf("Please enter a valid number.\nNumber of plan to delete : ");
                         continue;
                     }
                     --num;
                     DeletAllePlandetail(*(idxArr + num));
                     DeletePlan(userIdx, *(idxArr + num));
-                    printf("∞Ë»π¿ª ªË¡¶«ﬂΩ¿¥œ¥Ÿ.\n\n");
+                    printf("Plan has been deleted.\n\n");
                     break;
                 }
                 break;
@@ -492,16 +492,16 @@ void GetDayPlan(int * arr, int userIdx, char date[]) {
     printf("--------------------------------------\n\n");
 }
 
-void DeletePlan(int userIdx, int planIdx) {
+int DeletePlan(int userIdx, int planIdx) {
     sprintf(query, "DELETE FROM Plan WHERE userIdx = %d AND planIdx = %d", userIdx, planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
+        return 0;
     }
     sql_result = mysql_store_result(connection);
-    printf("successfully deleted.");
+    return 1;
 }
 
 void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
