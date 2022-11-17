@@ -35,7 +35,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
-int GetPlanIdx(int userIdx, char * arr); // 유저가 생성한 계획의 인덱스를 arr에 저장
+int GetPlanIdx(int userIdx, char ** arr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
@@ -182,7 +182,10 @@ int main(void) {
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
                 int planLen = GetPlanLen(userIdx);
-                char * planArr = (char*)malloc(sizeof(char) * planLen * 2);
+                char ** planArr = (char**)malloc(sizeof(char*) * planLen);
+                for (int i = 0; i < planLen; ++i) {
+                    *(planArr + i) = (char*)malloc(sizeof(char) * 2);
+                }
                 GetPlanIdx(userIdx, planArr); 
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
@@ -390,7 +393,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, char * arr) {
+int GetPlanIdx(int userIdx, char ** arr) {
     sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
