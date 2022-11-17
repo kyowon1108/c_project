@@ -35,7 +35,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
-int GetPlanIdx(int userIdx, char * idxArr, char * nameArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
+int GetPlanIdx(int userIdx, int * idxArr, char * nameArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
@@ -182,12 +182,12 @@ int main(void) {
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
                 int planLen = GetPlanLen(userIdx);
-                char * idxArr = (char*)malloc(sizeof(char) * planLen);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
                 char * nameArr = (char*)malloc(sizeof(char) * planLen);
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
-                    printf("%s, %s\n", *(idxArr+i), *(nameArr+i));
+                    printf("%d, %s\n", *(idxArr+i), *(nameArr+i));
                 }
                 printf("\n--------------------------------------\n");
                 break;
@@ -390,7 +390,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, char * idxArr, char * nameArr) {
+int GetPlanIdx(int userIdx, int * idxArr, char * nameArr) {
     sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -401,7 +401,7 @@ int GetPlanIdx(int userIdx, char * idxArr, char * nameArr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = sql_row[0], nameArr[i] = sql_row[1];
+        idxArr[i] = atoi(sql_row[0]), strcpy(nameArr[i], sql_row[1]);
         ++i;
     }
     return 1;
