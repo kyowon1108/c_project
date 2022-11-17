@@ -190,7 +190,7 @@ int main(void) {
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     //int planIdx = *(planArr + i);
-                    printf("%d번 : %s, %s\n", i + 1, *(planArr + i), *(planArr + i + 1));
+                    printf("%d번 : %s, %s\n", i + 1, *(planArr + i), *(*(planArr + i) + 1));
                 }
                 printf("\n--------------------------------------\n");
                 break;
@@ -404,7 +404,7 @@ int GetPlanIdx(int userIdx, char ** arr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        strcpy(*(arr+(i * 2)-1), sql_row[0]), strcpy(*(arr + i + 1), sql_row[1]);
+        strcpy(*(arr+i), sql_row[0]), strcpy(*(*arr+i)+1, sql_row[1]);
         // *(arr+i)[0] = sql_row[0], *(arr+i)[1] = sql_row[1];
         ++i;
     }
