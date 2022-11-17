@@ -190,9 +190,20 @@ int main(void) {
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
-                    printf("%d, %s\n", *(idxArr+i), *(nameArr+i));
+                    printf("%d번 : %s\n", i + 1, *(nameArr+i));
                 }
                 printf("\n--------------------------------------\n");
+                while (1) {
+                    int num;
+                    scanf("%d", &num);
+                    if (num < 0 || num > planLen) {
+                        printf("유효한 번호를 입력해주세요.");
+                        continue;
+                    }
+                    --num;
+                    DeletePlan(userIdx, *(nameArr+num));
+                    printf("계획을 삭제했습니다.\n\n");
+                }
                 break;
             case 3 :
                 printf("계획 수정을 선택했습니다.\n\n");
