@@ -25,7 +25,7 @@ void printCalendar(int year, int month); // 달력 출력
 
 // [ 유저 관련 함수 ]
 int SignUp(char name[]); // 회원가입
-int CheckLastIdx();
+int CheckLastUserIdx();
 int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
@@ -33,6 +33,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
 // [ 계획 관련 함수 ]
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
+int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
@@ -42,6 +43,7 @@ void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 
 
 // [ 세부 계획 관련 함수 ]
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 생성
+int CheckLastDetailIdx();
 int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 리턴
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
 void DeletePlandetail(int detailIdx); // 계획 디테일 삭제
@@ -98,7 +100,7 @@ int main(void) {
                 scanf("%s", name);
                 int sign = SignUp(name);
                 if (sign) {
-                    int idx = CheckLastIdx();
+                    int idx = CheckLastUserIdx();
                     printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", idx);
                     continue;
                 } else {
@@ -127,11 +129,72 @@ int main(void) {
     while(isRoof) {
         printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 |\n 실행할 번호 : ");
         scanf("%d", &function);
-        if (function > 7 || function < 0) {
-            printf("올바른 번호를 입력해주세요.\n\n");
-            continue;
+        switch (function) {
+            case 1 :
+                printf("계획 추가를 선택했습니다.\n\n");
+                char planName[20], explain[1024], endAt[20];
+                int openLevel;
+                printf("계획명을 입력해주세요(최대 20자) : ");
+                scanf("%s", planName);
+                printf("계획 설명을 입력해주세요(최대 1024자) : ");
+                scanf("%s", explain);
+                while (1) {
+                    printf("계획을 오픈할 레벨을 입력해주세요(1 : 전체공개, 2 : 친구공개, 3 : 나만공개) : ");
+                    scanf("%d", openLevel);
+                    if (openLevel > 0 && openLevel < 4) break;
+                    else {
+                        printf("1부터 3까지의 숫자만 입력해주세요.\n");
+                        continue;
+                    }
+                }
+                printf("계획 마감 날짜를 입력해주세요(형식 : yyyy-mm-dd) : ");
+                scanf("%s", endAt);
+                MakePlan(userIdx, planName, explain, openLevel, endAt);
+                int planIdx = CheckLastPlanIdx();
+                printf("계획을 저장했습니다.\n");
+                while (1) {
+                    printf("세부계획명을 입력해주세요. (종료 : end)");
+                    char input[20];
+                    if (!strcmp(input, "end")) {
+                        printf("세부계획 등록을 종료합니다.\n");
+                        break;
+                    }
+                    char detailName[20], startedAt[20], endAt[20], where[20];
+                    strcpy(detailName, input);
+                    printf("시작할 날짜를 입력해주세요(형식 : yyyy-mm-dd) : ");
+                    scanf("%s", startedAt);
+                    printf("마감 날짜를 입력해주세요(형식 : yyyy-mm-dd) : ");
+                    scanf("%s", endAt);
+                    printf("실행할 장소를 입력해주세요 : ");
+                    scanf("%s", where);
+                    MakePlanDetail(planIdx, detailName, startedAt, endAt, where);
+                    printf("세부계획을 추가했습니다.\n\n");
+                    continue;
+                }
+                printf("%s에 %s가 추가되었습니다.", endAt, planName);
+                break;
+            case 2 :
+                printf("계획 삭제를 선택했습니다.\n\n");
+                
+            case 3 :
+                printf("계획 수정을 선택했습니다.\n\n");
+
+            case 4 :
+                printf("계획 확인을 선택했습니다.\n\n");
+
+            case 5 :
+                printf("평가 확인을 선택했습니다.\n\n");
+
+            case 6 : 
+                printf("친구 계획 확인을 선택했습니다.\n\n");
+
+            case 7 :
+                printf("친구 추가를 선택했습니다.\n\n");
+
+            default :
+                printf("번호를 확인해주세요.");
+                continue;
         }
-        printf("%d번을 선택했습니다.", function);
         break;
     }
 
@@ -197,7 +260,7 @@ int SignUp(char name[]) {
     }
 }
 
-int CheckLastIdx() {
+int CheckLastUserIdx() {
     sprintf(query, "SELECT MAX(userIdx) FROM User");
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -282,6 +345,20 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
         return 0;
     }
     return 1;
+}
+
+int CheckLastPlanIdx() {
+    sprintf(query, "SELECT MAX(planIdx) FROM Plan");
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
 }
 
 int GetPlanLen(int userIdx) {
@@ -394,6 +471,20 @@ int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[
         return 0;
     }
     return 1;
+}
+
+int CheckLastDetailIdx() {
+    sprintf(query, "SELECT MAX(detailIdx) FROM Plandetail");
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
 }
 
 int GetPlanDetailLen(int planIdx) {
