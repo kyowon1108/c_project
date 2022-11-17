@@ -35,7 +35,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
-int GetPlanIdx(int userIdx, char ** arr); // 유저가 생성한 계획의 인덱스를 arr에 저장
+int GetPlanIdx(int userIdx, char * idxArr, char * nameArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
