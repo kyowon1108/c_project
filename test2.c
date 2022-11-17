@@ -212,7 +212,7 @@ int CheckLastIdx() {
 }
 
 int CheckUser(int userIdx) {
-    sprintf(query, "SELECT EXISTS (SELECT id FROM User USER userIdx = %d limit 1) AS success", userIdx);
+    sprintf(query, "SELECT EXISTS (SELECT 1 FROM User USER userIdx = %d) AS cnt", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
