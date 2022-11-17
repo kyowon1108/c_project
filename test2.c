@@ -182,6 +182,10 @@ int main(void) {
             case 2 :
                 printf("계획 삭제를 선택했습니다.\n\n");
                 int planLen = GetPlanLen(userIdx);
+                if (!planLen) {
+                    printf("계획이 존재하지 않습니다. 번호 선택창으로 돌아갑니다.\n\n");
+                    break;
+                }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
                 char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
