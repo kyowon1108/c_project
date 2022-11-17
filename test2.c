@@ -73,67 +73,72 @@ int main(void) {
         fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
         return 1;
     }
+    printf("이름을 입력해주세요 : ");
+    char name[30];
+    scanf("%s", name);
+    int sign = SignUp(name);
+    printf("[ %d ]", CheckLastIdx());
+    
+    // while (1) {
+    //     printf("| 1. 로그인 | 2. 회원가입 |\n실행할 번호 : ");
+    //     int func, a;
+    //     scanf("%d", &func);
+    //     switch (func) {
+    //         case 1 :
+    //             printf("로그인 할 userIdx : ");
+    //             scanf("%d", &a);
+    //             if (CheckUser(a)) {
+    //                 userIdx = a;
+    //                 printf("%d로 로그인했습니다.\n", userIdx);
+    //                 break;
+    //             }
+    //             else {
+    //                 printf("해당 아이디는 존재하지 않습니다. userIdx를 확인해주세요.\n");
+    //                 continue;
+    //             }
 
-    while (1) {
-        printf("| 1. 로그인 | 2. 회원가입 |\n실행할 번호 : ");
-        int func, a;
-        scanf("%d", &func);
-        switch (func) {
-            case 1 :
-                printf("로그인 할 userIdx : ");
-                scanf("%d", &a);
-                if (CheckUser(a)) {
-                    userIdx = a;
-                    printf("%d로 로그인했습니다.\n", userIdx);
-                    break;
-                }
-                else {
-                    printf("해당 아이디는 존재하지 않습니다. userIdx를 확인해주세요.\n");
-                    continue;
-                }
+    //         case 2 :
+    //             printf("이름을 입력해주세요 : ");
+    //             char name[30];
+    //             scanf("%s", name);
+    //             int sign = SignUp(name);
+    //             if (sign) {
+    //                 int idx = CheckLastIdx();
+    //                 printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", idx);
+    //                 continue;
+    //             } else {
+    //                 printf("오류가 발생했습니다.");
+    //                 continue;
+    //             }
 
-            case 2 :
-                printf("이름을 입력해주세요 : ");
-                char name[30];
-                scanf("%s", name);
-                int sign = SignUp(name);
-                if (sign) {
-                    int idx = CheckLastIdx();
-                    printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", idx);
-                    continue;
-                } else {
-                    printf("오류가 발생했습니다.");
-                    continue;
-                }
+    //         default :
+    //             printf("번호를 확인해주세요.\n");
+    //             continue;
+    //     }
+    //     break;
+    // }
 
-            default :
-                printf("번호를 확인해주세요.\n");
-                continue;
-        }
-        break;
-    }
+    // printf("\n\n");
 
-    printf("\n\n");
+    // struct tm* t;
+    // time_t base = time(NULL);
+    // t = localtime(&base);
 
-    struct tm* t;
-    time_t base = time(NULL);
-    t = localtime(&base);
+    // printCalendar(t->tm_year + 1900, t->tm_mon + 1);
 
-    printCalendar(t->tm_year + 1900, t->tm_mon + 1);
-
-    printf("\n\n");
-    int isRoof = 1;
-    int function;
-    while(isRoof) {
-        printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 |\n 실행할 번호 : ");
-        scanf("%d", &function);
-        if (function > 7 || function < 0) {
-            printf("올바른 번호를 입력해주세요.\n\n");
-            continue;
-        }
-        printf("%d번을 선택했습니다.", function);
-        break;
-    }
+    // printf("\n\n");
+    // int isRoof = 1;
+    // int function;
+    // while(isRoof) {
+    //     printf("| 1 : 계획 추가 | 2 : 계획 삭제 | 3 : 계획 수정 | 4 : 계획 확인 |\n| 5 : 평가 확인 | 6 : 친구 계획 확인 | 7 : 친구 추가 |\n 실행할 번호 : ");
+    //     scanf("%d", &function);
+    //     if (function > 7 || function < 0) {
+    //         printf("올바른 번호를 입력해주세요.\n\n");
+    //         continue;
+    //     }
+    //     printf("%d번을 선택했습니다.", function);
+    //     break;
+    // }
 
     mysql_close(connection);
 
