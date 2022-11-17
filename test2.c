@@ -25,6 +25,7 @@ void printCalendar(int year, int month); // 달력 출력
 
 // [ 유저 관련 함수 ]
 int SignUp(char name[]); // 회원가입
+int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
@@ -58,6 +59,8 @@ void DeleteDetailReview(int detailreviewIdx);
 void ModifyDetailReview(int detailreviewIdx, char content[], int score);
 
 
+int userIdx;
+
 int main(void) {
     
     mysql_init(&conn);
@@ -69,6 +72,46 @@ int main(void) {
         fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
         return 1;
     }
+
+    while (1) {
+        printf("| 1. 로그인 | 2. 회원가입 |\n실행할 번호 : ");
+        int func, a;
+        scanf("%d", &func);
+        switch (func) {
+            case 1 :
+                printf("로그인 할 userIdx : ");
+                scanf("%d", &a);
+                if (CheckUser(a)) {
+                    userIdx = a;
+                    printf("%d로 로그인했습니다.\n", userIdx);
+                    break;
+                }
+                else {
+                    printf("해당 아이디는 존재하지 않습니다. userIdx를 확인해주세요.\n");
+                    continue;
+                }
+
+            case 2 :
+                printf("이름을 입력해주세요 : ");
+                char name[30];
+                scanf("%s", name);
+                int sign = SignUp(name);
+                if (sign) {
+                    printf("회원가입을 성공했습니다.\nuserIdx : %d (userIdx로 로그인해주세요)\n", sign);
+                    continue;
+                } else {
+                    printf("오류가 발생했습니다.");
+                    continue;
+                }
+
+            default :
+                printf("번호를 확인해주세요.\n");
+                continue;
+        }
+        break;
+    }
+
+    printf("\n\n");
 
     struct tm* t;
     time_t base = time(NULL);
@@ -145,12 +188,34 @@ int SignUp(char name[]) {
     sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // User을 추가하는 쿼리문
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
-        printf("SignUp successed");
-        return 1;
+        sprintf(query, "SELECT MAX(userIdx) FROM User");
+        query_stat = mysql_query(connection, query);
+        char * a;
+        while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+            a = sql_row[0];
+        }
+        return atoi(a);
     } else {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
+}
+
+int CheckUser(int userIdx) {
+    sprintf(query, "SELECT EXISTS (SELECT id FROM User USER userIdx = %d limit 1) AS success", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    char * a;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        a = sql_row[0];
+    }
+    return atoi(a);
 }
 
 int PrintUser() {
