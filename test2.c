@@ -201,7 +201,7 @@ int main(void) {
                         continue;
                     }
                     --num;
-                    DeletePlan(userIdx, *(nameArr+num));
+                    DeletePlan(userIdx, *(idxArr + num));
                     printf("계획을 삭제했습니다.\n\n");
                 }
                 break;
