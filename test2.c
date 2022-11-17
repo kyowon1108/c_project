@@ -190,7 +190,7 @@ int main(void) {
                 printf("삭제할 계획의 번호를 선택해주세요.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     //int planIdx = *(planArr + i);
-                    printf("%s, %s\n", *(arr+i), *(arr+i+1));
+                    printf("%s, %s\n", *(planArr+i), *(planArr+i+1));
                 }
                 printf("\n--------------------------------------\n");
                 break;
