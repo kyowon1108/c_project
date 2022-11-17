@@ -184,7 +184,7 @@ int main(void) {
                 int planLen = GetPlanLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
                 char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planlen; ++i) {
+                for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 1024);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
