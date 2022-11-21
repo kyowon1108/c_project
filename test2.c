@@ -977,7 +977,7 @@ int GetChallengeIdx(int *idxArr, int userIdx) {
 }
 
 int GetChallenge(int depositIdx) {
-    sprintf(query, "SELECT depositName, money, endAt FROM Planreview WHERE depositIdx = %d", depositIdx);
+    sprintf(query, "SELECT depositName, money, endAt FROM Deposit WHERE depositIdx = %d", depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
