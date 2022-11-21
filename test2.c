@@ -411,12 +411,13 @@ int main(void) {
                 int depositIdx;
                 printf("Please enter idx to join : ");
                 scanf("%d", &depositIdx);
-                GetChallenge(depositIdx);
-                // if (!check) {
-                //     printf("Idx does not exist. Return to the number selection window.");
-                //     break;
-                // }
-                printf("\n--------------------------------------\n");
+                printf("--------------------------------------\n");
+                int check = GetChallenge(depositIdx);
+                if (!check) {
+                    printf("Idx does not exist. Return to the number selection window.");
+                    break;
+                }
+                printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.\n\n");
                 break; }
