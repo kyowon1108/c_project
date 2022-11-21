@@ -321,9 +321,13 @@ int main(void) {
                     *(explainArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
-                printf("test\n");
                 for (int i = 0; i < planLen; ++i) {
-                    printf("No.%d : | %d | %s | %s |\n", i + 1, *(idxArr + i), *(nameArr + i), *(explainArr + i));
+                    int planIdx = *(idxArr + i);
+                    char planName[20] = *(nameArr + i), explain[1024] = *(explainArr + i);
+                    printf("\n--------------------------------------\n");
+                    printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planIdx, planName, explain);
+                    GetPlanDetail(planIdx);
+                    printf("\n--------------------------------------\n");
                 }
                 break;
             case 5 :
@@ -676,7 +680,7 @@ int GetPlanDetailLen(int planIdx) {
 }
 
 int GetPlanDetail(int planIdx) {
-    sprintf(query, "SELECT detailIdx, detailName, startedAt, endAt, `where` FROM Plandetail WHERE planIdx = %d", planIdx);
+    sprintf(query, "SELECT detailName, startedAt, endAt, `where` FROM Plandetail WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -684,14 +688,11 @@ int GetPlanDetail(int planIdx) {
         return 0;
     }
     sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%d¹ø - | %s | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4]);
-
-        ++i;
+        printf("[%d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        ++i
     }
-    printf("--------------------------------------\n\n");
     return 1;
 }
 
