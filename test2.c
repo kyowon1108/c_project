@@ -206,10 +206,14 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
                 }
-                printf("\n--------------------------------------\n");
+                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
                     scanf("%d", &num);
+                    if (num == 0) {
+                        printf("delete canceled.");
+                        break;
+                    }
                     if (num < 0 || num > planLen) {
                         printf("Please enter a valid number.\nNumber of plan to delete : ");
                         continue;
@@ -244,10 +248,14 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
                 }
-                printf("\n--------------------------------------\n");
+                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
                     scanf("%d", &num);
+                    if (num == 0) {
+                        printf("delete canceled.");
+                        break;
+                    }
                     if (num < 0 || num > planLen) {
                         printf("Please enter a valid number.\nNumber of plan to modify : ");
                         continue;
@@ -309,17 +317,18 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
                 }
-                printf("\n--------------------------------------\n");
+                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
 
+                break;
             case 5 :
                 printf("Seleted Check Review.\n\n");
-
+                break;
             case 6 : 
                 printf("Seleted Check FriendReview.\n\n");
-
+                break;
             case 7 :
                 printf("Selected Add Friend.\n\n");
-
+                break;
             default :
                 printf("Please check your number.\n\n");
                 continue;
