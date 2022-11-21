@@ -581,7 +581,7 @@ int GetFriendPlan(int userIdx, int friendIdx) {
 }
 
 int GetDayPlanLen(char date[]) {
-    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE endAt = %s", date);
+    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE DATE(endAt) = '%s'", date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -595,7 +595,7 @@ int GetDayPlanLen(char date[]) {
 }
 
 int GetDayPlan(int userIdx, char date[], int * idxArr, char ** nameArr, char ** explainArr) {
-    sprintf(query, "SELECT planIdx, planName, `explain` FROM Plan WHERE userIdx = %d AND endAt = '%s'", userIdx, date);
+    sprintf(query, "SELECT planIdx, planName, `explain` FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
