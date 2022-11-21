@@ -572,7 +572,7 @@ int DeletePlan(int userIdx, int planIdx) {
 }
 
 int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
-    sprintf(query, "UPDATE Plan SET planName = %s, explain = %s, endAt = %s WHERE planIdx = %d", planName, explain, endAt, planIdx);
+    sprintf(query, "UPDATE Plan SET planName = '%s', explain = '%s', endAt = '%s' WHERE planIdx = %d", planName, explain, endAt, planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
