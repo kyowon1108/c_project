@@ -691,7 +691,7 @@ int GetPlanDetail(int planIdx) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("[%d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        printf("[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
         ++i;
     }
     return 1;
