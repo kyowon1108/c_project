@@ -201,7 +201,7 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetPlanIdx(userIdx, idxArr, nameArr); 
+                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
@@ -239,7 +239,7 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetPlanIdx(userIdx, idxArr, nameArr); 
+                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
@@ -304,7 +304,7 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetPlanIdx(userIdx, idxArr, nameArr); 
+                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
                     printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
