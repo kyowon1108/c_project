@@ -323,7 +323,8 @@ int main(void) {
                 GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
                 for (int i = 0; i < planLen; ++i) {
                     int planIdx = *(idxArr + i);
-                    char planName[20] = *(nameArr + i), explain[1024] = *(explainArr + i);
+                    char planName[20], explain[1024];
+                    strcpy(planName, *(nameArr + i)), strcpy(explain, *(explainArr + i));
                     printf("\n--------------------------------------\n");
                     printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
                     if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
