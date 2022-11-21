@@ -190,11 +190,11 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                // idxArr = (int*)malloc(sizeof(int) * planLen);
-                // nameArr = (char**)malloc(sizeof(char*) * planLen);
-                // for(int i = 0; i < planLen; ++i) {
-                //     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                // }
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
@@ -219,7 +219,11 @@ int main(void) {
 
             case 3 :
                 printf("Selected Modify Plan.\n\n");
-
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
                 GetPlanIdx(userIdx, idxArr, nameArr);
                 printf("Please select the number of the plan to modify.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
@@ -242,7 +246,7 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     // 여기에 수정하는 코드를 넣어야 함
                     printf("%s", *(arr+2));
-                    //char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
+                    char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
                     printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan |", num);
                     int modifyFunc;
                     scanf("%d", &modifyFunc);
@@ -494,7 +498,10 @@ int GetPlan(char ** arr, int planIdx) {
     sql_result = mysql_store_result(connection);
     //printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        arr[0] = sql_row[0], arr[1] = sql_row[1], arr[2] = sql_row[2], arr[3] = sql_row[3], arr[4] = sql_row[4], arr[5] = sql_row[5], arr[6] = sql_row[6];
+        for (int i = 0; i < 7; ++i) {
+            *(arr + i) = sql_row[i];
+        }
+        //arr[0] = sql_row[0], arr[1] = sql_row[1], arr[2] = sql_row[2], arr[3] = sql_row[3], arr[4] = sql_row[4], arr[5] = sql_row[5], arr[6] = sql_row[6];
         //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     //printf("--------------------------------------\n\n");
