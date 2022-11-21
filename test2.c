@@ -303,25 +303,17 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                endArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
-                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                for(int i = 0; i < planLen; ++i) {
-                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
-                }
-                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
-
+                char date[20];
+                printf("Please select the date of the plan to check (format : yyyy-mm--dd) : ");
+                scanf("%s", date);
+                planLen = GetPlanLen(userIdx);
+                int * arr = (int*)malloc(sizeof(int) * planLen);
+                GetDayPlan(arr, userIdx, date);
+                // 입력받고나서 플랜 보여주는 코드 작성
                 break;
             case 5 :
                 printf("Seleted Check Review.\n\n");
+
                 break;
             case 6 : 
                 printf("Seleted Check FriendReview.\n\n");
@@ -540,15 +532,11 @@ int GetPlan(char ** arr, int planIdx) {
         return 0;
     }
     sql_result = mysql_store_result(connection);
-    //printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         for (int i = 0; i < 7; ++i) {
             *(arr + i) = sql_row[i];
         }
-        //arr[0] = sql_row[0], arr[1] = sql_row[1], arr[2] = sql_row[2], arr[3] = sql_row[3], arr[4] = sql_row[4], arr[5] = sql_row[5], arr[6] = sql_row[6];
-        //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
-    //printf("--------------------------------------\n\n");
     return 1;
 }
 
@@ -619,6 +607,7 @@ int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
     sql_result = mysql_store_result(connection);
     return 1;
 }
+
 
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]) {
     sprintf(query, "INSERT INTO Plandetail VALUES (0, %d, '%s', '%s', '%s', '%s', now())", planIdx, detailName, startedAt, endAt, where);
