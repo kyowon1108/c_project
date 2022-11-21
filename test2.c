@@ -199,7 +199,7 @@ int main(void) {
                 }
                 endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
@@ -237,7 +237,7 @@ int main(void) {
                 }
                 endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
@@ -302,7 +302,7 @@ int main(void) {
                 }
                 endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
