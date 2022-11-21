@@ -250,11 +250,9 @@ int main(void) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
                     GetPlan(arr, planIdx);
-                    // char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
                     char planName[20], explain[1024], endAt[20];
                     strcpy(planName, *(arr + 2)), strcpy(explain, *(arr + 3)), strcpy(endAt, *(arr + 6));
-                    //planName = *(arr + 2), explain = *(arr + 3), endAt = *(arr + 6);
-                    printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan |", num);
+                    printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan | : ", num);
                     int modifyFunc;
                     scanf("%d", &modifyFunc);
                     switch (modifyFunc) {
@@ -572,7 +570,7 @@ int DeletePlan(int userIdx, int planIdx) {
 }
 
 int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
-    sprintf(query, "UPDATE Plan SET planName = '%s', explain = '%s', endAt = '%s' WHERE planIdx = %d", planName, explain, endAt, planIdx);
+    sprintf(query, "UPDATE Plan SET planName = '%s', explain = '%s', DATE(endAt) = '%s' WHERE planIdx = %d", planName, explain, endAt, planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
