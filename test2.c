@@ -250,9 +250,7 @@ int main(void) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
                     GetPlan(arr, planIdx);
-                    // 여기에 수정하는 코드를 넣어야 함
-                    printf("%s", *(arr+2));
-                    //char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
+                    char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
                     printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan |", num);
                     int modifyFunc;
                     scanf("%d", &modifyFunc);
