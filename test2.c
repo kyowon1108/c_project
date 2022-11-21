@@ -307,6 +307,10 @@ int main(void) {
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 scanf("%s", date);
                 planLen = GetDayPlanLen(date);
+                if (!planLen) {
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
                 idxArr = (int*)malloc(sizeof(int) * planLen);
                 nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
