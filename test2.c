@@ -134,7 +134,8 @@ int main(void) {
     char ** nameArr;
     char ** endArr;
     char ** explainArr;
-
+    char date[20];
+    
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
         scanf("%d", &function);
@@ -303,7 +304,6 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                char date[20];
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 scanf("%s", date);
                 planLen = GetDayPlanLen(date);
@@ -338,7 +338,6 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                char date[20];
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 scanf("%s", date);
                 planLen = GetDayPlanLen(date);
