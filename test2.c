@@ -328,7 +328,7 @@ int main(void) {
                     printf("\n--------------------------------------\n");
                     printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
                     if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
-                    printf("\n--------------------------------------\n");
+                    printf("--------------------------------------\n");
                 }
                 break;
             case 5 :
@@ -691,7 +691,7 @@ int GetPlanDetail(int planIdx) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        printf("\n[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
         ++i;
     }
     return 1;
