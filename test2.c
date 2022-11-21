@@ -793,7 +793,7 @@ int GetPlanReview(int planIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
-        char star[5];
+        char *star[5];
         for (int i = 0; i < 5; ++i) star[i] = "1";
         for (int j = 5 - score; j < 5; ++j) star[j] = "0";
         char * ptr = strtok(sql_row[3], " ");
