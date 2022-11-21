@@ -340,7 +340,9 @@ int main(void) {
                 }
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 scanf("%s", date);
+                printf("asdf");
                 planLen = GetDayPlanLen(date);
+                printf("qwer");
                 if (!planLen) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
