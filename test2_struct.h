@@ -50,6 +50,6 @@ typedef struct Deposit {
 typedef struct Deposituser {
     int depositIdx;
     int userIdx;
-}
+} deposituser;
 
 #endif
