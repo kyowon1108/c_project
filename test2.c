@@ -326,7 +326,7 @@ int main(void) {
                     char planName[20] = *(nameArr + i), explain[1024] = *(explainArr + i);
                     printf("\n--------------------------------------\n");
                     printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planIdx, planName, explain);
-                    GetPlanDetail(planIdx);
+                    if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
                     printf("\n--------------------------------------\n");
                 }
                 break;
