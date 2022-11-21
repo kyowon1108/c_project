@@ -422,7 +422,7 @@ int main(void) {
                 break; }
 
             case 10 :
-
+                GetChallenge(1);
                 break;
             default :
                 printf("Please check your number.\n\n");
