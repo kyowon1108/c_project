@@ -411,11 +411,11 @@ int main(void) {
                 int depositIdx;
                 printf("Please enter idx to join : ");
                 scanf("%d", &depositIdx);
-                int check = GetChallenge(depositIdx);
-                if (!check) {
-                    printf("Idx does not exist. Return to the number selection window.");
-                    break;
-                }
+                GetChallenge(depositIdx);
+                // if (!check) {
+                //     printf("Idx does not exist. Return to the number selection window.");
+                //     break;
+                // }
                 printf("\n--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.");
@@ -981,7 +981,7 @@ int GetChallenge(int depositIdx) {
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
-        //fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
     sql_result = mysql_store_result(connection);
