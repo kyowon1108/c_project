@@ -398,7 +398,7 @@ int main(void) {
                 scanf("%d", &money);
                 printf("Please enter a challenge deadline (format: yyyy-mm-dd) : ");
                 scanf("%s", endAt);
-                MakeChallenge(depositName, money, endAt[]);
+                MakeChallenge(depositName, money, endAt);
                 int depositIdx = CheckLastDepositIdx();
                 MakeChallengeUser(depositIdx, userIdx);
 
@@ -901,8 +901,8 @@ int CheckLastDepositIdx() {
     return atoi(res);
 }
 
-int IsChallengeUser(int challengeIdx, int userIdx) {
-    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
+int IsChallengeUser(int depositIdx, int userIdx) {
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND depositIdx = %d)", userIdx, depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
