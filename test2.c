@@ -61,6 +61,7 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score);
 int MakeChallenge(char depositName[], int money, char endAt[]);
 int MakeChallengeUser(int depositIdx, int userIdx);
 int CheckLastDepositIdx();
+int IsChallengeUser(int depositIdx, int userIdx);
 int GetChallengeLen(int userIdx);
 int GetChallengeUserLen(int depositIdx);
 int GetChallengeIdx(int *idxArr, int userIdx);
