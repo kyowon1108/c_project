@@ -600,7 +600,7 @@ int GetDayPlan(int userIdx, char date[], int * idxArr, char * nameArr, char * ex
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1], *(explainArr+i) = sql_row[2];
+        idxArr[i] = atoi(sql_row[0]), strcpy(*(nameArr+i),sql_row[1]), strcpy(*(explainArr+i), sql_row[2]);
         ++i;
     }
     return 1;
