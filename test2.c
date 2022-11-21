@@ -318,7 +318,7 @@ int main(void) {
                 }
                 GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
                 for (int i = 0; i < planLen; ++i) {
-                    printf("No.%d : | %s | %s | %s |\n", *(idxArr + i), *(nameArr + i), *(explainArr + i));
+                    printf("No.%d : | %d | %s | %s |\n", i + 1, *(idxArr + i), *(nameArr + i), *(explainArr + i));
                 }
                 break;
             case 5 :
