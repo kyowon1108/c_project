@@ -911,7 +911,7 @@ int GetChallenge(int challengeIdx) {
     
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3])
+        printf("%s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
     }
     return 1;
 }
