@@ -252,7 +252,8 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     // char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
                     char planName[20], explain[1024], endAt[20];
-                    planName = *(arr + 2), explain = *(arr + 3), endAt = *(arr + 6);
+                    strcpy(planName, *(arr + 2)), strcpy(explain, *(arr + 3)), strcpy(endAt, *(arr + 6));
+                    //planName = *(arr + 2), explain = *(arr + 3), endAt = *(arr + 6);
                     printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan |", num);
                     int modifyFunc;
                     scanf("%d", &modifyFunc);
