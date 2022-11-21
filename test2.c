@@ -128,6 +128,7 @@ int main(void) {
     printf("\n\n");
     int isRoof = 1;
     int function;
+    int planLen;
     int * idxArr;
     char ** nameArr;
 
@@ -185,7 +186,7 @@ int main(void) {
                 break;
             case 2 :
                 printf("Selected Delete plan.\n\n");
-                int planLen = GetPlanLen(userIdx);
+                planLen = GetPlanLen(userIdx);
                 if (!planLen) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
@@ -219,6 +220,11 @@ int main(void) {
 
             case 3 :
                 printf("Selected Modify Plan.\n\n");
+                planLen = GetPlanLen(userIdx);
+                if (!planLen) {
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
                 idxArr = (int*)malloc(sizeof(int) * planLen);
                 nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
