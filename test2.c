@@ -190,11 +190,11 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
+                // idxArr = (int*)malloc(sizeof(int) * planLen);
+                // nameArr = (char**)malloc(sizeof(char*) * planLen);
+                // for(int i = 0; i < planLen; ++i) {
+                //     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                // }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
@@ -219,12 +219,7 @@ int main(void) {
 
             case 3 :
                 printf("Selected Modify Plan.\n\n");
-                
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
+
                 GetPlanIdx(userIdx, idxArr, nameArr);
                 printf("Please select the number of the plan to modify.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
