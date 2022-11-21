@@ -799,7 +799,7 @@ int GetPlanReview(int planIdx) {
         // for (int i = 0; i < 5; ++i) star[i] = "1";
         // for (int j = 5 - score; j < 5; ++j) star[j] = "0";
         char * ptr = strtok(sql_row[3], " ");
-        printf("\nid : %s [ %d ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], score, sql_row[1], ptr);
+        printf("\nid : %s [ %d / 5 ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], score, sql_row[1], ptr);
     }
     return 1;
 }
