@@ -39,15 +39,6 @@ typedef struct Planreview {
     char createdAt[20];
 } planreview;
 
-typedef struct Plandetailreview {
-    int detailreviewIdx;
-    int detailIdx;
-    int userIdx;
-    char content[100];
-    int score;
-    char createdAt[20];
-} plandetailreview;
-
 typedef struct Deposit {
     int depositIdx;
     int planIdx;

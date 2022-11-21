@@ -54,15 +54,15 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
 
 // [ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö ]
 int MakePlanReview(int planIdx, int userIdx, char content[], int score);
-int GetPlanReview(int planreviewIdx);
+int GetPlanReview(int planIdx);
 void DeletePlanReview(int planreviewIdx);
 void ModifyPlanReview(int planreviewIdx, char content[], int score);
 
-// [ ¼¼ºÎ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö]
-int MakeDetailReview(int detailIdx, int userIdx, char content[], int score);
-int GetDetailReview(int detailreviewIdx);
-void DeleteDetailReview(int detailreviewIdx);
-void ModifyDetailReview(int detailreviewIdx, char content[], int score);
+// // [ ¼¼ºÎ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö]
+// int MakeDetailReview(int detailIdx, int userIdx, char content[], int score);
+// int GetDetailReview(int detailreviewIdx);
+// void DeleteDetailReview(int detailreviewIdx);
+// void ModifyDetailReview(int detailreviewIdx, char content[], int score);
 
 
 int userIdx;
@@ -333,11 +333,34 @@ int main(void) {
                 break;
             case 5 :
                 printf("Seleted Check Review.\n\n");
-
+                planLen = GetPlanLen(userIdx);
+                if (!planLen) {
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                char date[20];
+                printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
+                scanf("%s", date);
+                planLen = GetDayPlanLen(date);
+                if (!planLen) {
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
+                for (int i = 0; i < planLen; ++i) {
+                    int planIdx = *(idxArr + i);
+                    char planName[20], explain[1024];
+                    strcpy(planName, *(nameArr + i)), strcpy(explain, *(explainArr + i));
+                    printf("\n--------------------------------------\n");
+                    printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
+                    if (GetPlanReview(planIdx)) GetPlanReview(planIdx);
+                    else printf("There is no review in this plan.\n");
+                    printf("--------------------------------------\n");
+                }
                 break;
             case 6 : 
                 printf("Seleted Check FriendReview.\n\n");
-
+                
                 break;
             case 7 :
                 printf("Selected Add Friend.\n\n");
@@ -702,7 +725,9 @@ int GetPlanDetail(int planIdx) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("\n[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n", i + 1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        char * ptr1 = strtok(sql_row[1], " ");
+        char * ptr2 = strtok(sql_row[2], " ");
+        printf("\n[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
         ++i;
     }
     return 1;
@@ -757,8 +782,8 @@ int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
     return 1;
 }
 
-int GetPlanReview(int planreviewIdx) {
-    sprintf(query, "SELECT * FROM Planreview WHERE planreviewIdx = %d", planreviewIdx);
+int GetPlanReview(int planIdx) {
+    sprintf(query, "SELECT userIdx, content, score, createdAt FROM Planreview WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -767,11 +792,14 @@ int GetPlanReview(int planreviewIdx) {
     }
     
     sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        int score = atoi(sql_row[2]);
+        char * star = (char*)malloc(sizeof(char) * 5);
+        for (int i = 0; i < 5; ++i) *(star + i) = "¡Ú";
+        for (int j = 5 - score; j < 5; ++j) *(star + j) = "¡Ù";
+        char * ptr = strtok(sql_row[3], " ");
+        printf("\nid : %s [ %s ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], star, sql_row[1], ptr);
     }
-    printf("--------------------------------------\n\n");
     return 1;
 }
 
@@ -800,57 +828,57 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
 }
 
 
-//detailreviewIdx, detailIdx, userIdx, content, score, createdAt
-int MakeDetailReview(int detailIdx, int userIdx, char content[], int score) {
-    sprintf(query, "INSERT INTO Plandetailreview (detailIdx, userIdx, content, score) VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score);
-    query_stat = mysql_query(connection, query);
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 0;
-    }
-    return 1;
-}
+// //detailreviewIdx, detailIdx, userIdx, content, score, createdAt
+// int MakeDetailReview(int detailIdx, int userIdx, char content[], int score) {
+//     sprintf(query, "INSERT INTO Plandetailreview (detailIdx, userIdx, content, score) VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score);
+//     query_stat = mysql_query(connection, query);
+//     if (query_stat != 0)
+//     {
+//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+//         return 0;
+//     }
+//     return 1;
+// }
 
-int GetDetailReview(int detailreviewIdx) {
-    sprintf(query, "SELECT * FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
-    query_stat = mysql_query(connection, query); 
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return 0;
-    }
+// int GetDetailReview(int detailreviewIdx) {
+//     sprintf(query, "SELECT * FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
+//     query_stat = mysql_query(connection, query); 
+//     if (query_stat != 0)
+//     {
+//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+//         return 0;
+//     }
     
-    sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
-    }
-    printf("--------------------------------------\n\n");
-    return 1;
-}
+//     sql_result = mysql_store_result(connection);
+//     printf("\n--------------------------------------\n");
+//     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+//         printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+//     }
+//     printf("--------------------------------------\n\n");
+//     return 1;
+// }
 
-void DeleteDetailReview(int detailreviewIdx) {
-    sprintf(query, "DELETE FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
-    query_stat = mysql_query(connection, query);
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
-    }
-    sql_result = mysql_store_result(connection);
-    printf("successfully deleted.");
-}
+// void DeleteDetailReview(int detailreviewIdx) {
+//     sprintf(query, "DELETE FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
+//     query_stat = mysql_query(connection, query);
+//     if (query_stat != 0)
+//     {
+//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+//         return;
+//     }
+//     sql_result = mysql_store_result(connection);
+//     printf("successfully deleted.");
+// }
 
-void ModifyDetailReview(int detailreviewIdx, char content[], int score) {
-    sprintf(query, "UPDATE Plandetailreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, detailreviewIdx);
-    query_stat = mysql_query(connection, query);
-    if (query_stat != 0)
-    {
-        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
-    }
-    sql_result = mysql_store_result(connection);
-    printf("successfully modified.");
-}
+// void ModifyDetailReview(int detailreviewIdx, char content[], int score) {
+//     sprintf(query, "UPDATE Plandetailreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, detailreviewIdx);
+//     query_stat = mysql_query(connection, query);
+//     if (query_stat != 0)
+//     {
+//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+//         return;
+//     }
+//     sql_result = mysql_store_result(connection);
+//     printf("successfully modified.");
+// }
 
