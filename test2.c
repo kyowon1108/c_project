@@ -343,7 +343,7 @@ int main(void) {
                 printf("Selected Add Friend.\n\n");
                 int friendIdx;
                 printf("Enter friend's userIdx : ");
-                scanf("%d", friendIdx);
+                scanf("%d", &friendIdx);
                 int check = CheckUser(friendIdx);
                 if (!check) {
                     printf("userIdx not exists.\n\n");
