@@ -337,9 +337,20 @@ int main(void) {
                 break;
             case 6 : 
                 printf("Seleted Check FriendReview.\n\n");
+
                 break;
             case 7 :
                 printf("Selected Add Friend.\n\n");
+                int frinedIdx;
+                printf("Enter friend's userIdx : ");
+                scanf("%d", friendIdx);
+                int check = CheckUser(friendIdx);
+                if (!check) {
+                    printf("userIdx not exists.\n\n");
+                    break;
+                }
+                MakeFriend(userIdx, friendIdx);
+                printf("Successfully friend added.\n\n");
                 break;
             default :
                 printf("Please check your number.\n\n");
