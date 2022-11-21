@@ -237,7 +237,10 @@ int main(void) {
                     }
                     --num;
                     int planIdx = *(idxArr + num);
-                    char * arr = (char*)malloc(sizeof(char) * 7);
+                    char ** arr = (char**)malloc(sizeof(char*) * 7);
+                    for(int i = 0; i < 7; ++i) {
+                        *(arr + i) = (char*)malloc(sizeof(char) * 1024);
+                    }
                     GetPlan(arr, planIdx);
                     // 여기에 수정하는 코드를 넣어야 함
                     char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
@@ -481,7 +484,7 @@ int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr) {
     return 1;
 }
 
-int GetPlan(char * arr, int planIdx) {
+int GetPlan(char ** arr, int planIdx) {
     sprintf(query, "SELECT * FROM Plan WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
