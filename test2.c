@@ -136,9 +136,9 @@ int main(void) {
     char ** explainArr;
 
     while(isRoof) {
-        printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
+        printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 0 : End |\nNumber to execute : ");
         scanf("%d", &function);
-        if (function == 8) {
+        if (function == 0) {
             printf("Bye.");
             break;
         }
@@ -376,6 +376,14 @@ int main(void) {
                 MakeFriend(userIdx, friendIdx);
                 printf("Successfully friend added.\n\n");
                 break;
+            case 8 : 
+                break;
+
+            case 9 :
+                break;
+
+            case 10 :
+                break;
             default :
                 printf("Please check your number.\n\n");
                 continue;
@@ -416,8 +424,8 @@ int getStartDay(int year, int month) {
 void printCalendar(int year, int month) {
     int day = getDay(year, month);
     int start_day = getStartDay(year, month);
-    printf("           [ %d년 %d월 ]            \n\n", year, month);
-    printf("   일   월   화   수   목   금   토\n\n");
+    printf("           [ %d - %d ]            \n\n", year, month);
+    printf("   S   M   T   W   T   F   S\n\n");
     for(int i = 0; i < start_day; ++i) printf("     ");
     int count = start_day; // 7일이 찰때마다 주를 바꿔줘야 하기 때문에 count를 사용
     for (int j = 1; j <= day; ++j) {
@@ -829,57 +837,88 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
 }
 
 
-// //detailreviewIdx, detailIdx, userIdx, content, score, createdAt
-// int MakeDetailReview(int detailIdx, int userIdx, char content[], int score) {
-//     sprintf(query, "INSERT INTO Plandetailreview (detailIdx, userIdx, content, score) VALUES (%d, %d, '%s', %d)", detailIdx, userIdx, content, score);
-//     query_stat = mysql_query(connection, query);
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return 0;
-//     }
-//     return 1;
-// }
+int MakeChallenge(int money, char endAt[]) {
+    sprintf(query, "INSERT INTO Deposit (money, endAt) VALUES (%d, '%s')", money, endAt);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return 1;
+}
 
-// int GetDetailReview(int detailreviewIdx) {
-//     sprintf(query, "SELECT * FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
-//     query_stat = mysql_query(connection, query); 
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return 0;
-//     }
+int MakeChallengeUser(int depositIdx, int userIdx) {
+    sprintf(query, "INSERT INTO Deposituser (depositIdx, userIDx) VALUES (%d, %d)", depositIdx, userIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    return 1;
+}
+
+int GetChallengeLen(int userIdx) {
+    sprintf(query, "SELECT COUNT(depositIdx) FROM Deposit WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
     
-//     sql_result = mysql_store_result(connection);
-//     printf("\n--------------------------------------\n");
-//     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-//         printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
-//     }
-//     printf("--------------------------------------\n\n");
-//     return 1;
-// }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
+}
 
-// void DeleteDetailReview(int detailreviewIdx) {
-//     sprintf(query, "DELETE FROM Plandetailreview WHERE detailreviewIdx = %d", detailreviewIdx);
-//     query_stat = mysql_query(connection, query);
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return;
-//     }
-//     sql_result = mysql_store_result(connection);
-//     printf("successfully deleted.");
-// }
+int GetChallengeUserLen(int depositIdx) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Deposit WHERE depositIdx = %d", depositIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
+}
 
-// void ModifyDetailReview(int detailreviewIdx, char content[], int score) {
-//     sprintf(query, "UPDATE Plandetailreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, detailreviewIdx);
-//     query_stat = mysql_query(connection, query);
-//     if (query_stat != 0)
-//     {
-//         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-//         return;
-//     }
-//     sql_result = mysql_store_result(connection);
-//     printf("successfully modified.");
-// }
+int GetChallengeIdx(int *idxArr, int userIdx) {
+    sprintf(query, "SELECT depositIdx FROM Deposit WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    int len = GetChallengeLen(userIdx);
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        for (int i = 0; i < len; ++i) {
+            idxArr[i] = atoi(sql_row[0]);
+        }
+    }
+    return 1;
+}
 
+int GetChallenge(int challengeIdx) {
+    sprintf(query, "SELECT depositName, money, createdAt, endAt FROM Planreview WHERE challengeIdx = %d", challengeIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        printf("%s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3])
+    }
+    return 1;
+}

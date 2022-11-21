@@ -41,11 +41,15 @@ typedef struct Planreview {
 
 typedef struct Deposit {
     int depositIdx;
-    int planIdx;
-    int userIdx;
+    char depositName[20];
     int money;
     char createdAt[20];
     char endAt[20];
 } deposit;
+
+typedef struct Deposituser {
+    int depositIdx;
+    int userIdx;
+}
 
 #endif
