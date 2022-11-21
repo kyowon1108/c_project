@@ -341,7 +341,7 @@ int main(void) {
                 break;
             case 7 :
                 printf("Selected Add Friend.\n\n");
-                int frinedIdx;
+                int friendIdx;
                 printf("Enter friend's userIdx : ");
                 scanf("%d", friendIdx);
                 int check = CheckUser(friendIdx);
