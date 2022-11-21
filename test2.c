@@ -38,7 +38,8 @@ int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
-void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
+int GetDayPlanLen(char date[]);
+int GetDayPlan(int userIdx, char date[], int * idxArr, char * nameArr, char * explainArr); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 int DeletePlan(int userIdx, int planIdx); // 계획 삭제
 int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // 계획 수정
 
@@ -132,6 +133,7 @@ int main(void) {
     int * idxArr;
     char ** nameArr;
     char ** endArr;
+    char ** explainArr;
 
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
@@ -285,8 +287,6 @@ int main(void) {
                             printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
                             scanf("%s", planName);
                             break;
-                        case 4 :
-                            break;
                         default :
                             printf("Please check your number.\n");       
                     }
@@ -306,10 +306,20 @@ int main(void) {
                 char date[20];
                 printf("Please select the date of the plan to check (format : yyyy-mm--dd) : ");
                 scanf("%s", date);
-                planLen = GetPlanLen(userIdx);
-                int * arr = (int*)malloc(sizeof(int) * planLen);
-                GetDayPlan(arr, userIdx, date);
-                // 입력받고나서 플랜 보여주는 코드 작성
+                planLen = GetDatePlanLen(date);
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                explainArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(explainArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
+                for (int i = 0; i < planLen; ++i) {
+                    printf("No.%d : | %s | %s | %s |\n", *(idxArr + i), *(nameArr + i), *(explainArr + i));
+                }
                 break;
             case 5 :
                 printf("Seleted Check Review.\n\n");
@@ -565,23 +575,35 @@ int GetFriendPlan(int userIdx, int friendIdx) {
     return 1;
 }
 
-void GetDayPlan(int * arr, int userIdx, char date[]) {
-    sprintf(query, "SELECT planIdx, planName, createdAt, endAt FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
+int GetDayPlanLen(char date[]) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE endAt = %s", date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
+        return 0;
     }
     sql_result = mysql_store_result(connection);
-    printf("--------------------------------------\n");
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
+}
+
+int GetDayPlan(int userIdx, char date[], int * idxArr, char * nameArr, char * explainArr) {
+    sprintf(query, "SELECT planIdx, planName, explain FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("No.%d - | %s | %s | %s | %s |\n", i+1, sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
-        *(arr + i) = atoi(sql_row[0]); // int* 배열에 result에 관한 planIdx를 담음 > 해당 planIdx를 선택한 후 다른 기능에 사용하기 위함
+        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1], *(explainArr+i) = sql_row[2];
         ++i;
     }
-    printf("--------------------------------------\n\n");
+    return 1;
 }
 
 int DeletePlan(int userIdx, int planIdx) {
