@@ -58,6 +58,15 @@ int GetPlanReview(int planIdx);
 void DeletePlanReview(int planreviewIdx);
 void ModifyPlanReview(int planreviewIdx, char content[], int score);
 
+int MakeChallenge(char depositName[], int money, char endAt[]);
+int MakeChallengeUser(int depositIdx, int userIdx);
+int CheckLastDepositIdx();
+int GetChallengeLen(int userIdx);
+int GetChallengeUserLen(int depositIdx);
+int GetChallengeIdx(int *idxArr, int userIdx);
+int GetChallenge(int depositIdx);
+
+
 int userIdx;
 
 int main(void) {
@@ -122,6 +131,7 @@ int main(void) {
     printf("\n\n");
     int isRoof = 1;
     int function;
+
     int planLen;
     int * idxArr;
     char ** nameArr;
@@ -129,7 +139,9 @@ int main(void) {
     char ** explainArr;
 
     while(isRoof) {
-        printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 0 : End |\nNumber to execute : ");
+        printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n");
+        printf("| 5 : Check review | 6 : Check friend review | 7 : Add friend \n");
+        printf("| 8 : Add Challenge | 9 : Join Challenge | 10 : Check Challenge | 0 : End |\nNumber to execute : ");
         scanf("%d", &function);
         if (function == 0) {
             printf("Bye.");
@@ -180,6 +192,7 @@ int main(void) {
                 }
                 printf("%s has been added to %s.\n\n", planName, endAt);
                 break;
+
             case 2 :
                 printf("Selected Delete plan.\n\n");
                 planLen = GetPlanLen(userIdx);
@@ -289,6 +302,7 @@ int main(void) {
                     break;
                 }
                 break;
+
             case 4 :
                 printf("Selected Check Plan.\n\n");
                 planLen = GetPlanLen(userIdx);
@@ -324,6 +338,7 @@ int main(void) {
                     printf("--------------------------------------\n");
                 }
                 break;
+
             case 5 :
                 printf("Seleted Check Review.\n\n");
                 planLen = GetPlanLen(userIdx);
@@ -356,6 +371,7 @@ int main(void) {
                 printf("Seleted Check FriendReview.\n\n");
                 
                 break;
+
             case 7 :
                 printf("Selected Add Friend.\n\n");
                 int friendIdx;
@@ -369,13 +385,31 @@ int main(void) {
                 MakeFriend(userIdx, friendIdx);
                 printf("Successfully friend added.\n\n");
                 break;
-            case 8 : 
+
+            case 8 :
+                printf("Selected Add Challenge.\n\n");
+
+                char depositName[20], endAt[20];
+                int money;
+                printf("Please enter a challenge name(20 char maximum) : ");
+                scanf("%s", depositName);
+                printf("Please enter money to deposit : ");
+                scanf("%d", &money);
+                printf("Please enter a challenge deadline (format: yyyy-mm-dd) : ");
+                scanf("%s", endAt);
+                MakeChallenge(depositName, money, endAt[]);
+                int depositIdx = CheckLastDepositIdx();
+                MakeChallengeUser(depositIdx, userIdx);
+
+                printf("Successfully challenge added.\nif you want to join another people, take this idx : %d\n\n", depositIdx);
                 break;
 
             case 9 :
+
                 break;
 
             case 10 :
+
                 break;
             default :
                 printf("Please check your number.\n\n");
@@ -830,8 +864,8 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
 }
 
 
-int MakeChallenge(int money, char endAt[]) {
-    sprintf(query, "INSERT INTO Deposit (money, endAt) VALUES (%d, '%s')", money, endAt);
+int MakeChallenge(char depositName[], int money, char endAt[]) {
+    sprintf(query, "INSERT INTO Deposit (depositName, money, endAt) VALUES ('%s', %d, '%s')", depositName, money, endAt);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -842,7 +876,7 @@ int MakeChallenge(int money, char endAt[]) {
 }
 
 int MakeChallengeUser(int depositIdx, int userIdx) {
-    sprintf(query, "INSERT INTO Deposituser (depositIdx, userIDx) VALUES (%d, %d)", depositIdx, userIdx);
+    sprintf(query, "INSERT INTO Deposituser (depositIdx, userIdx) VALUES (%d, %d)", depositIdx, userIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -850,6 +884,35 @@ int MakeChallengeUser(int depositIdx, int userIdx) {
         return 0;
     }
     return 1;
+}
+
+int CheckLastDepositIdx() {
+    sprintf(query, "SELECT MAX(depositIdx) FROM Deposit");
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
+}
+
+int IsChallengeUser(int challengeIdx, int userIdx) {
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+        return atoi(sql_row[0]);
+    }
 }
 
 int GetChallengeLen(int userIdx) {
@@ -900,18 +963,23 @@ int GetChallengeIdx(int *idxArr, int userIdx) {
     return 1;
 }
 
-int GetChallenge(int challengeIdx) {
-    sprintf(query, "SELECT depositName, money, createdAt, endAt FROM Planreview WHERE challengeIdx = %d", challengeIdx);
+int GetChallenge(int depositIdx) {
+    sprintf(query, "SELECT depositName, money, endAt FROM Planreview WHERE depositIdx = %d", depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3]);
+        int userLen = GetChallengeUserLen(depositIdx);
+        printf("Challenge Name : %s (%d people joined)\nChallenge Money : %s\nDead Line : %s\n", sql_row[0], userLen, sql_row[1], sql_row[2]);
     }
     return 1;
 }
+
+/*
+1. 초기 화면에서 달력 밑에 첼린지 리스트가 뜨도록 해야함. (이름과 날짜 정도)
+2. 참여 인원을 넣어야 함 - 해결완료
+*/
