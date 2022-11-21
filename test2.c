@@ -35,7 +35,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
-int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
+int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
@@ -131,6 +131,7 @@ int main(void) {
     int planLen;
     int * idxArr;
     char ** nameArr;
+    char ** endArr;
 
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
@@ -196,10 +197,14 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
+                endArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
-                    printf("No.%d : %s\n", i + 1, *(nameArr+i));
+                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
                 }
                 printf("\n--------------------------------------\n");
                 while (1) {
@@ -230,10 +235,14 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetPlanIdx(userIdx, idxArr, nameArr);
-                printf("Please select the number of the plan to modify.\n--------------------------------------\n");
+                endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    printf("No.%d : %s\n", i + 1, *(nameArr+i));
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                GetPlanIdx(userIdx, idxArr, nameArr); 
+                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
+                for(int i = 0; i < planLen; ++i) {
+                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
                 }
                 printf("\n--------------------------------------\n");
                 while (1) {
@@ -252,7 +261,7 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     char planName[20], explain[1024], endAt[20];
                     strcpy(planName, *(arr + 2)), strcpy(explain, *(arr + 3)), strcpy(endAt, *(arr + 6));
-                    printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan | : ", num);
+                    printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | : ", num);
                     int modifyFunc;
                     scanf("%d", &modifyFunc);
                     switch (modifyFunc) {
@@ -281,6 +290,26 @@ int main(void) {
                 break;
             case 4 :
                 printf("Selected Check Plan.\n\n");
+                planLen = GetPlanLen(userIdx);
+                if (!planLen) {
+                    printf("Plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                endArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                GetPlanIdx(userIdx, idxArr, nameArr); 
+                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
+                for(int i = 0; i < planLen; ++i) {
+                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
+                }
+                printf("\n--------------------------------------\n");
 
             case 5 :
                 printf("Seleted Check Review.\n\n");
@@ -475,7 +504,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr) {
+int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr) {
     sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
