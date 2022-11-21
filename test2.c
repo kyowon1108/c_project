@@ -128,6 +128,9 @@ int main(void) {
     printf("\n\n");
     int isRoof = 1;
     int function;
+    int * idxArr;
+    char ** nameArr;
+
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
         scanf("%d", &function);
@@ -187,8 +190,8 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int * idxArr = (int*)malloc(sizeof(int) * planLen);
-                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
@@ -217,8 +220,8 @@ int main(void) {
             case 3 :
                 printf("Selected Modify Plan.\n\n");
                 
-                int * idxArr = (int*)malloc(sizeof(int) * planLen);
-                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                idxArr = (int*)malloc(sizeof(int) * planLen);
+                nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
