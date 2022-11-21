@@ -58,13 +58,6 @@ int GetPlanReview(int planIdx);
 void DeletePlanReview(int planreviewIdx);
 void ModifyPlanReview(int planreviewIdx, char content[], int score);
 
-// // [ 技何 拌裙 府轰 包访 窃荐]
-// int MakeDetailReview(int detailIdx, int userIdx, char content[], int score);
-// int GetDetailReview(int detailreviewIdx);
-// void DeleteDetailReview(int detailreviewIdx);
-// void ModifyDetailReview(int detailreviewIdx, char content[], int score);
-
-
 int userIdx;
 
 int main(void) {
