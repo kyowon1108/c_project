@@ -341,7 +341,6 @@ int main(void) {
                 printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
                 char date1[20];
                 scanf("%s", date1);
-                printf("%s", date1);
                 planLen = GetDayPlanLen(date1);
                 printf("qwer");
                 if (!planLen) {
