@@ -338,7 +338,7 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
+                printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
                 char date1[20];
                 scanf("%s", date1);
                 printf("%s", date1);
