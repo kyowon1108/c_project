@@ -211,7 +211,7 @@ int main(void) {
                     int num;
                     scanf("%d", &num);
                     if (num == 0) {
-                        printf("delete canceled.");
+                        printf("delete canceled.\n\n");
                         break;
                     }
                     if (num < 0 || num > planLen) {
@@ -253,7 +253,7 @@ int main(void) {
                     int num;
                     scanf("%d", &num);
                     if (num == 0) {
-                        printf("delete canceled.");
+                        printf("modify canceled.\n\n");
                         break;
                     }
                     if (num < 0 || num > planLen) {
