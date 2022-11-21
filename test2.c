@@ -944,7 +944,7 @@ int GetChallengeLen(int userIdx) {
 }
 
 int GetChallengeUserLen(int depositIdx) {
-    sprintf(query, "SELECT COUNT(userIdx) FROM Deposit WHERE depositIdx = %d", depositIdx);
+    sprintf(query, "SELECT COUNT(userIdx) FROM Deposituser WHERE depositIdx = %d", depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
