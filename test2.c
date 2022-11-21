@@ -304,7 +304,7 @@ int main(void) {
                     break;
                 }
                 char date[20];
-                printf("Please select the date of the plan to check (format : yyyy-mm--dd) : ");
+                printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 scanf("%s", date);
                 planLen = GetDayPlanLen(date);
                 idxArr = (int*)malloc(sizeof(int) * planLen);
@@ -317,6 +317,7 @@ int main(void) {
                     *(explainArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
+                printf("test\n");
                 for (int i = 0; i < planLen; ++i) {
                     printf("No.%d : | %d | %s | %s |\n", i + 1, *(idxArr + i), *(nameArr + i), *(explainArr + i));
                 }
