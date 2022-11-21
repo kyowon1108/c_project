@@ -7,7 +7,7 @@
 
 #define HOST "localhost"
 #define USER "kapr"
-#define PASSWORD "kyowon1108"
+#define PASSWORD "kyowon1108"d
 #define DB "PFP"
 #define CHOP(x) x[strlen(x) - 1] = ' '
 
@@ -36,11 +36,11 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
-int GetPlan(int userIdx); // 유저가 생성한 계획 리스트 출력
+int GetPlan(char * arr, int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
 void GetDayPlan(int * arr, int userIdx, char date[]); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 int DeletePlan(int userIdx, int planIdx); // 계획 삭제
-void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx); // 계획 수정
+int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // 계획 수정
 
 // [ 세부 계획 관련 함수 ]
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 생성
@@ -84,7 +84,7 @@ int main(void) {
         scanf("%d", &func);
         switch (func) {
             case 1 :
-                printf("로그인 할 userIdx : ");
+                printf("userIdx to signin : ");
                 scanf("%d", &a);
                 if (CheckUser(a)) {
                     userIdx = a;
@@ -103,7 +103,7 @@ int main(void) {
                 int sign = SignUp(name);
                 if (sign) {
                     int idx = CheckLastUserIdx();
-                    printf(" successfully registered.\nuserIdx : %d (SignIn to userIdx)\n", idx);
+                    printf("successfully registered.\nuserIdx : %d (SignIn to userIdx)\n", idx);
                     continue;
                 } else {
                     printf("error");
@@ -178,7 +178,7 @@ int main(void) {
                     printf("successfully added a detail plan.\n\n");
                     continue;
                 }
-                printf("%s has been added to %s.", planName, endAt);
+                printf("%s has been added to %s.\n\n", planName, endAt);
                 break;
             case 2 :
                 printf("Selected Delete plan.\n\n");
@@ -190,12 +190,12 @@ int main(void) {
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
                 char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 1024);
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetPlanIdx(userIdx, idxArr, nameArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 for(int i = 0; i < planLen; ++i) {
-                    printf("%d번 : %s\n", i + 1, *(nameArr+i));
+                    printf("No.%d : %s\n", i + 1, *(nameArr+i));
                 }
                 printf("\n--------------------------------------\n");
                 while (1) {
@@ -206,30 +206,82 @@ int main(void) {
                         continue;
                     }
                     --num;
-                    DeletAllePlandetail(*(idxArr + num));
-                    DeletePlan(userIdx, *(idxArr + num));
+                    int planIdx = *(idxArr + num);
+                    DeletAllePlandetail(planIdx);
+                    DeletePlan(userIdx, planIdx);
                     printf("Plan has been deleted.\n\n");
                     break;
                 }
                 break;
 
             case 3 :
-                printf("계획 수정을 선택했습니다.\n\n");
-
+                printf("Selected Modify Plan.\n\n");
+                
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                GetPlanIdx(userIdx, idxArr, nameArr);
+                printf("Please select the number of the plan to modify.\n--------------------------------------\n");
+                for(int i = 0; i < planLen; ++i) {
+                    printf("No.%d : %s\n", i + 1, *(nameArr+i));
+                }
+                printf("\n--------------------------------------\n");
+                while (1) {
+                    int num;
+                    scanf("%d", &num);
+                    if (num < 0 || num > planLen) {
+                        printf("Please enter a valid number.\nNumber of plan to modify : ");
+                        continue;
+                    }
+                    --num;
+                    int planIdx = *(idxArr + num);
+                    char * arr = (char*)malloc(sizeof(char) * 7);
+                    GetPlan(arr, planIdx);
+                    // 여기에 수정하는 코드를 넣어야 함
+                    char planName[20] = *(arr + 2), explain[1024] = *(arr + 3), endAt[20] = *(arr + 6);
+                    printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | 4 : detail plan |", num);
+                    int modifyFunc;
+                    scanf("%d", &modifyFunc);
+                    switch (modifyFunc) {
+                        case 1 :
+                            printf("Please enter a plan name(20 char maximum) : ");
+                            scanf("%s", planName);
+                            break;
+                        case 2 :
+                            printf("Please enter a description of the plan (1024 char maximum) : ");
+                            scanf("%s", planName);
+                            break;
+                        case 3 :
+                            printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
+                            scanf("%s", planName);
+                            break;
+                        case 4 :
+                            break;
+                        default :
+                            printf("Please check your number.\n");       
+                    }
+                    
+                    ModifyPlan(planIdx, planName, explain, endAt);
+                    printf("Plan has been modified.\n\n");
+                    break;
+                }
+                break;
             case 4 :
-                printf("계획 확인을 선택했습니다.\n\n");
+                printf("Selected Check Plan.\n\n");
 
             case 5 :
-                printf("평가 확인을 선택했습니다.\n\n");
+                printf("Seleted Check Review.\n\n");
 
             case 6 : 
-                printf("친구 계획 확인을 선택했습니다.\n\n");
+                printf("Seleted Check FriendReview.\n\n");
 
             case 7 :
-                printf("친구 추가를 선택했습니다.\n\n");
+                printf("Selected Add Friend.\n\n");
 
             default :
-                printf("번호를 확인해주세요.");
+                printf("Please check your number.\n\n");
                 continue;
         }
         continue;
@@ -429,22 +481,21 @@ int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr) {
     return 1;
 }
 
-int GetPlan(int userIdx) {
-    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d", userIdx);
+int GetPlan(char * arr, int planIdx) {
+    sprintf(query, "SELECT * FROM Plan WHERE planIdx = %d", planIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    
     sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
+    //printf("\n--------------------------------------\n");
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-
-        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        arr[0] = sql_row[0], arr[1] = sql_row[1], arr[2] = sql_row[2], arr[3] = sql_row[3], arr[4] = sql_row[4], arr[5] = sql_row[5], arr[6] = sql_row[6];
+        //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
-    printf("--------------------------------------\n\n");
+    //printf("--------------------------------------\n\n");
     return 1;
 }
 
@@ -504,16 +555,16 @@ int DeletePlan(int userIdx, int planIdx) {
     return 1;
 }
 
-void ModifyPlan(char planName[], char explain[], char endAt[], int planIdx) {
+int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
     sprintf(query, "UPDATE Plan SET planName = %s, explain = %s, endAt = %s WHERE planIdx = %d", planName, explain, endAt, planIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
+        return 0;
     }
     sql_result = mysql_store_result(connection);
-    printf("successfully modified.");
+    return 1;
 }
 
 
