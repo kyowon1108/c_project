@@ -418,7 +418,7 @@ void printCalendar(int year, int month) {
     int day = getDay(year, month);
     int start_day = getStartDay(year, month);
     printf("           [ %d - %d ]            \n\n", year, month);
-    printf("   S   M   T   W   T   F   S\n\n");
+    printf("   S    M    T    W    T    F    S\n\n");
     for(int i = 0; i < start_day; ++i) printf("     ");
     int count = start_day; // 7일이 찰때마다 주를 바꿔줘야 하기 때문에 count를 사용
     for (int j = 1; j <= day; ++j) {
