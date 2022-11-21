@@ -135,7 +135,7 @@ int main(void) {
     char ** endArr;
     char ** explainArr;
     char date[20];
-    
+
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n| 5 : Check review | 6 : Check friend review | 7 : Add friend | 8 : End |\nNumber to execute : ");
         scanf("%d", &function);
@@ -794,8 +794,8 @@ int GetPlanReview(int planIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
         char * star = (char*)malloc(sizeof(char) * 5);
-        for (int i = 0; i < 5; ++i) *(star + i) = "¡Ú";
-        for (int j = 5 - score; j < 5; ++j) *(star + j) = "¡Ù";
+        for (int i = 0; i < 5; ++i) strcpy(*(star + i), "1");
+        for (int j = 5 - score; j < 5; ++j) strcpy(*(star + j), "0");
         char * ptr = strtok(sql_row[3], " ");
         printf("\nid : %s [ %s ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], star, sql_row[1], ptr);
     }
