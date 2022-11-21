@@ -988,8 +988,8 @@ int GetChallenge(int depositIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         printf("asdf");
-        int userLen = GetChallengeUserLen(depositIdx);
-        printf("Challenge Name : %s (%d people joined)\nChallenge Money : %s\nDead Line : %s\n", sql_row[0], userLen, sql_row[1], sql_row[2]);
+        //int userLen = GetChallengeUserLen(depositIdx);
+        printf("Challenge Name : %s (%d people joined)\nChallenge Money : %s\nDead Line : %s\n", sql_row[0], 2, sql_row[1], sql_row[2]);
     }
     return 1;
 }
