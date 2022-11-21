@@ -505,7 +505,7 @@ int GetPlanLen(int userIdx) {
 }
 
 int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr) {
-    sprintf(query, "SELECT planIdx, planName FROM Plan WHERE userIdx = %d", userIdx);
+    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -515,7 +515,7 @@ int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1], *(endArr+i) = sql_row[6];
+        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1], *(endArr+i) = sql_row[2];
         ++i;
     }
     return 1;
