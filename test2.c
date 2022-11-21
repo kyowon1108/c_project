@@ -411,14 +411,13 @@ int main(void) {
                 int depositIdx;
                 printf("Please enter idx to join : ");
                 scanf("%d", &depositIdx);
-                printf("%d", GetChallengeUserLen(depositIdx));
-                //GetChallenge(depositIdx);
+                GetChallenge(depositIdx);
                 // if (!check) {
                 //     printf("Idx does not exist. Return to the number selection window.");
                 //     break;
                 // }
                 printf("\n--------------------------------------\n");
-                //MakeChallengeUser(depositIdx, userIdx);
+                MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.\n\n");
                 break; }
 
@@ -986,8 +985,8 @@ int GetChallenge(int depositIdx) {
         return 0;
     }
     sql_result = mysql_store_result(connection);
+    int userLen = GetChallengeUserLen(depositIdx);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        int userLen = GetChallengeUserLen(depositIdx);
         printf("Challenge Name : %s (%d people joined)\nChallenge Money : %s\nDead Line : %s\n", sql_row[0], userLen, sql_row[1], sql_row[2]);
     }
     return 1;
