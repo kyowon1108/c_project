@@ -793,11 +793,11 @@ int GetPlanReview(int planIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
-        char *star;
-        for (int i = 0; i < 5; ++i) star[i] = "1";
-        for (int j = 5 - score; j < 5; ++j) star[j] = "0";
+        // char **star = ;
+        // for (int i = 0; i < 5; ++i) star[i] = "1";
+        // for (int j = 5 - score; j < 5; ++j) star[j] = "0";
         char * ptr = strtok(sql_row[3], " ");
-        printf("\nid : %s [ %s ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], star, sql_row[1], ptr);
+        printf("\nid : %s [ %d ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], score, sql_row[1], ptr);
     }
     return 1;
 }
