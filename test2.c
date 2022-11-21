@@ -148,7 +148,7 @@ int main(void) {
             break;
         }
         switch (function) {
-            case 1 :
+            case 1 : {
                 printf("Selected Add Plan.\n\n");
                 char planName[20], explain[1024], endAt[20];
                 int openLevel;
@@ -191,9 +191,9 @@ int main(void) {
                     continue;
                 }
                 printf("%s has been added to %s.\n\n", planName, endAt);
-                break;
+                break; }
 
-            case 2 :
+            case 2 : {
                 printf("Selected Delete plan.\n\n");
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) {
@@ -233,9 +233,9 @@ int main(void) {
                     printf("Plan has been deleted.\n\n");
                     break;
                 }
-                break;
+                break; }
 
-            case 3 :
+            case 3 : {
                 printf("Selected Modify Plan.\n\n");
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) {
@@ -301,9 +301,9 @@ int main(void) {
                     printf("Plan has been modified.\n\n");
                     break;
                 }
-                break;
+                break; }
 
-            case 4 :
+            case 4 : {
                 printf("Selected Check Plan.\n\n");
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) {
@@ -337,9 +337,9 @@ int main(void) {
                     if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
                     printf("--------------------------------------\n");
                 }
-                break;
+                break; }
 
-            case 5 :
+            case 5 : {
                 printf("Seleted Check Review.\n\n");
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) {
@@ -366,13 +366,14 @@ int main(void) {
                     else printf("There is no review in this plan.\n");
                     printf("--------------------------------------\n");
                 }
-                break;
-            case 6 : 
+                break; }
+
+            case 6 : {
                 printf("Seleted Check FriendReview.\n\n");
                 
-                break;
+                break; }
 
-            case 7 :
+            case 7 : {
                 printf("Selected Add Friend.\n\n");
                 int friendIdx;
                 printf("Enter friend's userIdx : ");
@@ -384,9 +385,9 @@ int main(void) {
                 }
                 MakeFriend(userIdx, friendIdx);
                 printf("Successfully friend added.\n\n");
-                break;
+                break; }
 
-            case 8 :
+            case 8 : {
                 printf("Selected Add Challenge.\n\n");
 
                 char depositName[20], endAt[20];
@@ -402,7 +403,7 @@ int main(void) {
                 MakeChallengeUser(depositIdx, userIdx);
 
                 printf("Successfully challenge added.\nif you want to join another people, take this idx : %d\n\n", depositIdx);
-                break;
+                break; }
 
             case 9 :
 
