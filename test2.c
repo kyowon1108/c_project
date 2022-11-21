@@ -7,7 +7,7 @@
 
 #define HOST "localhost"
 #define USER "kapr"
-#define PASSWORD "kyowon1108"d
+#define PASSWORD "kyowon1108"
 #define DB "PFP"
 #define CHOP(x) x[strlen(x) - 1] = ' '
 
