@@ -64,7 +64,7 @@ int CheckLastDepositIdx();
 int IsChallengeUser(int depositIdx, int userIdx);
 int GetChallengeLen(int userIdx);
 int GetChallengeUserLen(int depositIdx);
-int GetChallengeIdx(int *idxArr, int userIdx);
+int GetChallengeIdx(int *idxArr, int len, int userIdx);
 int GetChallenge(int depositIdx);
 
 
@@ -428,15 +428,15 @@ int main(void) {
                 printf("Selected Check Challenge.\n\n");
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
-                GetChallengeIdx(idxArr, userIdx);
-                // for (int i = 0; i < len; ++i) {
-                //     int depositIdx = *(idxArr + i);
-                //     int userLen = GetChallengeUserLen(depositIdx);
-                //     printf("\n--------------------------------------\n");
-                //     printf("[ %d people joined ]\n", userLen);
-                //     GetChallenge(depositIdx);
-                //     printf("--------------------------------------\n");
-                // }
+                GetChallengeIdx(idxArr, len, userIdx);
+                for (int i = 0; i < len; ++i) {
+                    int depositIdx = *(idxArr + i);
+                    int userLen = GetChallengeUserLen(depositIdx);
+                    printf("\n--------------------------------------\n");
+                    printf("[ %d people joined ]\n", userLen);
+                    GetChallenge(depositIdx);
+                    printf("--------------------------------------\n");
+                }
                 break; }
             default :
                 printf("Please check your number.\n\n");
@@ -972,7 +972,7 @@ int GetChallengeUserLen(int depositIdx) {
     return atoi(res);
 }
 
-int GetChallengeIdx(int *idxArr, int userIdx) {
+int GetChallengeIdx(int *idxArr, int len, int userIdx) {
     sprintf(query, "SELECT depositIdx FROM Deposit WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -980,7 +980,6 @@ int GetChallengeIdx(int *idxArr, int userIdx) {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    int len = GetChallengeLen(userIdx);
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         for (int i = 0; i < len; ++i) {
