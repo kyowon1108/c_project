@@ -317,7 +317,7 @@ int main(void) {
                     printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
                     if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
                     printf("--------------------------------------\n");
-                }
+                } 
                 break; }
 
             case 5 : {
