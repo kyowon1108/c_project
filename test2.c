@@ -39,7 +39,7 @@ int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
-int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, char ** endArr); // 친구가 생성한 계획 리스트 출력
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // 친구가 생성한 계획 리스트 출력
 int GetDayPlanLen(char date[]);
 int GetDayPlan(int userIdx, char date[], int * idxArr, char ** nameArr, char ** explainArr); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 int DeletePlan(int userIdx, int planIdx); // 계획 삭제
@@ -396,25 +396,12 @@ int main(void) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                for (int i = 0; i < friendLen; ++i) free(nameArr[i]);
-                free(nameArr), free(idxArr);
+                free(idxArr);
                 int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                char ** nameArr2 = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr2+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                char **endArr2 = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(endArr2+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetFriendPlan(userIdx, friendIdx, idxArr2, nameArr2, endArr2);
                 printf("\n--------------------------------------\n");
-                for (int i = 0; i < planLen; ++i) {
-                    printf("[ %d ] %s (~%s)\n", i+1, *(nameArr2+i), *(endArr2+i));
-                }
+                GetFriendPlan(userIdx, friendIdx, idxArr2);
                 printf("\n--------------------------------------\n");
-                for (int i = 0; i < planLen; ++i) free(nameArr2[i]), free(endArr2[i]);
-                free(endArr2), free(nameArr2), free(idxArr2);
+                free(idxArr2);
                 break;
 
             case 7 : {
@@ -735,7 +722,7 @@ int GetPlan(char ** arr, int planIdx) {
     return 1;
 }
 
-int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, char ** endArr) {
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     int access = IsFriend(userIdx, friendIdx);
     if (!access) return 0;
     /*
@@ -754,7 +741,7 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, cha
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char *ptr = strtok(sql_row[2], " ");
         idxArr[i] = atoi(sql_row[0]);
-        strcpy(*(nameArr + i), sql_row[1]), strcpy(*(endArr + i), ptr);
+        printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]);
         //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
     return 1;
