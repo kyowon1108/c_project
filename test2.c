@@ -387,7 +387,7 @@ int main(void) {
                 GetFriend(idxArr, nameArr, userIdx);
                 printf("--------------------------------------\n");
                 for (int i = 0; i < friendLen; ++i) {
-                    printf("[ %d ] %s ( Idx : %d )", i+1, *(nameArr+i), *(idxArr+i));
+                    printf("%d. %s (%d)", i+1, *(nameArr+i), *(idxArr+i));
                 }
                 printf("\n--------------------------------------\n");
 
@@ -452,10 +452,6 @@ int main(void) {
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
                 GetChallengeIdx(idxArr, len, userIdx);
-                printf("%d", len);
-                for (int i = 0; i < len; ++i) {
-                    printf("%d\n", *(idxArr + i));
-                }
                 for (int i = 0; i < len; ++i) {
                     int depositIdx = *(idxArr + i);
                     int userLen = GetChallengeUserLen(depositIdx);
