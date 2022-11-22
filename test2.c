@@ -315,7 +315,9 @@ int main(void) {
                     strcpy(planName, *(nameArr + i)), strcpy(explain, *(explainArr + i));
                     printf("\n--------------------------------------\n");
                     printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
-                    if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
+                    if (GetPlanDetailLen(planIdx)) {
+                        GetPlanDetail(planIdx);
+                    }
                     printf("--------------------------------------\n");
                 } 
                 break; }
@@ -328,21 +330,24 @@ int main(void) {
                     break;
                 }
                 printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
-                char date1[20];
-                scanf("%s", date1);
-                planLen = GetDayPlanLen(date1);
-                printf("qwer");
+                char date[20];
+                scanf("%s", date);
+                int planLen = GetDayPlanLen(date);
                 if (!planLen) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                GetDayPlan(userIdx, date1, idxArr, nameArr, explainArr);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                GetDayPlan(userIdx, date, idxArr);
                 for (int i = 0; i < planLen; ++i) {
                     int planIdx = *(idxArr + i);
-                    char planName[20], explain[1024];
-                    strcpy(planName, *(nameArr + i)), strcpy(explain, *(explainArr + i));
+                    char ** arr = (char**)malloc(sizeof(char*) * 7);
+                    for(int i = 0; i < 7; ++i) {
+                        *(arr + i) = (char*)malloc(sizeof(char) * 1024);
+                    }
+                    GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
+                    printf("[ %d ] : %s\n%s\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanReview(planIdx)) GetPlanReview(planIdx);
                     else printf("There is no review in this plan.\n");
                     printf("--------------------------------------\n");
@@ -788,7 +793,7 @@ int GetDayPlanLen(char date[]) {
     return atoi(res);
 }
 
-int GetDayPlan(int userIdx, char date[], int * idxArr, char ** nameArr, char ** explainArr) {
+int GetDayPlan(int userIdx, char date[], int * idxArr) {
     sprintf(query, "SELECT planIdx, planName, `explain` FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
@@ -799,8 +804,7 @@ int GetDayPlan(int userIdx, char date[], int * idxArr, char ** nameArr, char ** 
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        char *ptr = strtok(sql_row[2], " ");
-        idxArr[i] = atoi(sql_row[0]), strcpy(*(nameArr+i),sql_row[1]), strcpy(*(explainArr+i), ptr);
+        idxArr[i] = atoi(sql_row[0]);
         ++i;
     }
     return 1;
