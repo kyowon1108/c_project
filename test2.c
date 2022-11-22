@@ -312,7 +312,7 @@ int main(void) {
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
-                    else printf("There is no plan detail in this plan.\n");
+                    else printf("\n(There is no plan detail in this plan.)\n");
                     printf("--------------------------------------\n");
                 } 
                 break; }
@@ -345,7 +345,7 @@ int main(void) {
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanReviewLen(planIdx)) GetPlanReview(planIdx);
-                    else printf("There is no review in this plan.\n");
+                    else printf("\n(There is no review in this plan.)\n");
                     printf("--------------------------------------\n");
                 }
                 break; }
