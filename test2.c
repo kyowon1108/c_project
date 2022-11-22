@@ -404,8 +404,8 @@ int main(void) {
                 if (!planLen) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
-                } }
-                idxArr = (int*)malloc(sizeof(int) * friendLen);
+                }
+                idxArr = (int*)malloc(sizeof(int) * planLen);
                 nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
