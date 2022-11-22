@@ -143,7 +143,7 @@ int main(void) {
 
     while(isRoof) {
         printf("| 1 : Add plan | 2 : Delete plan | 3 : Modify plan | 4 : Check plan |\n");
-        printf("| 5 : Check review | 6 : Check friend review | 7 : Add friend \n");
+        printf("| 5 : Check review | 6 : Check friend review | 7 : Add friend |\n");
         printf("| 8 : Add Challenge | 9 : Join Challenge | 10 : Check Challenge | 0 : End |\nNumber to execute : ");
         scanf("%d", &function);
         if (function == 0) {
@@ -390,7 +390,10 @@ int main(void) {
                     printf("[ %d ] %s (idx : %d)", i+1, *(nameArr+i), *(idxArr+i));
                 }
                 printf("\n--------------------------------------\n");
-
+                printf("Select the number : ");
+                int number;
+                scanf("%d", &number);
+                printf("selected %s, %d", *(nameArr+number), *(idxArr+number));
                 break; }
 
             case 7 : {
