@@ -402,11 +402,10 @@ int main(void) {
                 printf("\n-------------------------------------\n");
                 printf("[ Plan ]\n");
                 printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3));
-                printf("--------------------------------------\n");
                 if (GetPlanDetailLen(planIdx)) {
                     printf("[ Plan Detail ]\n");
                     GetPlanDetail(planIdx);
-                }
+                } else printf("(There is no review in this plan.)\n");
                 printf("--------------------------------------\n\n");
                 printf("Make review for this plan (max 100 char, exit : 'end') : ");
                 char input[100];
