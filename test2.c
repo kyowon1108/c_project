@@ -426,7 +426,7 @@ int main(void) {
 
             case 10 : {
                 printf("Selected Check Challenge.\n\n");
-                // int len = GetChallengeLen(userIdx);
+                int len = GetChallengeLen(userIdx);
                 // int * idxArr = (int*)malloc(sizeof(int) * len);
                 // GetChallengeIdx(idxArr, userIdx);
                 // for (int i = 0; i < len; ++i) {
