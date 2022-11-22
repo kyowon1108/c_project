@@ -419,6 +419,7 @@ int main(void) {
                 int check = IsChallengeUser(depositIdx, userIdx);
                 if (check) {
                     printf("You already joined this challenge. Return to the number selection window.\n\n");
+                    break;
                 }
                 printf("--------------------------------------\n");
                 printf("[ %d people joined ]\n", userLen);
