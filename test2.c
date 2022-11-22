@@ -776,7 +776,7 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
         char *ptr = strtok(sql_row[2], " ");
         idxArr[i] = atoi(sql_row[0]);
         printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]);
-        //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        ++i;
     }
     return 1;
 }
@@ -973,6 +973,7 @@ int GetPlanReview(int planIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
         printf("%d. user : %s [ %d / 5 ] (%s)\ncontent : %s\n", i + 1, sql_row[0], score, sql_row[3], sql_row[1]);
+        ++i;
     }
     return 1;
 }
