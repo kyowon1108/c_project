@@ -429,10 +429,8 @@ int main(void) {
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
                 GetChallengeIdx(idxArr, len, userIdx);
-                printf("asdf");
                 for (int i = 0; i < len; ++i) {
                     int depositIdx = *(idxArr + i);
-                    printf("asdf");
                     int userLen = GetChallengeUserLen(depositIdx);
                     printf("\n--------------------------------------\n");
                     printf("[ %d people joined ]\n", userLen);
