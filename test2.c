@@ -412,11 +412,11 @@ int main(void) {
                 printf("Please enter idx to join : ");
                 scanf("%d", &depositIdx);
                 printf("--------------------------------------\n");
-                int check = GetChallenge(depositIdx);
-                if (check == 0) {
-                    printf("Idx does not exist. Return to the number selection window.");
-                    break;
-                }
+                char * name = (char*)malloc(sizeof(char) * 20);
+                int * money = (int*)malloc(sizeof(int));
+                char * endAt = (char*)malloc(sizeof(char) * 20);
+                GetChallenge(name, money, endAt, depositIdx);
+                printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", name, *money, endAt);
                 printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.\n\n");
@@ -977,17 +977,19 @@ int GetChallengeIdx(int *idxArr, int userIdx) {
     return 1;
 }
 
-int GetChallenge(int depositIdx) {
+int GetChallenge(char * name, int * money, char * endAt, int depositIdx) {
     sprintf(query, "SELECT depositName, money, endAt FROM Deposit WHERE depositIdx = %d", depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
-        //fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
+        strcpy(*name, sql_row[0]), strcpy(*endAt, sql_row[2]);
+        *money = atoi(sql_row[1]);
+        //printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
     }
     return 1;
 }
