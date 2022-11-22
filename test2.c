@@ -387,7 +387,7 @@ int main(void) {
                 GetFriend(idxArr, nameArr, userIdx);
                 printf("--------------------------------------\n");
                 for (int i = 0; i < friendLen; ++i) {
-                    printf("%d. %s (%d)", i+1, *(nameArr+i), *(idxArr+i));
+                    printf("[ %d ] %s (%d)", i+1, *(nameArr+i), *(idxArr+i));
                 }
                 printf("\n--------------------------------------\n");
 
