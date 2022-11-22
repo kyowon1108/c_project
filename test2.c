@@ -936,7 +936,7 @@ int CheckLastDepositIdx() {
 }
 
 int IsChallengeUser(int depositIdx, int userIdx) {
-    sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND depositIdx = %d)", userIdx, depositIdx);
+    sprintf(query, "SELECT EXISTS (SELECT * FROM Deposituser WHERE userIdx = %d AND depositIdx = %d)", userIdx, depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
