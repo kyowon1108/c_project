@@ -402,8 +402,8 @@ int main(void) {
                 }
                 printf("--------------------------------------\n\n");
                 printf("Make review for this plan (max 100 char, exit : 'end') : ");
-                char txt[100];
-                scanf("%s", txt);
+                char input[100];
+                scanf("%s", input);
                 if (!strcmp(input, "end")) {
                     printf("Ends review about friend's plan.\n");
                     break;
