@@ -405,12 +405,12 @@ int main(void) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                nameArr2 = (char**)malloc(sizeof(char*) * planLen);
+                int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
+                char ** nameArr2 = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr2+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                endArr2 = (char**)malloc(sizeof(char*) * planLen);
+                char **endArr2 = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(endArr2+i) = (char*)malloc(sizeof(char) * 20);
                 }
