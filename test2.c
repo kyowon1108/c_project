@@ -376,7 +376,7 @@ int main(void) {
                 }
                 free(idxArr);
                 int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                printf("\n--------------------------------------\n");
+                printf("--------------------------------------\n");
                 GetFriendPlan(userIdx, friendIdx, idxArr2);
                 printf("--------------------------------------\n");
                 printf("Select the number : ");
@@ -392,7 +392,7 @@ int main(void) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
                 GetPlan(arr, planIdx);
-                printf("--------------------------------------\n");
+                printf("\n-------------------------------------\n");
                 printf("[ Plan ]\n");
                 printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3));
                 printf("--------------------------------------\n");
