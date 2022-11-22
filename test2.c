@@ -385,9 +385,15 @@ int main(void) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
                 GetFriend(idxArr, nameArr, userIdx);
+                printf("--------------------------------------\n");
                 for (int i = 0; i < friendLen; ++i) {
-                    printf("%d. %s (%d)", i+1, *(nameArr+i), *(idxArr+i));
+                    printf("[ %d ] %s ( Idx : %d )", i+1, *(nameArr+i), *(idxArr+i));
                 }
+                printf("--------------------------------------\n");
+                printf("Please select idx to check : ");
+                int friendIdx;
+                scanf("%d", &friendIdx);
+                printf("asdfasdf %d", friendIdx);
                 break; }
 
             case 7 : {
