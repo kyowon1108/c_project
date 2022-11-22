@@ -56,6 +56,7 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
 
 // [ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö ]
 int MakePlanReview(int planIdx, int userIdx, char content[], int score);
+int GetPlanReviewLen(int planIdx);
 int GetPlanReview(int planIdx);
 void DeletePlanReview(int planreviewIdx);
 void ModifyPlanReview(int planreviewIdx, char content[], int score);
@@ -310,9 +311,8 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
-                    if (GetPlanDetailLen(planIdx)) {
-                        GetPlanDetail(planIdx);
-                    }
+                    if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
+                    else printf("There is no plan detail in this plan.\n");
                     printf("--------------------------------------\n");
                 } 
                 break; }
@@ -344,8 +344,8 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
-                    if (!GetPlanReview(planIdx))
-                        printf("There is no review in this plan.\n");
+                    if (GetPlanReviewLen(planIdx)) GetPlanReview(planIdx);
+                    else printf("There is no review in this plan.\n");
                     printf("--------------------------------------\n");
                 }
                 break; }
@@ -936,6 +936,21 @@ int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
         return 0;
     }
     return 1;
+}
+
+int GetPlanReviewLen(int planIdx) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Planreview WHERE planIdx = %d", planIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
 }
 
 int GetPlanReview(int planIdx) {
