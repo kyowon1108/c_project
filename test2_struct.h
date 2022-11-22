@@ -3,7 +3,7 @@
 
 typedef struct User {
     int userIdx;
-    int name;
+    int userName;
 } user;
 
 typedef struct Friend {
