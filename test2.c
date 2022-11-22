@@ -392,7 +392,10 @@ int main(void) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
                 GetPlan(arr, planIdx);
-                printf("planName : %s\nexplain : %s\nendAt : %s\n", *(arr+2), *(arr+3), *(arr+6));
+                printf("--------------------------------------\n");
+                printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3));
+                printf("--------------------------------------\n");
+
                 free(idxArr2);
                 break; }
 
@@ -709,7 +712,11 @@ int GetPlan(char ** arr, int planIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         for (int i = 0; i < 7; ++i) {
-            *(arr + i) = sql_row[i];
+            if (i == 6) {
+                char *ptr = strtok(sql_row[i], " ");
+                *(arr + i) = ptr;
+            }
+            else *(arr + i) = sql_row[i];
         }
     }
     return 1;
