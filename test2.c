@@ -971,7 +971,7 @@ int GetPlanReview(int planIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
-        printf("\nuser : %s [ %d / 5 ] (%s)\ncontent : %s\n", sql_row[0], score, sql_row[3], sql_row[1]);
+        printf("user : %s [ %d / 5 ] (%s)\ncontent : %s\n", sql_row[0], score, sql_row[3], sql_row[1]);
     }
     return 1;
 }
