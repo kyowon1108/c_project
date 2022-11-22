@@ -393,9 +393,14 @@ int main(void) {
                     }
                 GetPlan(arr, planIdx);
                 printf("--------------------------------------\n");
+                printf("[ Plan ]\n");
                 printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3));
                 printf("--------------------------------------\n");
-
+                if (GetPlanDetailLen(planIdx)) {
+                    printf("[ Plan Detail ]\n");
+                    GetPlanDetail(planIdx);
+                }
+                printf("--------------------------------------\n");
                 free(idxArr2);
                 break; }
 
@@ -856,7 +861,7 @@ int GetPlanDetail(int planIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char * ptr1 = strtok(sql_row[1], " ");
         char * ptr2 = strtok(sql_row[2], " ");
-        printf("\n[detail %d]\ndetailName : %s\nstarted date : %s\ndeadline : %s\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
+        printf("\n[ %d ]\ndetailName : %s (%s~%s)\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
         ++i;
     }
     return 1;
