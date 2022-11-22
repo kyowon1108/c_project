@@ -408,7 +408,7 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                char * endArr = (char**)malloc(sizeof(char*) * planLen);
+                char ** endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 } 
