@@ -389,7 +389,7 @@ int main(void) {
                 for (int i = 0; i < friendLen; ++i) {
                     printf("[ %d ] %s ( Idx : %d )\n", i+1, *(nameArr+i), *(idxArr+i));
                 }
-                printf("--------------------------------------\nPlease select idx to check : ");
+                printf("--------------------------------------\n");
                 // int idx;
                 // scanf("%d", &idx);
                 // printf("asdfasdf %d", idx);
