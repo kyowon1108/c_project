@@ -422,6 +422,7 @@ int main(void) {
                 }
                 MakePlanReview(planIdx, userIdx, content, score);
                 printf("successfully added a review.\n\n");
+                
                 free(idxArr2);
                 break; }
 
