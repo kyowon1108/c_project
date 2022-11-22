@@ -379,7 +379,7 @@ int main(void) {
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen);
-                int ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
@@ -408,7 +408,7 @@ int main(void) {
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                int * endArr = (char**)malloc(sizeof(char*) * planLen);
+                char * endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 } 
