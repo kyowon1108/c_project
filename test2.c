@@ -37,7 +37,7 @@ int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
 int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
-int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
+int GetPlanIdx(int userIdx, int * idxArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // 친구가 생성한 계획 리스트 출력
 int GetDayPlanLen(char date[]);
@@ -245,20 +245,17 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                endArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                // nameArr = (char**)malloc(sizeof(char*) * planLen);
+                // for(int i = 0; i < planLen; ++i) {
+                //     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                // }
+                // endArr = (char**)malloc(sizeof(char*) * planLen);
+                // for(int i = 0; i < planLen; ++i) {
+                //     *(endArr+i) = (char*)malloc(sizeof(char) * 20);
+                // }
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                for(int i = 0; i < planLen; ++i) {
-                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
-                }
+                GetPlanIdx(userIdx, idxArr);
                 printf("\n--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
@@ -371,7 +368,7 @@ int main(void) {
                 }
                 break; }
 
-            case 6 : 
+            case 6 : {
                 printf("Seleted Check Friend Plan.\n\n");
                 int friendLen = GetFriendLen(userIdx);
                 if (!friendLen) {
@@ -381,7 +378,7 @@ int main(void) {
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen);
                 printf("--------------------------------------\n");
                 GetFriend(idxArr, userIdx);
-                printf("\n--------------------------------------\n"); 
+                printf("--------------------------------------\n"); 
                 printf("Select the number : ");
                 int number;
                 scanf("%d", &number);
@@ -390,7 +387,7 @@ int main(void) {
                     break;
                 }
                 --number;
-                int friendIdx = *(idxArr+number);
+                int friendIdx = *(idxArr + number);
                 int planLen = GetPlanLen(friendIdx);
                 if (!planLen) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
@@ -398,11 +395,20 @@ int main(void) {
                 }
                 free(idxArr);
                 int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                printf("\n--------------------------------------\n");
+                printf("--------------------------------------\n");
                 GetFriendPlan(userIdx, friendIdx, idxArr2);
-                printf("\n--------------------------------------\n");
+                printf("--------------------------------------\n");
+                printf("Select the number : ");
+                scanf("%d", &number);
+                if (number > friendLen || number < 0) {
+                    printf("Number does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                --number;
+                int planIdx = *(idxArr2 + number);
+
                 free(idxArr2);
-                break;
+                break; }
 
             case 7 : {
                 printf("Selected Add Friend.\n\n");
@@ -687,7 +693,7 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 
-int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr) {
+int GetPlanIdx(int userIdx, int * idxArr) {
     sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -699,7 +705,8 @@ int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr) {
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char *ptr = strtok(sql_row[2], " ");
-        idxArr[i] = atoi(sql_row[0]), *(nameArr+i) = sql_row[1], *(endArr+i) = ptr;
+        printf("[ %d ] : %s (~%s)\n", i + 1, sql_row[1], ptr);
+        idxArr[i] = atoi(sql_row[0]);
         ++i;
     }
     return 1;
