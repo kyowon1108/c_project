@@ -977,7 +977,7 @@ int GetChallengeUserLen(int depositIdx) {
 }
 
 int GetChallengeIdx(int *idxArr, int len, int userIdx) {
-    sprintf(query, "SELECT depositIdx FROM Deposit WHERE userIdx = %d", userIdx);
+    sprintf(query, "SELECT depositIdx FROM Deposituser WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
