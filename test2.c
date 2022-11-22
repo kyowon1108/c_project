@@ -752,7 +752,7 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, cha
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = sql_row[0];
+        idxArr[i] = atoi(sql_row[0]);
         strcpy(*(nameArr + i), sql_row[1]), strcpy(*(endArr + i), sql_row[2]);
         //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
