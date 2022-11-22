@@ -30,7 +30,7 @@ int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
 int GetFriendLen(int userIdx);
-int GetFriend(int * idxArr, int userIdx);
+int GetFriend(int * idxArr, char ** nameArr, int userIdx);
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
 // [ 계획 관련 함수 ]
