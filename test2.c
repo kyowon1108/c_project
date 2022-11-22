@@ -390,9 +390,9 @@ int main(void) {
                     printf("[ %d ] %s ( Idx : %d )\n", i+1, *(nameArr+i), *(idxArr+i));
                 }
                 printf("--------------------------------------\nPlease select idx to check : ");
-                int idx;
-                scanf("%d", &idx);
-                printf("asdfasdf %d", idx);
+                // int idx;
+                // scanf("%d", &idx);
+                // printf("asdfasdf %d", idx);
                 break; }
 
             case 7 : {
