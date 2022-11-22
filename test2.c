@@ -405,23 +405,23 @@ int main(void) {
                 }
                 for (int i = 0; i < friendLen; ++i) free(nameArr[i]);
                 free(nameArr), free(idxArr);
-                int * idxArr = (int*)malloc(sizeof(int) * planLen);
-                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
+                char ** nameArr2 = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                    *(nameArr2+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                char **endArr = (char**)malloc(sizeof(char*) * planLen);
+                char **endArr2 = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
+                    *(endArr2+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetFriendPlan(userIdx, friendIdx, idxArr, nameArr, endArr);
+                GetFriendPlan(userIdx, friendIdx, idxArr2, nameArr2, endArr2);
                 printf("\n--------------------------------------\n");
                 for (int i = 0; i < planLen; ++i) {
-                    printf("[ %d ] %s (~%s)\n", i+1, *(nameArr+i), *(endArr+i));
+                    printf("[ %d ] %s (~%s)\n", i+1, *(nameArr2+i), *(endArr2+i));
                 }
                 printf("\n--------------------------------------\n");
-                for (int i = 0; i < planLen; ++i) free(nameArr[i]), free(endArr[i]);
-                free(endArr), free(nameArr), free(idxArr);
+                for (int i = 0; i < planLen; ++i) free(nameArr2[i]), free(endArr2[i]);
+                free(endArr2), free(nameArr2), free(idxArr2);
                 break;
 
             case 7 : {
