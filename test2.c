@@ -415,7 +415,7 @@ int main(void) {
                 char * name = (char*)malloc(sizeof(char) * 20);
                 int * money = (int*)malloc(sizeof(int));
                 char * endAt = (char*)malloc(sizeof(char) * 20);
-                GetChallenge(name, money, endAt, depositIdx);
+                GetChallenge(depositIdx);
                 //printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", name, *money, endAt);
                 printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
@@ -977,7 +977,7 @@ int GetChallengeIdx(int *idxArr, int userIdx) {
     return 1;
 }
 
-int GetChallenge(char * name, int * money, char * endAt, int depositIdx) {
+int GetChallenge(int depositIdx) {
     sprintf(query, "SELECT depositName, money, endAt FROM Deposit WHERE depositIdx = %d", depositIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
