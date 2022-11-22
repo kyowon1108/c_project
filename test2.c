@@ -13,8 +13,7 @@
 
 MYSQL *connection = NULL, conn;
 MYSQL_RES *sql_result;
-MYSQL_ROW sql_row;
-int unsigned columns = mysql_num_fields(sql_result);
+MYSQL_ROW sql_row;\
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
@@ -30,6 +29,7 @@ int CheckLastUserIdx();
 int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
+int GetFriendLen(int userIdx);
 int GetFriend(int * idxArr, int userIdx);
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
@@ -374,8 +374,20 @@ int main(void) {
             case 6 : {
                 printf("Seleted Check Friend Plan.\n\n");
                 // 친구의 플랜을 보고 리뷰 남길 수 있도록 함
-                int * idxArr;
-                printf("%d", GetFriend(idxArr, userIdx));
+                int friendLen = GetFriendLen(userIdx);
+                if (!friendLen) {
+                    printf("Friend does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                int * idxArr = (int*)malloc(sizeof(int) * friendLen);
+                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                GetFriend(idxArr, nameArr, userIdx);
+                for (int i = 0; i < friendLen; ++i) {
+                    printf("%d. %s (%d)", i+1, *(nameArr+i), *(idxArr+i));
+                }
                 break; }
 
             case 7 : {
@@ -579,8 +591,22 @@ int MakeFriend(int userIdx, int friendIdx) {
     }
 }
 
-int GetFriend(int * idxArr, int userIdx) {
-    sprintf(query, "SELECT friendIdx FROM Friend WHERE userIdx = %d", userIdx);
+int GetFriendLen(int userIdx) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Friend WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query);
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    char * res;
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
+    return atoi(res);
+}
+
+int GetFriend(int * idxArr, char ** nameArr, int userIdx) {
+    sprintf(query, "SELECT r.friendIdx, u.name FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -588,10 +614,11 @@ int GetFriend(int * idxArr, int userIdx) {
         return 0;
     }
     sql_result = mysql_store_result(connection);
+    int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-            //idxArr[i] = atoi(sql_row[0]);
+        idxArr[i] = atoi(sql_row[0]), strcpy(*(nameArr+i),sql_row[1]);
+        ++i;
     }
-    return columns;
 }
 
 int IsFriend(int userIdx, int friendIdx) {
