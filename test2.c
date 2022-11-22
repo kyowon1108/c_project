@@ -39,7 +39,7 @@ int CheckLastPlanIdx();
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr, char ** nameArr, char ** endArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
-int GetFriendPlan(int userIdx, int friendIdx); // 친구가 생성한 계획 리스트 출력
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, char ** endArr) // 친구가 생성한 계획 리스트 출력
 int GetDayPlanLen(char date[]);
 int GetDayPlan(int userIdx, char date[], int * idxArr, char ** nameArr, char ** explainArr); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 int DeletePlan(int userIdx, int planIdx); // 계획 삭제
@@ -403,7 +403,19 @@ int main(void) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                GetFriendPlan(userIdx, friendIdx);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                }
+                char ** endArr = (char**)malloc(sizeof(char*) * planLen);
+                for(int i = 0; i < planLen; ++i) {
+                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
+                } 
+                GetFriendPlan(userIdx, friendIdx, idxArr, nameArr, endArr);
+                for (int i = 0; i < planLen; ++i) {
+                    printf("%d, %s, %s\n", *(idxArr + i), *(nameArr + i), *(endArr + i));
+                }
                 break; }
 
             case 7 : {
@@ -723,15 +735,13 @@ int GetPlan(char ** arr, int planIdx) {
     return 1;
 }
 
-int GetFriendPlan(int userIdx, int friendIdx) {
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr, char ** nameArr, char ** endArr) {
     int access = IsFriend(userIdx, friendIdx);
     if (!access) return 0;
     /*
-    1 : 전체 공개
-    2 : 친구 공개
-    3 : 나만 공개
+    1 : 전체 공개, 2 : 친구 공개, 3 : 나만 공개
     */
-    sprintf(query, "SELECT * FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx);
+    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -740,11 +750,12 @@ int GetFriendPlan(int userIdx, int friendIdx) {
     }
     
     sql_result = mysql_store_result(connection);
-    printf("\n--------------------------------------\n");
+    int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
+        idxArr[i] = sql_row[0];
+        strcpy(*(nameArr + i), sql_row[1]), strcpy(*(endArr + i), sql_row[2]);
+        //printf("%s | %s | %s | %s | %s | %s | %s\n", sql_row[0], sql_row[1], sql_row[2], sql_row[3], sql_row[4], sql_row[5], sql_row[6]);
     }
-    printf("--------------------------------------\n\n");
     return 1;
 }
 
