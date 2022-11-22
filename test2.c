@@ -14,6 +14,7 @@
 MYSQL *connection = NULL, conn;
 MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;
+int unsigned columns = mysql_num_fields(sql_result);
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
@@ -29,6 +30,7 @@ int CheckLastUserIdx();
 int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
+int GetFriend(int * idxArr, int userIdx);
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
 // [ 계획 관련 함수 ]
@@ -370,8 +372,10 @@ int main(void) {
                 break; }
 
             case 6 : {
-                printf("Seleted Check FriendReview.\n\n");
-                
+                printf("Seleted Check Friend Plan.\n\n");
+                // 친구의 플랜을 보고 리뷰 남길 수 있도록 함
+                int * idxArr;
+                printf("%d", GetFriend(idxArr, userIdx));
                 break; }
 
             case 7 : {
@@ -390,7 +394,6 @@ int main(void) {
 
             case 8 : {
                 printf("Selected Add Challenge.\n\n");
-
                 char depositName[20], endAt[20];
                 int money;
                 printf("Please enter a challenge name(20 char maximum) : ");
@@ -574,6 +577,21 @@ int MakeFriend(int userIdx, int friendIdx) {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
+}
+
+int GetFriend(int * idxArr, int userIdx) {
+    sprintf(query, "SELECT friendIdx FROM Friend WHERE userIdx = %d", userIdx);
+    query_stat = mysql_query(connection, query); 
+    if (query_stat != 0)
+    {
+        fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+        return 0;
+    }
+    sql_result = mysql_store_result(connection);
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
+            //idxArr[i] = atoi(sql_row[0]);
+    }
+    return columns;
 }
 
 int IsFriend(int userIdx, int friendIdx) {
