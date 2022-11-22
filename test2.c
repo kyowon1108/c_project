@@ -310,9 +310,12 @@ int main(void) {
                     }
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
-                    if (GetPlanDetailLen(planIdx)) GetPlanDetail(planIdx);
-                    else printf("\n(There is no plan detail in this plan.)\n");
+                    printf("[ Plan %d ] : %s\nexplain : %s\n\n", i + 1, *(arr + 2), *(arr + 3));
+                    if (GetPlanDetailLen(planIdx)) {
+                        printf("[ Plan Detail ]\n");
+                        GetPlanDetail(planIdx);
+                    }
+                    else printf("(There is no plan detail in this plan.)\n");
                     printf("--------------------------------------\n");
                 } 
                 break; }
@@ -343,9 +346,12 @@ int main(void) {
                     }
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
-                    if (GetPlanReviewLen(planIdx)) GetPlanReview(planIdx);
-                    else printf("\n(There is no review in this plan.)\n");
+                    printf("[ Plan %d ] : %s\nexplain : %s\n\n", i + 1, *(arr + 2), *(arr + 3));
+                    if (GetPlanReviewLen(planIdx)) {
+                        printf("[ Plan Review ]\n");
+                        GetPlanReview(planIdx);
+                    }
+                    else printf("(There is no review in this plan.)\n");
                     printf("--------------------------------------\n");
                 }
                 break; }
