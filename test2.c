@@ -344,7 +344,8 @@ int main(void) {
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
-                    GetPlanReview(planIdx);
+                    if (!GetPlanReview(planIdx))
+                        printf("There is no review in this plan.\n");
                     printf("--------------------------------------\n");
                 }
                 break; }
