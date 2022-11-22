@@ -409,7 +409,7 @@ int main(void) {
                     break;
                 }
                 char content[100];
-                strcpy(content, txt);
+                strcpy(content, input);
                 int score;
                 while (1) {
                     printf("Please enter score (1~5) : ");
