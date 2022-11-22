@@ -429,14 +429,14 @@ int main(void) {
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
                 GetChallengeIdx(idxArr, userIdx);
-                for (int i = 0; i < len; ++i) {
-                    int depositIdx = *(idxArr + i);
-                    int userLen = GetChallengeUserLen(depositIdx);
-                    printf("\n--------------------------------------\n");
-                    printf("[ %d people joined ]\n", userLen);
-                    GetChallenge(depositIdx);
-                    printf("--------------------------------------\n");
-                }
+                // for (int i = 0; i < len; ++i) {
+                //     int depositIdx = *(idxArr + i);
+                //     int userLen = GetChallengeUserLen(depositIdx);
+                //     printf("\n--------------------------------------\n");
+                //     printf("[ %d people joined ]\n", userLen);
+                //     GetChallenge(depositIdx);
+                //     printf("--------------------------------------\n");
+                // }
                 break; }
             default :
                 printf("Please check your number.\n\n");
