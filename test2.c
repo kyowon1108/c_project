@@ -299,22 +299,17 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                explainArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(explainArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetDayPlan(userIdx, date, idxArr, nameArr, explainArr);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                GetDayPlan(userIdx, date, idxArr,);
                 for (int i = 0; i < planLen; ++i) {
                     int planIdx = *(idxArr + i);
-                    char planName[20], explain[1024];
-                    strcpy(planName, *(nameArr + i)), strcpy(explain, *(explainArr + i));
+                    char ** arr = (char**)malloc(sizeof(char*) * 7);
+                    for(int i = 0; i < 7; ++i) {
+                        *(arr + i) = (char*)malloc(sizeof(char) * 1024);
+                    }
+                    GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("No.%d\nplanName :  %s\nexplain : %s\n", i + 1, planName, explain);
+                    printf("[ %d ] : %s\n%s\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanDetailLen(planIdx)) {
                         GetPlanDetail(planIdx);
                     }
