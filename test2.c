@@ -309,7 +309,7 @@ int main(void) {
                     }
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("[ %d ] : %s\n%s\n", i + 1, *(arr + 2), *(arr + 3));
+                    printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanDetailLen(planIdx)) {
                         GetPlanDetail(planIdx);
                     }
@@ -343,9 +343,8 @@ int main(void) {
                     }
                     GetPlan(arr, planIdx);
                     printf("\n--------------------------------------\n");
-                    printf("[ %d ] : %s\n%s\n", i + 1, *(arr + 2), *(arr + 3));
-                    if (GetPlanReview(planIdx)) GetPlanReview(planIdx);
-                    else printf("There is no review in this plan.\n");
+                    printf("[ Plan %d ] : %s\nexplain : %s\n", i + 1, *(arr + 2), *(arr + 3));
+                    GetPlanReview(planIdx);
                     printf("--------------------------------------\n");
                 }
                 break; }
@@ -950,11 +949,7 @@ int GetPlanReview(int planIdx) {
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
-        // char **star = ;
-        // for (int i = 0; i < 5; ++i) star[i] = "1";
-        // for (int j = 5 - score; j < 5; ++j) star[j] = "0";
-        char * ptr = strtok(sql_row[3], " ");
-        printf("\nid : %s [ %d / 5 ]\ncontent : %s\ncreatedAt : %s \n", sql_row[0], score, sql_row[1], ptr);
+        printf("\nuser : %s [ %d / 5 ] (%s)\ncontent : %s\n", sql_row[0], score, sql_row[3], sql_row[1]);
     }
     return 1;
 }
