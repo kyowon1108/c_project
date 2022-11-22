@@ -392,7 +392,7 @@ int main(void) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
                 GetPlan(arr, planIdx);
-                printf("planName : %s\nexplain : %s\nendAt : %s", *(arr+2), *(arr+3), *(arr+6));
+                printf("planName : %s\nexplain : %s\nendAt : %s\n", *(arr+2), *(arr+3), *(arr+6));
                 free(idxArr2);
                 break; }
 
