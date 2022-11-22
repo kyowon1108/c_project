@@ -371,7 +371,7 @@ int main(void) {
                 }
                 break; }
 
-            case 6 : {
+            case 6 : 
                 printf("Seleted Check Friend Plan.\n\n");
                 int friendLen = GetFriendLen(userIdx);
                 if (!friendLen) {
