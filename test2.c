@@ -398,6 +398,7 @@ int main(void) {
                 }
                 --number;
                 int friendIdx = *(idxArr+number);
+                printf("friendIdx : %d", friendIdx);
                 int planLen = GetPlanLen(friendIdx);
                 if (!planLen) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
