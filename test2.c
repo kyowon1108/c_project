@@ -424,9 +424,20 @@ int main(void) {
                 printf("Successfully Joined.\n\n");
                 break; }
 
-            case 10 :
-                GetChallenge(1);
-                break;
+            case 10 : {
+                printf("Selected Check Challenge.\n\n");
+                int len = GetChallengeLen(userIdx);
+                int * idxArr = (int*)malloc(sizeof(int) * len);
+                GetChallengeIdx(*idxArr, userIdx);
+                for (int i = 0; i < len; ++i) {
+                    int depositIdx = *(idxArr + i);
+                    int userLen = GetChallengeUserLen(depositIdx);
+                    printf("\n--------------------------------------\n");
+                    printf("[ %d people joined ]\n", userLen);
+                    GetChallenge(depositIdx);
+                    printf("--------------------------------------\n");
+                }
+                break; }
             default :
                 printf("Please check your number.\n\n");
                 continue;
@@ -989,8 +1000,6 @@ int GetChallenge(int depositIdx) {
     }
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        // strcpy(*name, sql_row[0]), strcpy(*endAt, sql_row[2]);
-        // *money = atoi(sql_row[1]);
         printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
     }
     return 1;
