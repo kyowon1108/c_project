@@ -352,7 +352,7 @@ int main(void) {
                         GetPlanReview(planIdx);
                     }
                     else printf("(There is no review in this plan.)\n");
-                    printf("--------------------------------------\n");
+                    printf("--------------------------------------\n\n");
                 }
                 break; }
 
