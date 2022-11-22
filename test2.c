@@ -376,7 +376,7 @@ int main(void) {
                 }
                 free(idxArr);
                 int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                printf("--------------------------------------\n");
+                printf("\n--------------------------------------\n");
                 GetFriendPlan(userIdx, friendIdx, idxArr2);
                 printf("--------------------------------------\n");
                 printf("Select the number : ");
@@ -861,7 +861,7 @@ int GetPlanDetail(int planIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char * ptr1 = strtok(sql_row[1], " ");
         char * ptr2 = strtok(sql_row[2], " ");
-        printf("[ %d ] name : %s (%s~%s)\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
+        printf("%d. name : %s (%s~%s)\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
         ++i;
     }
     return 1;
