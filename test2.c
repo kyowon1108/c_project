@@ -592,7 +592,7 @@ int MakeFriend(int userIdx, int friendIdx) {
 }
 
 int GetFriendLen(int userIdx) {
-    sprintf(query, "SELECT COUNT(userIdx) FROM Friend WHERE userIdx = %d", userIdx);
+    sprintf(query, "SELECT COUNT(friendIdx) FROM Friend WHERE userIdx = %d", userIdx);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
