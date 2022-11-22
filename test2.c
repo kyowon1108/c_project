@@ -40,7 +40,7 @@ int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
 int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // 친구가 생성한 계획 리스트 출력
-int GetDayPlanLen(char date[]);
+int GetDayPlanLen(int userIdx, char date[]);
 int GetDayPlan(int userIdx, char date[], int * idxArr); // 특정 날의 계획 리스트 출력 및 인덱스 리턴
 int DeletePlan(int userIdx, int planIdx); // 계획 삭제
 int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // 계획 수정
@@ -294,7 +294,7 @@ int main(void) {
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 char date[20];
                 scanf("%s", date);
-                planLen = GetDayPlanLen(date);
+                int planLen = GetDayPlanLen(userIdx, date);
                 if (!planLen) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
@@ -327,7 +327,7 @@ int main(void) {
                 printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
                 char date[20];
                 scanf("%s", date);
-                int planLen = GetDayPlanLen(date);
+                int planLen = GetDayPlanLen(userIdx, date);
                 if (!planLen) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
@@ -775,8 +775,8 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     return 1;
 }
 
-int GetDayPlanLen(char date[]) {
-    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE DATE(endAt) = '%s'", date);
+int GetDayPlanLen(int userIdx, char date[]) {
+    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date);
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
