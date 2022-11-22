@@ -204,19 +204,8 @@ int main(void) {
                     break;
                 }
                 idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                endArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetPlanIdx(userIdx, idxArr, nameArr, endArr); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                for(int i = 0; i < planLen; ++i) {
-                    printf("No.%d : %s | %s\n", i + 1, *(nameArr + i), *(endArr + i));
-                }
+                GetPlanIdx(userIdx, idxArr);
                 printf("\n--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
