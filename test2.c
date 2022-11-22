@@ -30,7 +30,7 @@ int CheckUser(int userIdx);
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
 int GetFriendLen(int userIdx);
-int GetFriend(int * idxArr, char ** nameArr, int userIdx);
+int GetFriend(int * idxArr, int userIdx);
 int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
 
 // [ 계획 관련 함수 ]
@@ -379,16 +379,9 @@ int main(void) {
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen);
-                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                GetFriend(idxArr, nameArr, userIdx);
                 printf("--------------------------------------\n");
-                for (int i = 0; i < friendLen; ++i) {
-                    printf("[ %d ] %s ( idx : %d )\n", i+1, *(nameArr+i), *(idxArr+i));
-                }
-                printf("\n--------------------------------------\n");
+                GetFriend(idxArr, userIdx);
+                printf("\n--------------------------------------\n"); 
                 printf("Select the number : ");
                 int number;
                 scanf("%d", &number);
@@ -635,7 +628,7 @@ int GetFriendLen(int userIdx) {
     return atoi(res);
 }
 
-int GetFriend(int * idxArr, char ** nameArr, int userIdx) {
+int GetFriend(int * idxArr, int userIdx) {
     sprintf(query, "SELECT f.friendIdx, u.userName FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
@@ -646,7 +639,8 @@ int GetFriend(int * idxArr, char ** nameArr, int userIdx) {
     sql_result = mysql_store_result(connection);
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        idxArr[i] = atoi(sql_row[0]), strcpy(*(nameArr+i),sql_row[1]);
+        printf("[ %d ] %s ( idx : %d )\n", i+1, sql_row[1], sql_row[0]);
+        idxArr[i] = atoi(sql_row[0]);
         ++i;
     }
 }
