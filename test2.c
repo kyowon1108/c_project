@@ -418,6 +418,7 @@ int main(void) {
                         printf("Invaild score.\n\n");
                         continue;
                     }
+                    break;
                 }
                 MakePlanReview(planIdx, userIdx, content, score);
                 printf("successfully added a review.\n\n");
