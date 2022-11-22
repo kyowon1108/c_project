@@ -373,7 +373,6 @@ int main(void) {
 
             case 6 : {
                 printf("Seleted Check Friend Plan.\n\n");
-                // 친구의 플랜을 보고 리뷰 남길 수 있도록 함
                 int friendLen = GetFriendLen(userIdx);
                 if (!friendLen) {
                     printf("Friend does not exist. Return to the number selection window.\n\n");
@@ -398,7 +397,13 @@ int main(void) {
                     break;
                 }
                 --number;
-                printf("Selected %s (idx : %d)", *(nameArr+number), *(idxArr+number));
+                int friendIdx = *(idxArr+number);
+                int planLen = GetPlanLen(friendIdx);
+                if (!planLen) {
+                    printf("Friend's plan does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                GetFriendPlan(userIdx, friendIdx);
                 break; }
 
             case 7 : {
@@ -1064,8 +1069,3 @@ int GetChallenge(int depositIdx) {
     }
     return 1;
 }
-
-/*
-1. 초기 화면에서 달력 밑에 첼린지 리스트가 뜨도록 해야함. (이름과 날짜 정도)
-2. 참여 인원을 넣어야 함 - 해결완료
-*/
