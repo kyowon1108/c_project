@@ -391,9 +391,9 @@ int main(void) {
                 }
                 printf("--------------------------------------\n");
                 printf("Please select idx to check : ");
-                int friendIdx;
-                scanf("%d", &friendIdx);
-                printf("asdfasdf %d", friendIdx);
+                int idx;
+                scanf("%d", &idx);
+                printf("asdfasdf %d", idx);
                 break; }
 
             case 7 : {
