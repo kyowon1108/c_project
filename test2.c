@@ -416,7 +416,7 @@ int main(void) {
                 int * money = (int*)malloc(sizeof(int));
                 char * endAt = (char*)malloc(sizeof(char) * 20);
                 GetChallenge(name, money, endAt, depositIdx);
-                printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", name, *money, endAt);
+                //printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", name, *money, endAt);
                 printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.\n\n");
@@ -987,9 +987,9 @@ int GetChallenge(char * name, int * money, char * endAt, int depositIdx) {
     }
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        strcpy(*name, sql_row[0]), strcpy(*endAt, sql_row[2]);
-        *money = atoi(sql_row[1]);
-        //printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
+        // strcpy(*name, sql_row[0]), strcpy(*endAt, sql_row[2]);
+        // *money = atoi(sql_row[1]);
+        printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
     }
     return 1;
 }
