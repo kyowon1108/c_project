@@ -378,8 +378,8 @@ int main(void) {
                     printf("Friend does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * friendLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
+                int * idxArr = (int*)malloc(sizeof(int) * friendLen);
+                int ** nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
@@ -403,12 +403,12 @@ int main(void) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                idxArr = (int*)malloc(sizeof(int) * planLen);
-                nameArr = (char**)malloc(sizeof(char*) * planLen);
-                for(int i = 0; i < planLen; ++i) {
-                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
-                }
-                endArr = (char**)malloc(sizeof(char*) * planLen);
+                // int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                // int * nameArr = (char**)malloc(sizeof(char*) * planLen);
+                // for(int i = 0; i < planLen; ++i) {
+                //     *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
+                // }
+                int * endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
                     *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 } 
