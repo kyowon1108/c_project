@@ -428,7 +428,7 @@ int main(void) {
                 printf("Selected Check Challenge.\n\n");
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
-                GetChallengeIdx(*idxArr, userIdx);
+                GetChallengeIdx(idxArr, userIdx);
                 for (int i = 0; i < len; ++i) {
                     int depositIdx = *(idxArr + i);
                     int userLen = GetChallengeUserLen(depositIdx);
