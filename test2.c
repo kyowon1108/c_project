@@ -412,11 +412,13 @@ int main(void) {
                 printf("Please enter idx to join : ");
                 scanf("%d", &depositIdx);
                 printf("--------------------------------------\n");
-                char * name = (char*)malloc(sizeof(char) * 20);
-                int * money = (int*)malloc(sizeof(int));
-                char * endAt = (char*)malloc(sizeof(char) * 20);
+                int userLen = GetChallengeUserLen(depositIdx);
+                if (!userLen) {
+                    printf("Idx does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                printf("[ %d people joined ]", userLen);
                 GetChallenge(depositIdx);
-                //printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", name, *money, endAt);
                 printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx);
                 printf("Successfully Joined.\n\n");
