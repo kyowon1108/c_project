@@ -431,6 +431,9 @@ int main(void) {
                 GetChallengeIdx(idxArr, len, userIdx);
                 printf("%d", len);
                 for (int i = 0; i < len; ++i) {
+                    printf("%d\n", *(idxArr + i));
+                }
+                for (int i = 0; i < len; ++i) {
                     int depositIdx = *(idxArr + i);
                     int userLen = GetChallengeUserLen(depositIdx);
                     printf("\n--------------------------------------\n");
