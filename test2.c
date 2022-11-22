@@ -371,7 +371,7 @@ int main(void) {
                 }
                 break; }
 
-            case 6 : 
+            case 6 : {
                 printf("Seleted Check Friend Plan.\n\n");
                 int friendLen = GetFriendLen(userIdx);
                 if (!friendLen) {
@@ -404,7 +404,7 @@ int main(void) {
                 if (!planLen) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
-                }
+                } }
                 idxArr = (int*)malloc(sizeof(int) * friendLen);
                 nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
