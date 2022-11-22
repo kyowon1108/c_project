@@ -393,7 +393,12 @@ int main(void) {
                 printf("Select the number : ");
                 int number;
                 scanf("%d", &number);
-                printf("selected %s, %d", *(nameArr+number), *(idxArr+number));
+                if (number > friendLen || number < 0) {
+                    printf("Number does not exist. Return to the number selection window.\n\n");
+                    break;
+                }
+                --number;
+                printf("Selected %s (idx : %d)", *(nameArr+number), *(idxArr+number));
                 break; }
 
             case 7 : {
