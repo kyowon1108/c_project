@@ -300,7 +300,7 @@ int main(void) {
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
-                GetDayPlan(userIdx, date, idxArr,);
+                GetDayPlan(userIdx, date, idxArr);
                 for (int i = 0; i < planLen; ++i) {
                     int planIdx = *(idxArr + i);
                     char ** arr = (char**)malloc(sizeof(char*) * 7);
