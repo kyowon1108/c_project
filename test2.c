@@ -388,7 +388,7 @@ int main(void) {
                 printf("--------------------------------------\n");
                 printf("Select the number : ");
                 scanf("%d", &number);
-                if (number > friendLen || number < 0) {
+                if (number > planLen || number < 0) {
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     break;
                 }
