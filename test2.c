@@ -429,6 +429,7 @@ int main(void) {
                 int len = GetChallengeLen(userIdx);
                 int * idxArr = (int*)malloc(sizeof(int) * len);
                 GetChallengeIdx(idxArr, len, userIdx);
+                printf("%d", len);
                 for (int i = 0; i < len; ++i) {
                     int depositIdx = *(idxArr + i);
                     int userLen = GetChallengeUserLen(depositIdx);
