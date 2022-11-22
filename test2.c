@@ -606,7 +606,7 @@ int GetFriendLen(int userIdx) {
 }
 
 int GetFriend(int * idxArr, char ** nameArr, int userIdx) {
-    sprintf(query, "SELECT r.friendIdx, u.name FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx);
+    sprintf(query, "SELECT f.friendIdx, u.name FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx);
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
