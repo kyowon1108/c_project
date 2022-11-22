@@ -403,22 +403,25 @@ int main(void) {
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int * idxArr2 = (int*)malloc(sizeof(int) * planLen);
-                char ** nameArr2 = (char**)malloc(sizeof(char*) * planLen);
+                for (int i = 0; i < friendLen; ++i) free(nameArr[i]);
+                free(nameArr), free(idxArr);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                char ** nameArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(nameArr2+i) = (char*)malloc(sizeof(char) * 20);
+                    *(nameArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                char **endArr2 = (char**)malloc(sizeof(char*) * planLen);
+                char **endArr = (char**)malloc(sizeof(char*) * planLen);
                 for(int i = 0; i < planLen; ++i) {
-                    *(endArr2+i) = (char*)malloc(sizeof(char) * 20);
+                    *(endArr+i) = (char*)malloc(sizeof(char) * 20);
                 }
-                GetFriendPlan(userIdx, friendIdx, idxArr2, nameArr2, endArr2);
+                GetFriendPlan(userIdx, friendIdx, idxArr, nameArr, endArr);
                 printf("\n--------------------------------------\n");
                 for (int i = 0; i < planLen; ++i) {
-                    printf("[ %d ] %s (~%s)\n", i+1, *(nameArr2+i), *(endArr2+i));
+                    printf("[ %d ] %s (~%s)\n", i+1, *(nameArr+i), *(endArr+i));
                 }
                 printf("\n--------------------------------------\n");
-                
+                for (int i = 0; i < planLen; ++i) free(nameArr[i]), free(endArr[i]);
+                free(endArr), free(nameArr), free(idxArr);
                 break;
 
             case 7 : {
