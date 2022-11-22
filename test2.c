@@ -206,7 +206,7 @@ int main(void) {
                 idxArr = (int*)malloc(sizeof(int) * planLen);
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 GetPlanIdx(userIdx, idxArr);
-                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
+                printf("--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
                     scanf("%d", &num);
@@ -245,7 +245,7 @@ int main(void) {
                 // }
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
                 GetPlanIdx(userIdx, idxArr);
-                printf("\n--------------------------------------\nnumber(cancel : 0) : ");
+                printf("--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
                     int num;
                     scanf("%d", &num);
