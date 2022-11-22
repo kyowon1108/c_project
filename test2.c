@@ -388,9 +388,9 @@ int main(void) {
                 --number;
                 int planIdx = *(idxArr2 + number);
                 char ** arr = (char**)malloc(sizeof(char*) * 7);
-                    for(int i = 0; i < 7; ++i) {
-                        *(arr + i) = (char*)malloc(sizeof(char) * 1024);
-                    }
+                for(int i = 0; i < 7; ++i) {
+                    *(arr + i) = (char*)malloc(sizeof(char) * 1024);
+                }
                 GetPlan(arr, planIdx);
                 printf("\n-------------------------------------\n");
                 printf("[ Plan ]\n");
@@ -401,6 +401,26 @@ int main(void) {
                     GetPlanDetail(planIdx);
                 }
                 printf("--------------------------------------\n\n");
+                printf("Make review for this plan (max 100 char, exit : 'end') : ");
+                char txt[100];
+                scanf("%s", txt);
+                if (!strcmp(input, "end")) {
+                    printf("Ends review about friend's plan.\n");
+                    break;
+                }
+                char content[100];
+                strcpy(content, txt);
+                int score;
+                while (1) {
+                    printf("Please enter score (1~5) : ");
+                    scanf("%d", &score);
+                    if (score > 5 || score < 0) {
+                        printf("Invaild score.\n\n");
+                        continue;
+                    }
+                }
+                MakePlanReview(planIdx, userIdx, content, score);
+                printf("successfully added a review.\n\n");
                 free(idxArr2);
                 break; }
 
