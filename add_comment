@@ -25,17 +25,17 @@ void printCalendar(int year, int month); // 달력 출력
 
 // [ 유저 관련 함수 ]
 int SignUp(char name[]); // 회원가입
-int CheckLastUserIdx(); 
+int CheckLastUserIdx(); //가장 최근에 추가된 user의 idx 불러오기
 int CheckUser(int userIdx); // 유저 존재 확인
 int printUser(); // 유저 리스트 출력
 int MakeFriend(int userIdx, int friendIdx); // 친구 추가
 int GetFriendLen(int userIdx); //친구 수 불러오기
 int GetFriend(int * idxArr, int userIdx); // 친구 불러오기
-int IsFriend(int userIdx, int friendIdx); // 친구인지 확인
+int IsFriend(int userIdx, int friendIdx); // 친구인지 아닌지 확인
 
 // [ 계획 관련 함수 ]
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // 계획 생성
-int CheckLastPlanIdx(); //최근 만든 인덱스 불러오기
+int CheckLastPlanIdx(); //가장 최근 만든 계획의 인덱스 불러오기
 int GetPlanLen(int userIdx); // 유저가 생성한 계획의 수 리턴
 int GetPlanIdx(int userIdx, int * idxArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
 int GetPlan(char ** arr, int userIdx); // 유저가 생성한 계획 리스트 출력
@@ -47,7 +47,7 @@ int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // �
 
 // [ 세부 계획 관련 함수 ]
 int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // 계획 디테일 생성
-int CheckLastDetailIdx(); 
+int CheckLastDetailIdx(); //가장 최근 만든 세부계획 인덱스 불러오기
 int GetPlanDetailLen(int planIdx); // 유저가 생성한 계획 디테일의 수 불러오기
 int GetPlanDetail(int planIdx); // 유저가 생성한 계획 디테일 리스트 출력
 int DeletAllePlandetail(int planIdx); // 모든 세부계획 삭제
@@ -131,7 +131,7 @@ int main(void) {
     time_t base = time(NULL);
     t = localtime(&base);
 
-    printCalendar(t->tm_year + 1900, t->tm_mon + 1);
+    printCalendar(t->tm_year + 1900, t->tm_mon + 1); //달력 출력
 
     printf("\n\n");
     int isRoof = 1;
@@ -173,13 +173,13 @@ int main(void) {
                 printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
                 scanf("%s", endAt); //계획 마감 날짜
                 MakePlan(userIdx, planName, explain, openLevel, endAt); // 계획 생성
-                int plan Idx = CheckLastPlanIdx(); //세부계획 추가 위치를 정하기 위한 함수
+                int plan Idx = CheckLastPlanIdx(); //세부계획 추가 위치를 정하기 위함
                 printf("Plan has been saved.\n");
                 while (1) { //세부계획 추가
                     printf("Please enter a detail plan name(if want end enter 'end') : ");
                     char input[20];
                     scanf("%s", input);
-                    if (!strcmp(input, "end")) { //end 입력시 세부계획 추가 끝
+                    if (!strcmp(input, "end")) { //세부계획 추가 끝
                         printf("Ends detail plan registration.\n");
                         break;
                     }
@@ -236,9 +236,9 @@ int main(void) {
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int * idxArr = (int*)malloc(sizeof(int) * planLen);
+                int * idxArr = (int*)malloc(sizeof(int) * planLen); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                GetPlanIdx(userIdx, idxArr);
+                GetPlanIdx(userIdx, idxArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
                 printf("--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) { //수정할 게획 선택
                     int num;
@@ -361,24 +361,24 @@ int main(void) {
             case 6 : { // 친구 계획 확인
                 printf("Seleted Check Friend Plan.\n\n");
                 int friendLen = GetFriendLen(userIdx); //친구 수 체크와 동적변수 할당 위해 필요한 함수
-                if (!friendLen) { //친구의 계획이 하나도 존재하지 않을 때
+                if (!friendLen) { //친구가 하나도 존재하지 않을 때
                     printf("Friend does not exist. Return to the number selection window.\n\n");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen); //동적변수 할당
                 printf("--------------------------------------\n");
-                GetFriend(idxArr, userIdx); //친구들의 모든 계획 불러오기
+                GetFriend(idxArr, userIdx); //친구 불러오기
                 printf("--------------------------------------\n"); 
                 printf("Select the number : ");
                 int number;
-                scanf("%d", &number); //세부 계획 확인할 idx 선택
+                scanf("%d", &number); //계획 확인할 친구의 idx 선택
                 if (number > friendLen || number < 0) { //idx를 벗어난 수 선택시
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     break;
                 }
                 --number;
                 int friendIdx = *(idxArr + number); 
-                int planLen = GetPlanLen(friendIdx); //친구 계획 개수 불러오기
+                int planLen = GetPlanLen(friendIdx); //선택한 친구의 계획 개수 불러오기
                 if (!planLen) { //친구의 계획이 존재하지 않을 때
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     break;
@@ -389,7 +389,7 @@ int main(void) {
                 GetFriendPlan(userIdx, friendIdx, idxArr2); //선택한 친구의 계획 불러오기
                 printf("--------------------------------------\n");
                 printf("Select the number : ");
-                scanf("%d", &number); //확인할 계획의 인덱스 선택
+                scanf("%d", &number); //더 세부적으로 확인할 계획의 인덱스 선택
                 if (number > planLen || number < 0) { //선택한 번호에 계획이 존재하지 않을 때
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     break;
@@ -701,7 +701,7 @@ int GetFriend(int * idxArr, int userIdx) {
     sql_result = mysql_store_result(connection); //결과 저장
     int i = 0; 
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //값이 없을 때까지 반환
-        printf("[ %d ] %s ( idx : %s )\n", i+1, sql_row[1], sql_row[0]); //[친구의 계획 인덱스] 친구의 계획명 (idx : 친구의 유저 인덱스)
+        printf("[ %d ] %s ( idx : %s )\n", i+1, sql_row[1], sql_row[0]); //[친구의 계획 인덱스] 친구 (idx : 친구의 유저 인덱스)
         idxArr[i] = atoi(sql_row[0]);
         ++i;
     }
@@ -709,7 +709,7 @@ int GetFriend(int * idxArr, int userIdx) {
 /*
 ㄴidxArr : 유저의 friendidx 불러올 배열
 ㄴuserIdx : user의 친구 불러오기 위한 userIdx
-모든 친구 불러오기 성공하면 친구와 친구의 계획 print, 실패시 오류 출력하며 0리턴
+모든 친구 불러오기 성공하면 친구와 친구의 idx print, 실패시 오류 출력하며 0리턴
 */
 
 int IsFriend(int userIdx, int friendIdx) {
@@ -764,7 +764,7 @@ int CheckLastPlanIdx() {
     return atoi(res);
 }
 /*
-가장 최근에 저장된 planidx 불러옴성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+가장 최근에 저장된 planidx 불러옴 성공하면 가장 최근 저장된 planidx 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanLen(int userIdx) {
@@ -782,7 +782,7 @@ int GetPlanLen(int userIdx) {
 }
 /*
 userIdx : 유저의 idx
-유저의 계획 개수 불러오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+유저의 계획 개수 불러오기 성공하면 계획 개수 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanIdx(int userIdx, int * idxArr) { 
@@ -806,7 +806,7 @@ int GetPlanIdx(int userIdx, int * idxArr) {
 /*
 userIdx : plan 생성할 유저의 idx
 idxArr : 유저가 생성한 planidx를 저장
-유저가 설정한 계획인덱스, 계획명, 마감기한 모두 불러와서 print, idxArr에 planidx 저장하고 1리턴
+유저가 설정한 계획인덱스, 계획명, 마감기한 모두 불러와서 print 후 idxArr에 planidx 저장하고 1리턴
 불러오기 실패시 0을 리턴하며 오류 print
 */
 
@@ -833,7 +833,7 @@ int GetPlan(char ** arr, int planIdx) {
 /*
 ㄴ**arr : plan에 있는 데이터를 모두 가져오기 위한 이중 포인터 배열
 ㄴ**planIdx : 유저가 선택한 planidx
-입력한 planidx의 모둔 value를 arr로 불러옴 불러오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+입력한 planidx의 모든 value를 arr로 불러옴 불러오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
@@ -855,7 +855,7 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char *ptr = strtok(sql_row[2], " ");
         idxArr[i] = atoi(sql_row[0]);
-        printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]);
+        printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]); //[인덱스] 친구의계획명 (~마감기한)
         ++i;
     }
     return 1;
@@ -981,7 +981,7 @@ int CheckLastDetailIdx() {
     return atoi(res);
 }
 /*
-가장 최근에 저장된 DetailIdx 불러옴
+가장 최근에 저장된 DetailIdx 불러오기 성공하면 가장 최근 저장된 DetailIdx 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanDetailLen(int planIdx) {
@@ -999,7 +999,7 @@ int GetPlanDetailLen(int planIdx) {
 }
 /*
 planIdx : 유저가 선택한 계획
-유저가 선택한 계획 속 세부계획 개수 불러오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+유저가 선택한 계획 속 세부계획 개수 불러오기 성공하면 세부계획 수 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanDetail(int planIdx) {
@@ -1015,14 +1015,15 @@ int GetPlanDetail(int planIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char * ptr1 = strtok(sql_row[1], " ");
         char * ptr2 = strtok(sql_row[2], " ");
-        printf("%d. name : %s (%s~%s)\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]);
+        printf("%d. name : %s (%s~%s)\nplace : %s\n", i + 1, sql_row[0], ptr1, ptr2, sql_row[3]); 
         ++i;
     }
     return 1;
 }
 /*
 ㄴ**planIdx : 유저가 선택한 planidx
-입력한 planidx의 모든 detailplan를 불러옴 불러오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+입력한 planidx의 모든 detailplan를 불러옴 불러오기 성공하면 세부계획이름, 시작시간, 마감시간, 장소 print 후 1리턴
+아니라면 오류 출력하며 0 리턴
 */
 
 int DeletAllePlandetail(int planIdx) {
@@ -1054,7 +1055,7 @@ void DeletePlandetail(int detailIdx) {
 }
 /*
 ㄴdetailIdx : 유저가 삭제하기로 선택한 detailIdx
-선택한 세부계획 삭제 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+선택한 세부계획 삭제 성공하면 삭제 성공 print , 아니라면 오류 출력하며 리턴
 */
 
 void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]) {
@@ -1063,7 +1064,7 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
     if (query_stat != 0)
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
-        return;
+        return ;
     }
     sql_result = mysql_store_result(connection);
     printf("successfully modified.");
@@ -1074,7 +1075,7 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
 ㄴstartedAt : 세부계획 시작 날짜
 ㄴendAt : 세부계획 마감 날짜
 ㄴwhere : 세부계획 실행 위치
-유저가 수정할 세부계획을 받아서 이름, 시작날짜, 마감날짜, 위치 수정 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+유저가 수정할 세부계획을 받아서 이름, 시작날짜, 마감날짜, 위치 수정 성공하면 수정 성공 print, 아니라면 오류 출력하며 리턴
 */
 
 //reviewIdx, planIdx, userIdx, content, score, createdAt
@@ -1112,7 +1113,7 @@ int GetPlanReviewLen(int planIdx) {
 }
 /*
 ㄴplanIdx : 유저가 선택한 리뷰 가져올 계획의 idx
-리뷰 개수 가져오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+리뷰 개수 가져오기 성공하면 리뷰 개수 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanReview(int planIdx) {
@@ -1128,14 +1129,14 @@ int GetPlanReview(int planIdx) {
     int i = 0;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         int score = atoi(sql_row[2]);
-        printf("%d. user : %s [ %d / 5 ] (%s)\ncontent : %s\n", i + 1, sql_row[0], score, sql_row[3], sql_row[1]);
+        printf("%d. user : %s [ %d / 5 ] (%s)\ncontent : %s\n", i + 1, sql_row[0], score, sql_row[3], sql_row[1]); 
         ++i;
     }
     return 1;
 }
 /*
 ㄴplanidx : 유저가 선택한 리뷰 가져올 계획의 idx
-리뷰에 있는 userIdx, content, score, createdAt 모두 가져오기 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+리뷰에 있는 userIdx, content, score, createdAt 모두 가져오기 성공하면 print 하며 1리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 void DeletePlanReview(int planreviewIdx) {
@@ -1151,7 +1152,7 @@ void DeletePlanReview(int planreviewIdx) {
 }
 /*
 ㄴplanreviewIdx : 유저가 삭제하기로 선택한 리뷰의 idx
-선택한 리뷰 삭제 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+선택한 리뷰 삭제 성공하면 삭제 성공 print, 아니라면 오류 출력하며 리턴
 */
 
 void ModifyPlanReview(int planreviewIdx, char content[], int score) {
@@ -1169,7 +1170,7 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
 ㄴplanreviewIdx : 유저가 수정할 리뷰의 Idx
 ㄴcontent : 리뷰 내용
 ㄴscore : 별점
-유저가 수정할 리뷰를 받아서 리뷰내용, 별점 수정 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+유저가 수정할 리뷰를 받아서 리뷰내용, 별점 수정 성공하면 수정 성공 print, 아니라면 오류 출력하며 리턴
 */
 
 int MakeChallenge(char depositName[], int money, char endAt[]) {
@@ -1219,7 +1220,7 @@ int CheckLastDepositIdx() {
     return atoi(res);
 }
 /*
-가장 최근에 저장된 챌린지의 idx불러옴 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+가장 최근에 저장된 챌린지의 idx불러옴 챌린지 idx리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int IsChallengeUser(int depositIdx, int userIdx) {
@@ -1239,7 +1240,7 @@ int IsChallengeUser(int depositIdx, int userIdx) {
 /*
 ㄴdepositIdx : 참여 여부 확인할 챌린지 idx
 ㄴuserIdx : 참여 여부 확인할 유저 idx
-챌린지 참여 여부 확인 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+챌린지 참여 여부 확인 성공하면 유저 idx 리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetChallengeLen(int userIdx) {
@@ -1314,7 +1315,7 @@ int GetChallenge(int depositIdx) {
     }
     sql_result = mysql_store_result(connection);
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
-        printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]);
+        printf("Challenge Name : %s \nChallenge Money : %s\nDead Line : %s\n", sql_row[0], sql_row[1], sql_row[2]); 
     }
     return 1;
 }
