@@ -64,11 +64,11 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score); // 리뷰 �
 //[ 챌린지 관련 함수 ]
 int MakeChallenge(char depositName[], int money, char endAt[]); //챌린지 설정
 int MakeChallengeUser(int depositIdx, int userIdx); //챌린지 유저 추가
-int CheckLastDepositIdx(); 
+int CheckLastDepositIdx(); //최근 만든 챌린지 인덱스 불러오기
 int IsChallengeUser(int depositIdx, int userIdx); //챌린지 유저인지 확인
 int GetChallengeLen(int userIdx); //챌린지 수 불러오기
-int GetChallengeUserLen(int depositIdx);
-int GetChallengeIdx(int *idxArr, int len, int userIdx); 
+int GetChallengeUserLen(int depositIdx); //참여하는 유저 수 불러오기
+int GetChallengeIdx(int *idxArr, int len, int userIdx);  //
 int GetChallenge(int depositIdx); // 챌린지 출력
 
 
@@ -360,19 +360,19 @@ int main(void) {
 
             case 6 : { // 친구 계획 확인
                 printf("Seleted Check Friend Plan.\n\n");
-                int friendLen = GetFriendLen(userIdx); //동적변수 할당 위한 함수
+                int friendLen = GetFriendLen(userIdx); //친구 수 체크와 동적변수 할당 위해 필요한 함수
                 if (!friendLen) { //친구의 계획이 하나도 존재하지 않을 때
                     printf("Friend does not exist. Return to the number selection window.\n\n");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen); //동적변수 할당
                 printf("--------------------------------------\n");
-                GetFriend(idxArr, userIdx); //모든 친구 불러오기
+                GetFriend(idxArr, userIdx); //친구들의 모든 계획 불러오기
                 printf("--------------------------------------\n"); 
                 printf("Select the number : ");
                 int number;
-                scanf("%d", &number); //계획 확인할 친구 인덱스 선택
-                if (number > friendLen || number < 0) { //친구 범위를 벗어난 수 선택시
+                scanf("%d", &number); //세부 계획 확인할 idx 선택
+                if (number > friendLen || number < 0) { //idx를 벗어난 수 선택시
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     break;
                 }
@@ -384,7 +384,7 @@ int main(void) {
                     break;
                 }
                 free(idxArr);
-                int * idxArr2 = (int*)malloc(sizeof(int) * planLen); //친구의 모든 계획을 불러올 이차원 동적배열 할당
+                int * idxArr2 = (int*)malloc(sizeof(int) * planLen); // 선택한 친구의 계획 불러올 이차원 동적배열 할당
                 printf("\n--------------------------------------\n");
                 GetFriendPlan(userIdx, friendIdx, idxArr2); //선택한 친구의 계획 불러오기
                 printf("--------------------------------------\n");
@@ -459,7 +459,7 @@ int main(void) {
                 printf("Please enter a challenge deadline (format: yyyy-mm-dd) : ");
                 scanf("%s", endAt); //챌린지 기간 설정
                 MakeChallenge(depositName, money, endAt); //챌린지 생성(이름, 모금액, 기간 추가)
-                int depositIdx = CheckLastDepositIdx();
+                int depositIdx = CheckLastDepositIdx(); //최근 생성된 챌린지 idx를 depositIdx에 저장
                 MakeChallengeUser(depositIdx, userIdx); //챌린지에 유저 이름, 유저 인덱스 추가
 
                 printf("Successfully challenge added.\nif you want to join another people, take this idx : %d\n\n", depositIdx);
@@ -469,36 +469,36 @@ int main(void) {
                 printf("Selected Join Challenge.\n\n");
                 int depositIdx;
                 printf("Please enter idx to join : ");
-                scanf("%d", &depositIdx); // 
-                int userLen = GetChallengeUserLen(depositIdx);
-                if (!userLen) {
+                scanf("%d", &depositIdx); // 참여할 챌린지 인덱스 선택
+                int userLen = GetChallengeUserLen(depositIdx); //챌린지 참여중인 유저 수 불러오기
+                if (!userLen) { //유저 존재하지 않을시
                     printf("Idx does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int check = IsChallengeUser(depositIdx, userIdx);
-                if (check) {
+                int check = IsChallengeUser(depositIdx, userIdx); //유저가 챌린지 참여중인지 아닌지 체크
+                if (check) { //check = 1 일 때, 이미 참여중인 챌린지 입니다. print후 끝내기
                     printf("You already joined this challenge. Return to the number selection window.\n\n");
                     break;
                 }
                 printf("--------------------------------------\n");
                 printf("[ %d people joined ]\n", userLen);
-                GetChallenge(depositIdx);
+                GetChallenge(depositIdx); // 챌린지 불러오기
                 printf("--------------------------------------\n");
-                MakeChallengeUser(depositIdx, userIdx);
+                MakeChallengeUser(depositIdx, userIdx); // 챌린지 참여
                 printf("Successfully Joined.\n\n");
                 break; }
 
             case 10 : { // 챌린지 확인
                 printf("Selected Check Challenge.\n\n");
-                int len = GetChallengeLen(userIdx);
-                int * idxArr = (int*)malloc(sizeof(int) * len);
-                GetChallengeIdx(idxArr, len, userIdx);
-                for (int i = 0; i < len; ++i) {
+                int len = GetChallengeLen(userIdx); // 참여중인 챌린지 개수 출력
+                int * idxArr = (int*)malloc(sizeof(int) * len); // 챌린지 받아올 동적배열할당
+                GetChallengeIdx(idxArr, len, userIdx); //챌린지 인덱스 모두 불러오기
+                for (int i = 0; i < len; ++i) { //모든 챌린지와 챌린지 참여중인 유저 수 print
                     int depositIdx = *(idxArr + i);
-                    int userLen = GetChallengeUserLen(depositIdx);
+                    int userLen = GetChallengeUserLen(depositIdx); 
                     printf("\n--------------------------------------\n");
-                    printf("[ %d people joined ]\n", userLen);
-                    GetChallenge(depositIdx);
+                    printf("[ %d people joined ]\n", userLen); 
+                    GetChallenge(depositIdx); 
                     printf("--------------------------------------\n");
                 }
                 break; }
@@ -687,7 +687,7 @@ int GetFriendLen(int userIdx) {
 }
 /*
 ㄴuserIdx : user의 친구 수 불러오기 위한 userIdx
-유저의 친구 수 불러오기 성공시 1리턴, 실패시 오류 출력하며 0 리턴
+유저의 친구 수 불러오기 성공시 친구 수 리턴, 실패시 오류 출력하며 0 리턴
 */
 
 int GetFriend(int * idxArr, int userIdx) {
@@ -706,6 +706,11 @@ int GetFriend(int * idxArr, int userIdx) {
         ++i;
     }
 }
+/*
+ㄴidxArr : 유저의 friendidx 불러올 배열
+ㄴuserIdx : user의 친구 불러오기 위한 userIdx
+모든 친구 불러오기 성공하면 친구와 친구의 계획 print, 실패시 오류 출력하며 0리턴
+*/
 
 int IsFriend(int userIdx, int friendIdx) {
     sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
@@ -721,7 +726,10 @@ int IsFriend(int userIdx, int friendIdx) {
         return atoi(sql_row[0]);
     }
 }
-
+/*
+userIdx안에 friendIdx 있는지 확인, 확인 실패시 오류 출력하며 0 리턴
+확인 성공시 없으면 0리턴 , 있으면 friendIdx 리턴
+*/
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) { //
     sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // User을 추가하는 쿼리문
@@ -739,7 +747,7 @@ int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char e
 ㄴexplain : 계획 설명
 ㄴopenLevel : 공개 범위
 ㄴendAt : 마감 기한
-계획 추가 성공시 1리턴, 아니면 0리턴하며 오류 print
+계획 추가 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int CheckLastPlanIdx() {
@@ -756,7 +764,7 @@ int CheckLastPlanIdx() {
     return atoi(res);
 }
 /*
-가장 최근에 저장된 planidx 불러옴
+가장 최근에 저장된 planidx 불러옴성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
 */
 
 int GetPlanLen(int userIdx) {
@@ -796,9 +804,10 @@ int GetPlanIdx(int userIdx, int * idxArr) {
     return 1;
 }
 /*
-userIdx : 
+userIdx : plan 생성할 유저의 idx
 idxArr : 유저가 생성한 planidx를 저장
-유저가 설정한 계획인덱스, 계획명, 마감기한 모두 불러와서 print, 불러오기 실패시 0을 리턴하며 오류 print
+유저가 설정한 계획인덱스, 계획명, 마감기한 모두 불러와서 print, idxArr에 planidx 저장하고 1리턴
+불러오기 실패시 0을 리턴하며 오류 print
 */
 
 int GetPlan(char ** arr, int planIdx) {
@@ -829,11 +838,11 @@ int GetPlan(char ** arr, int planIdx) {
 
 int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     int access = IsFriend(userIdx, friendIdx);
-    if (!access) return 0;
+    if (!access) return 0; //친구인지 아닌지 확인 후 친구 아니면 0 리턴
     /*
     1 : 전체 공개, 2 : 친구 공개, 3 : 나만 공개
     */
-    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx);
+    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx); 
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -851,6 +860,13 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     }
     return 1;
 }
+/*
+ㄴuserIdx : 유저의 idx
+ㄴfriendIdx : 계획 확인할 친구의 idx
+ㄴidxArr : 친구의 planidx 저장
+친구인지, 친구의 계획이 전체공개나 친구공개인지 확인한 뒤, 확인 성공하면 idxArr에 친구의 planidx 저장하고, 친구의 계획과 설명 print 하며 1리턴
+아니라면 오류 출력하며 0 리턴
+*/
 
 int GetDayPlanLen(int userIdx, char date[]) {
     sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date); //선택한 날짜에 있는 plan 개수 불러오기
@@ -1133,6 +1149,10 @@ void DeletePlanReview(int planreviewIdx) {
     sql_result = mysql_store_result(connection);
     printf("successfully deleted.");
 }
+/*
+ㄴplanreviewIdx : 유저가 삭제하기로 선택한 리뷰의 idx
+선택한 리뷰 삭제 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 void ModifyPlanReview(int planreviewIdx, char content[], int score) {
     sprintf(query, "UPDATE Planreview SET content = %s, score = %d WHERE planreviewIdx = %d", content, score, planreviewIdx);
@@ -1145,7 +1165,12 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
     sql_result = mysql_store_result(connection);
     printf("successfully modified.");
 }
-
+/*
+ㄴplanreviewIdx : 유저가 수정할 리뷰의 Idx
+ㄴcontent : 리뷰 내용
+ㄴscore : 별점
+유저가 수정할 리뷰를 받아서 리뷰내용, 별점 수정 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 int MakeChallenge(char depositName[], int money, char endAt[]) {
     sprintf(query, "INSERT INTO Deposit (depositName, money, endAt) VALUES ('%s', %d, '%s')", depositName, money, endAt);
@@ -1157,6 +1182,12 @@ int MakeChallenge(char depositName[], int money, char endAt[]) {
     }
     return 1;
 }
+/*
+ㄴdepositName : 챌린지 명
+ㄴmoney : 모금액
+ㄴendAt : 마감기한
+챌린지 생성 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 int MakeChallengeUser(int depositIdx, int userIdx) {
     sprintf(query, "INSERT INTO Deposituser (depositIdx, userIdx) VALUES (%d, %d)", depositIdx, userIdx);
@@ -1168,6 +1199,11 @@ int MakeChallengeUser(int depositIdx, int userIdx) {
     }
     return 1;
 }
+/*
+ㄴ depositIdx : 챌린지를 불러올 idx
+ㄴ userIdx : 챌린지에 참여할 유저의 idx
+> 챌린지에 유저 참여 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 int CheckLastDepositIdx() { 
     sprintf(query, "SELECT MAX(depositIdx) FROM Deposit"); //DepositIdx 중 숫자가 가장 큰 idx(가장 마지막에 추가된 idx) 가져오는 쿼리문
@@ -1182,6 +1218,9 @@ int CheckLastDepositIdx() {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
 }
+/*
+가장 최근에 저장된 챌린지의 idx불러옴 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 int IsChallengeUser(int depositIdx, int userIdx) {
     sprintf(query, "SELECT EXISTS (SELECT * FROM Deposituser WHERE userIdx = %d AND depositIdx = %d)", userIdx, depositIdx);
@@ -1197,6 +1236,11 @@ int IsChallengeUser(int depositIdx, int userIdx) {
         return atoi(sql_row[0]);
     }
 }
+/*
+ㄴdepositIdx : 참여 여부 확인할 챌린지 idx
+ㄴuserIdx : 참여 여부 확인할 유저 idx
+챌린지 참여 여부 확인 성공하면 1리턴, 아니라면 오류 출력하며 0 리턴
+*/
 
 int GetChallengeLen(int userIdx) {
     sprintf(query, "SELECT COUNT(depositIdx) FROM Deposituser WHERE userIdx = %d", userIdx);
@@ -1212,6 +1256,10 @@ int GetChallengeLen(int userIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
 }
+/*
+ㄴuserIdx : user의 친구 수 불러오기 위한 userIdx
+챌린지 수 불러오기 성공시 친구 수 리턴, 실패시 오류 출력하며 0 리턴
+*/
 
 int GetChallengeUserLen(int depositIdx) {
     sprintf(query, "SELECT COUNT(userIdx) FROM Deposituser WHERE depositIdx = %d", depositIdx);
@@ -1227,6 +1275,11 @@ int GetChallengeUserLen(int depositIdx) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
 }
+/*
+ㄴ depositIdx : 챌린지에 참여한 user 수 불러오기 위한 idx
+> 유저 수 불러오기 성공하면 유저 수 리턴, 아니라면 0을 리턴하며 오류 print 
+*/
+
 
 int GetChallengeIdx(int *idxArr, int len, int userIdx) {
     sprintf(query, "SELECT depositIdx FROM Deposituser WHERE userIdx = %d", userIdx);
@@ -1244,6 +1297,12 @@ int GetChallengeIdx(int *idxArr, int len, int userIdx) {
     }
     return 1;
 }
+/*
+idxArr : 유저가 참여중인 challengeIdx를 저장
+len : 참여중인 챌린지 개수
+userIdx : 유저의 idx
+유저가 설정한  모두 불러와서 idxArr에 저장하고 1리턴, 불러오기 실패시 0을 리턴하며 오류 print
+*/
 
 int GetChallenge(int depositIdx) {
     sprintf(query, "SELECT depositName, money, endAt FROM Deposit WHERE depositIdx = %d", depositIdx);
