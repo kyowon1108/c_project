@@ -67,8 +67,8 @@ int MakeChallengeUser(int depositIdx, int userIdx); //챌린지 유저 추가
 int CheckLastDepositIdx(); //최근 만든 챌린지 인덱스 불러오기
 int IsChallengeUser(int depositIdx, int userIdx); //챌린지 유저인지 확인
 int GetChallengeLen(int userIdx); //챌린지 수 불러오기
-int GetChallengeUserLen(int depositIdx); //참여하는 유저 수 불러오기
-int GetChallengeIdx(int *idxArr, int len, int userIdx);  //
+int GetChallengeUserLen(int depositIdx); //챌린지에 참여하는 유저 수 불러오기
+int GetChallengeIdx(int *idxArr, int len, int userIdx);  //참여중인 챌린지 idx불러오기
 int GetChallenge(int depositIdx); // 챌린지 출력
 
 
@@ -1301,7 +1301,7 @@ int GetChallengeIdx(int *idxArr, int len, int userIdx) {
 idxArr : 유저가 참여중인 challengeIdx를 저장
 len : 참여중인 챌린지 개수
 userIdx : 유저의 idx
-유저가 설정한  모두 불러와서 idxArr에 저장하고 1리턴, 불러오기 실패시 0을 리턴하며 오류 print
+유저가 참여중인 challengeidx 모두 불러와서 idxArr에 저장하고 1리턴, 불러오기 실패시 0을 리턴하며 오류 print
 */
 
 int GetChallenge(int depositIdx) {
