@@ -15,64 +15,64 @@ MYSQL *connection = NULL, conn;
 MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;
 int query_stat;
-char query[255]; // ÀÔ·ÂÇÒ mysql Äõ¸®¹®ÀÌ µé¾î°¥ º¯¼ö
+char query[255]; // ì…ë ¥í•  mysql ì¿¼ë¦¬ë¬¸ì´ ë“¤ì–´ê°ˆ ë³€ìˆ˜
 
-void MakeLog(int userIdx, char content[]);
-char* GetISOTime(struct tm *t);
+void MakeLog(int userIdx, char content[]); //ìœ ì €ê°€ ì‹¤í–‰í•œ ê¸°ëŠ¥ë“¤ ë¡œê·¸ íŒŒì¼ì— ì €ì¥
+char* GetISOTime(struct tm *t); // í˜„ì¬ ì‹œê°„ ë¶ˆëŸ¬ì˜´
 
-// [ ´Ş·Â Ãâ·Â °ü·Ã ÇÔ¼ö]
-int IsLeafYear(int year); // À±³âÀÎÁö Ã¼Å©
-int getDay(int year, int month); // ¿ùº° ³¯Â¥ ¼ö°¡ ¸îÀÎÁö ¸®ÅÏ
-int getStartDay(int year, int month); // ´Ş·Â¿¡¼­ 1ÀÏÀÎ ¿äÀÏ ¸®ÅÏ
-void printCalendar(int year, int month); // ´Ş·Â Ãâ·Â
+// [ ë‹¬ë ¥ ì¶œë ¥ ê´€ë ¨ í•¨ìˆ˜]
+int IsLeafYear(int year); // ìœ¤ë…„ì¸ì§€ ì²´í¬
+int getDay(int year, int month); // ì›”ë³„ ë‚ ì§œ ìˆ˜ê°€ ëª‡ì¸ì§€ ë¦¬í„´
+int getStartDay(int year, int month); // ë‹¬ë ¥ì—ì„œ 1ì¼ì¸ ìš”ì¼ ë¦¬í„´
+void printCalendar(int year, int month); // ë‹¬ë ¥ ì¶œë ¥
 
-// [ À¯Àú °ü·Ã ÇÔ¼ö ]
-int SignUp(char name[]); // È¸¿ø°¡ÀÔ
-int CheckLastUserIdx(); //°¡Àå ÃÖ±Ù¿¡ Ãß°¡µÈ userÀÇ idx ºÒ·¯¿À±â
-int CheckUser(int userIdx); // À¯Àú Á¸Àç È®ÀÎ
-int printUser(); // À¯Àú ¸®½ºÆ® Ãâ·Â
-int MakeFriend(int userIdx, int friendIdx); // Ä£±¸ Ãß°¡
-int GetFriendLen(int userIdx); //Ä£±¸ ¼ö ºÒ·¯¿À±â
-int GetFriend(int * idxArr, int userIdx); // Ä£±¸ ºÒ·¯¿À±â
-int IsFriend(int userIdx, int friendIdx); // Ä£±¸ÀÎÁö ¾Æ´ÑÁö È®ÀÎ
+// [ ìœ ì € ê´€ë ¨ í•¨ìˆ˜ ]
+int SignUp(char name[]); // íšŒì›ê°€ì…
+int CheckLastUserIdx(); //ê°€ì¥ ìµœê·¼ì— ì¶”ê°€ëœ userì˜ idx ë¶ˆëŸ¬ì˜¤ê¸°
+int CheckUser(int userIdx); // ìœ ì € ì¡´ì¬ í™•ì¸
+int printUser(); // ìœ ì € ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int MakeFriend(int userIdx, int friendIdx); // ì¹œêµ¬ ì¶”ê°€
+int GetFriendLen(int userIdx); //ì¹œêµ¬ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetFriend(int * idxArr, int userIdx); // ì¹œêµ¬ ë¶ˆëŸ¬ì˜¤ê¸°
+int IsFriend(int userIdx, int friendIdx); // ì¹œêµ¬ì¸ì§€ ì•„ë‹Œì§€ í™•ì¸
 
-// [ °èÈ¹ °ü·Ã ÇÔ¼ö ]
-int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // °èÈ¹ »ı¼º
-int CheckLastPlanIdx(); //°¡Àå ÃÖ±Ù ¸¸µç °èÈ¹ÀÇ ÀÎµ¦½º ºÒ·¯¿À±â
-int GetPlanLen(int userIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ÀÇ ¼ö ¸®ÅÏ
-int GetPlanIdx(int userIdx, int * idxArr); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ÀÇ ÀÎµ¦½º¸¦ arr¿¡ ÀúÀå
-int GetPlan(char ** arr, int userIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ ¸®½ºÆ® Ãâ·Â
-int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // Ä£±¸°¡ »ı¼ºÇÑ °èÈ¹ ¸®½ºÆ® Ãâ·Â
-int GetDayPlanLen(int userIdx, char date[]); //À¯Àú°¡ ¼±ÅÃÇÑ ³¯Â¥ÀÇ °èÈ¹ °³¼ö ºÒ·¯¿À±â
-int GetDayPlan(int userIdx, char date[], int * idxArr); // Æ¯Á¤ ³¯ÀÇ °èÈ¹ ¸®½ºÆ® Ãâ·Â ¹× ÀÎµ¦½º ¸®ÅÏ
-int DeletePlan(int userIdx, int planIdx); // °èÈ¹ »èÁ¦
-int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // °èÈ¹ ¼öÁ¤
+// [ ê³„íš ê´€ë ¨ í•¨ìˆ˜ ]
+int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // ê³„íš ìƒì„±
+int CheckLastPlanIdx(); //ê°€ì¥ ìµœê·¼ ë§Œë“  ê³„íšì˜ ì¸ë±ìŠ¤ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetPlanLen(int userIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íšì˜ ìˆ˜ ë¦¬í„´
+int GetPlanIdx(int userIdx, int * idxArr); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íšì˜ ì¸ë±ìŠ¤ë¥¼ arrì— ì €ì¥
+int GetPlan(char ** arr, int userIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // ì¹œêµ¬ê°€ ìƒì„±í•œ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int GetDayPlanLen(int userIdx, char date[]); //ìœ ì €ê°€ ì„ íƒí•œ ë‚ ì§œì˜ ê³„íš ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetDayPlan(int userIdx, char date[], int * idxArr); // íŠ¹ì • ë‚ ì˜ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥ ë° ì¸ë±ìŠ¤ ë¦¬í„´
+int DeletePlan(int userIdx, int planIdx); // ê³„íš ì‚­ì œ
+int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // ê³„íš ìˆ˜ì •
 
-// [ ¼¼ºÎ °èÈ¹ °ü·Ã ÇÔ¼ö ]
-int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // °èÈ¹ µğÅ×ÀÏ »ı¼º
-int CheckLastDetailIdx(); //°¡Àå ÃÖ±Ù ¸¸µç ¼¼ºÎ°èÈ¹ ÀÎµ¦½º ºÒ·¯¿À±â
-int GetPlanDetailLen(int planIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ µğÅ×ÀÏÀÇ ¼ö ºÒ·¯¿À±â
-int GetPlanDetail(int planIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ µğÅ×ÀÏ ¸®½ºÆ® Ãâ·Â
-int DeletAllePlandetail(int planIdx); // ¸ğµç ¼¼ºÎ°èÈ¹ »èÁ¦
-void DeletePlandetail(int detailIdx); // °èÈ¹ µğÅ×ÀÏ »èÁ¦
-void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // °èÈ¹ µğÅ×ÀÏ ¼öÁ¤
+// [ ì„¸ë¶€ ê³„íš ê´€ë ¨ í•¨ìˆ˜ ]
+int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // ê³„íš ë””í…Œì¼ ìƒì„±
+int CheckLastDetailIdx(); //ê°€ì¥ ìµœê·¼ ë§Œë“  ì„¸ë¶€ê³„íš ì¸ë±ìŠ¤ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetPlanDetailLen(int planIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë””í…Œì¼ì˜ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetPlanDetail(int planIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë””í…Œì¼ ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int DeletAllePlandetail(int planIdx); // ëª¨ë“  ì„¸ë¶€ê³„íš ì‚­ì œ
+void DeletePlandetail(int detailIdx); // ê³„íš ë””í…Œì¼ ì‚­ì œ
+void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // ê³„íš ë””í…Œì¼ ìˆ˜ì •
 
-// [ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö ]
-int MakePlanReview(int planIdx, int userIdx, char content[], int score); // °èÈ¹ ¸®ºä »ı¼º
-int GetPlanReviewLen(int planIdx); //¸®ºä °³¼ö ºÒ·¯¿À±â
-int GetPlanReview(int planIdx); // °èÈ¹ ¸®ºä Ãâ·Â
-void DeletePlanReview(int planreviewIdx); // ¸®ºä »èÁ¦
-void ModifyPlanReview(int planreviewIdx, char content[], int score); // ¸®ºä ¼öÁ¤
+// [ ê³„íš ë¦¬ë·° ê´€ë ¨ í•¨ìˆ˜ ]
+int MakePlanReview(int planIdx, int userIdx, char content[], int score); // ê³„íš ë¦¬ë·° ìƒì„±
+int GetPlanReviewLen(int planIdx); //ë¦¬ë·° ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetPlanReview(int planIdx); // ê³„íš ë¦¬ë·° ì¶œë ¥
+void DeletePlanReview(int planreviewIdx); // ë¦¬ë·° ì‚­ì œ
+void ModifyPlanReview(int planreviewIdx, char content[], int score); // ë¦¬ë·° ìˆ˜ì •
 
-//[ Ã§¸°Áö °ü·Ã ÇÔ¼ö ]
-int MakeChallenge(char depositName[], int money, char endAt[]); //Ã§¸°Áö ¼³Á¤
-int MakeChallengeUser(int depositIdx, int userIdx); //Ã§¸°Áö À¯Àú Ãß°¡
-int CheckLastDepositIdx(); //ÃÖ±Ù ¸¸µç Ã§¸°Áö ÀÎµ¦½º ºÒ·¯¿À±â
-int IsChallengeUser(int depositIdx, int userIdx); //Ã§¸°Áö À¯ÀúÀÎÁö È®ÀÎ
-int GetChallengeLen(int userIdx); //Ã§¸°Áö ¼ö ºÒ·¯¿À±â
-int GetChallengeUserLen(int depositIdx); //Ã§¸°Áö¿¡ Âü¿©ÇÏ´Â À¯Àú ¼ö ºÒ·¯¿À±â
-int GetChallengeIdx(int *idxArr, int len, int userIdx);  //Âü¿©ÁßÀÎ Ã§¸°Áö idxºÒ·¯¿À±â
-int GetChallenge(int depositIdx); // Ã§¸°Áö Ãâ·Â
+//[ ì±Œë¦°ì§€ ê´€ë ¨ í•¨ìˆ˜ ]
+int MakeChallenge(char depositName[], int money, char endAt[]); //ì±Œë¦°ì§€ ì„¤ì •
+int MakeChallengeUser(int depositIdx, int userIdx); //ì±Œë¦°ì§€ ìœ ì € ì¶”ê°€
+int CheckLastDepositIdx(); //ìµœê·¼ ë§Œë“  ì±Œë¦°ì§€ ì¸ë±ìŠ¤ ë¶ˆëŸ¬ì˜¤ê¸°
+int IsChallengeUser(int depositIdx, int userIdx); //ì±Œë¦°ì§€ ìœ ì €ì¸ì§€ í™•ì¸
+int GetChallengeLen(int userIdx); //ì±Œë¦°ì§€ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetChallengeUserLen(int depositIdx); //ì±Œë¦°ì§€ì— ì°¸ì—¬í•˜ëŠ” ìœ ì € ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+int GetChallengeIdx(int *idxArr, int len, int userIdx);  //ì°¸ì—¬ì¤‘ì¸ ì±Œë¦°ì§€ idxë¶ˆëŸ¬ì˜¤ê¸°
+int GetChallenge(int depositIdx); // ì±Œë¦°ì§€ ì¶œë ¥
 
 
 int userIdx;
@@ -81,42 +81,42 @@ int main(void) {
     
     mysql_init(&conn);
 
-    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // ¼­¹ö¿Í Åë½Å ½ÃÀÛ
+    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // ì„œë²„ì™€ í†µì‹  ì‹œì‘
 
     if (connection == NULL) {
         fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
         return 1;
-    } //¼­¹ö ¿¬°á ¾ÈµÉ½Ã ¿¡·¯ È­¸é
+    } //ì„œë²„ ì—°ê²° ì•ˆë ì‹œ ì—ëŸ¬ í™”ë©´
 
-    FILE* fp = fopen("log.txt","a"); // ·Î±×¸¦ ³²±â±â À§ÇÑ ÆÄÀÏ »ı¼º
+    FILE* fp = fopen("log.txt","a"); // ë¡œê·¸ë¥¼ ë‚¨ê¸°ê¸° ìœ„í•œ íŒŒì¼ ìƒì„±
     char logContent[1024];
 
-    while (1) { //·Î±×ÀÎ, È¸¿ø°¡ÀÔ
+    while (1) { //ë¡œê·¸ì¸, íšŒì›ê°€ì…
         printf("| 1. SignIn | 2. SignUp |\nNumber to Execute : ");
         int func, a;
         scanf("%d", &func);
         switch (func) {
-            case 1 : //·Î±×ÀÎ
-                printf("userIdx to signin : "); //À¯Àú ÀÎµ¦½º·Î ·Î±×ÀÎ
+            case 1 : //ë¡œê·¸ì¸
+                printf("userIdx to signin : "); //ìœ ì € ì¸ë±ìŠ¤ë¡œ ë¡œê·¸ì¸
                 scanf("%d", &a);
-                if (CheckUser(a)) { //È¸¿ø°¡ÀÔ µÇ¾îÀÖ´Â À¯ÀúÀÎÁö È®ÀÎ
+                if (CheckUser(a)) { //íšŒì›ê°€ì… ë˜ì–´ìˆëŠ” ìœ ì €ì¸ì§€ í™•ì¸
                     userIdx = a;
                     printf("Success Signin userIdx : %d\n", userIdx);
                     MakeLog(userIdx, "signin");
                     break;
                 }
-                else { //È¸¿ø°¡ÀÔ ¾ÈµÇ¾î ÀÖÀ» ¶§
+                else { //íšŒì›ê°€ì… ì•ˆë˜ì–´ ìˆì„ ë•Œ
                     printf("This userIdx does not exist. Please check userIdx.\n");
                     continue;
                 }
 
-            case 2 : //È¸¿ø°¡ÀÔ
+            case 2 : //íšŒì›ê°€ì…
                 printf("Please enter a name : ");
                 char name[30];
                 scanf("%s", name);
                 int sign = SignUp(name);
                 if (sign) {
-                    int idx = CheckLastUserIdx(); //ÃÖ±Ù Ãß°¡ÇÑ À¯ÀúÀÇ ÀÎµ¦½º ºÒ·¯¿À±â
+                    int idx = CheckLastUserIdx(); //ìµœê·¼ ì¶”ê°€í•œ ìœ ì €ì˜ ì¸ë±ìŠ¤ ë¶ˆëŸ¬ì˜¤ê¸°
                     printf("successfully registered.\nuserIdx : %d (SignIn to userIdx)\n", idx);
                     MakeLog(idx, "signup");
                     continue;
@@ -125,7 +125,7 @@ int main(void) {
                     continue;
                 }
 
-            default : // 1, 2°¡ ¾Æ´Ñ ´Ù¸¥ ÀÔ·Â µé¾î¿ÔÀ» ¶§
+            default : // 1, 2ê°€ ì•„ë‹Œ ë‹¤ë¥¸ ì…ë ¥ ë“¤ì–´ì™”ì„ ë•Œ
                 printf("Please check the number.\n");
                 continue;
         }
@@ -138,7 +138,7 @@ int main(void) {
     time_t base = time(NULL);
     t = localtime(&base);
 
-    printCalendar(t->tm_year + 1900, t->tm_mon + 1); //´Ş·Â Ãâ·Â
+    printCalendar(t->tm_year + 1900, t->tm_mon + 1); //ë‹¬ë ¥ ì¶œë ¥
 
     printf("\n\n");
     int isRoof = 1;
@@ -155,51 +155,51 @@ int main(void) {
         printf("| 5 : Check review | 6 : Check friend plan | 7 : Add friend |\n");
         printf("| 8 : Add Challenge | 9 : Join Challenge | 10 : Check Challenge | 0 : End |\nNumber to execute : ");
         scanf("%d", &function);
-        if (function == 0) {  //Á¾·á
+        if (function == 0) {  //ì¢…ë£Œ
             printf("Bye.");
             MakeLog(userIdx, "signout");
             break;
         }
         switch (function) {
-            case 1 : { // °èÈ¹ Ãß°¡
+            case 1 : { // ê³„íš ì¶”ê°€
                 printf("Selected Add Plan.\n\n");
                 char planName[20], explain[1024], endAt[20];
                 int openLevel;
                 printf("Please enter a plan name(20 char maximum) : "); 
-                scanf("%s", planName); //°èÈ¹ ÀÌ¸§ ¼³Á¤
+                scanf("%s", planName); //ê³„íš ì´ë¦„ ì„¤ì •
                 printf("Please enter a description of the plan (1024 char maximum) : ");
-                scanf("%s", explain); //°èÈ¹ ¼³¸í
+                scanf("%s", explain); //ê³„íš ì„¤ëª…
                 while (1) {
                     printf("Please enter the openLevel of the plan (1 : Full disclosure, 2 : Friend disclosure, 3 : Only me) : ");
-                    scanf("%d", &openLevel); //³ª¸¸º¸±â ÀÏºÎ°ø°³ ÀüÃ¼°ø°³ ¼³Á¤
+                    scanf("%d", &openLevel); //ë‚˜ë§Œë³´ê¸° ì¼ë¶€ê³µê°œ ì „ì²´ê³µê°œ ì„¤ì •
                     if (openLevel > 0 && openLevel < 4) break;
-                    else { //1, 2, 3ÀÌ ¾Æ´Ñ ´Ù¸¥ ÀÔ·Â µé¾î¿ÔÀ» ¶§ ÀçÀÔ·Â
+                    else { //1, 2, 3ì´ ì•„ë‹Œ ë‹¤ë¥¸ ì…ë ¥ ë“¤ì–´ì™”ì„ ë•Œ ì¬ì…ë ¥
                         printf("Please enter only numbers from 1 to 3.\n");
                         continue;
                     }
                 }
                 printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
-                scanf("%s", endAt); //°èÈ¹ ¸¶°¨ ³¯Â¥
-                MakePlan(userIdx, planName, explain, openLevel, endAt); // °èÈ¹ »ı¼º
-                int planIdx = CheckLastPlanIdx(); //¼¼ºÎ°èÈ¹ Ãß°¡ À§Ä¡¸¦ Á¤ÇÏ±â À§ÇÔ
+                scanf("%s", endAt); //ê³„íš ë§ˆê° ë‚ ì§œ
+                MakePlan(userIdx, planName, explain, openLevel, endAt); // ê³„íš ìƒì„±
+                int planIdx = CheckLastPlanIdx(); //ì„¸ë¶€ê³„íš ì¶”ê°€ ìœ„ì¹˜ë¥¼ ì •í•˜ê¸° ìœ„í•¨
                 printf("Plan has been saved.\n");
-                while (1) { //¼¼ºÎ°èÈ¹ Ãß°¡
+                while (1) { //ì„¸ë¶€ê³„íš ì¶”ê°€
                     printf("Please enter a detail plan name(if want end enter 'end') : ");
                     char input[20];
                     scanf("%s", input);
-                    if (!strcmp(input, "end")) { //¼¼ºÎ°èÈ¹ Ãß°¡ ³¡
+                    if (!strcmp(input, "end")) { //ì„¸ë¶€ê³„íš ì¶”ê°€ ë
                         printf("Ends detail plan registration.\n");
                         break;
                     }
                     char detailName[20], startedAt[20], endAt[20], where[20];
-                    strcpy(detailName, input); //¼¼ºÎ°èÈ¹ ÀÌ¸§ ¼³Á¤
+                    strcpy(detailName, input); //ì„¸ë¶€ê³„íš ì´ë¦„ ì„¤ì •
                     printf("Please enter a date to start (format: yyyy-mm-dd) : ");
-                    scanf("%s", startedAt); //¼¼ºÎ°èÈ¹ ½ÃÀÛ ³¯Â¥ ¼³Á¤
+                    scanf("%s", startedAt); //ì„¸ë¶€ê³„íš ì‹œì‘ ë‚ ì§œ ì„¤ì •
                     printf("Please enter the deadline (format: yyyy-mm-dd) : ");
-                    scanf("%s", endAt); //¼¼ºÎ°èÈ¹ ¸¶°¨ ³¯Â¥ ¼³Á¤
+                    scanf("%s", endAt); //ì„¸ë¶€ê³„íš ë§ˆê° ë‚ ì§œ ì„¤ì •
                     printf("Please enter a place to run : ");
-                    scanf("%s", where); // ¼¼ºÎ°èÈ¹ ½ÇÇà Àå¼Ò ¼³Á¤ ex) cafe, studyroom 
-                    MakePlanDetail(planIdx, detailName, startedAt, endAt, where); //¼¼ºÎ°èÈ¹ »ı¼º
+                    scanf("%s", where); // ì„¸ë¶€ê³„íš ì‹¤í–‰ ì¥ì†Œ ì„¤ì • ex) cafe, studyroom 
+                    MakePlanDetail(planIdx, detailName, startedAt, endAt, where); //ì„¸ë¶€ê³„íš ìƒì„±
                     printf("successfully added a detail plan.\n\n");
                     continue;
                 }
@@ -207,86 +207,86 @@ int main(void) {
                 MakeLog(userIdx, "add plan success");
                 break; }
 
-            case 2 : { //°èÈ¹ »èÁ¦
+            case 2 : { //ê³„íš ì‚­ì œ
                 printf("Selected Delete plan.\n\n");
                 planLen = GetPlanLen(userIdx);
-                if (!planLen) { //°èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                if (!planLen) { //ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "delete plan fail ( no exist plan )");
                     break;
-                } //ÀÌÀüÈ­¸éÀ¸·Î µ¹¾Æ°¨
+                } //ì´ì „í™”ë©´ìœ¼ë¡œ ëŒì•„ê°
                 idxArr = (int*)malloc(sizeof(int) * planLen); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                GetPlanIdx(userIdx, idxArr); //°èÈ¹ ºÒ·¯¿À±â
+                GetPlanIdx(userIdx, idxArr); //ê³„íš ë¶ˆëŸ¬ì˜¤ê¸°
                 printf("--------------------------------------\nnumber(cancel : 0) : "); 
-                while (1) { //°èÈ¹ »èÁ¦
+                while (1) { //ê³„íš ì‚­ì œ
                     int num;
-                    scanf("%d", &num); //»èÁ¦ÇÒ °ÔÈ¹ ¼±ÅÃ
-                    if (num == 0) { //ÇÔ¼ö ³¡³»±â
+                    scanf("%d", &num); //ì‚­ì œí•  ê²Œíš ì„ íƒ
+                    if (num == 0) { //í•¨ìˆ˜ ëë‚´ê¸°
                         printf("delete canceled.\n\n");
                         MakeLog(userIdx, "delete plan cancel");
                         break;
                     }
-                    if (num < 0 || num > planLen) { //°èÈ¹ ¾È¿¡ ÀÖ´Â ¼ö ¿Ü¿¡ ´Ù¸¥ ¼ö¸¦ ¼±ÅÃÇßÀ» ¶§
+                    if (num < 0 || num > planLen) { //ê³„íš ì•ˆì— ìˆëŠ” ìˆ˜ ì™¸ì— ë‹¤ë¥¸ ìˆ˜ë¥¼ ì„ íƒí–ˆì„ ë•Œ
                         printf("Please enter a valid number.\nNumber of plan to delete : ");
                         continue;
                     }
                     --num;
-                    int planIdx = *(idxArr + num); //planIdx¿¡ »ç¿ëÀÚ°¡ »èÁ¦ÇÒ °ª ÁöÁ¤
-                    DeletAllePlandetail(planIdx); // Å« °èÈ¹ »èÁ¦
-                    DeletePlan(userIdx, planIdx); // ¼¼ºÎ°èÈ¹ »èÁ¦
+                    int planIdx = *(idxArr + num); //planIdxì— ì‚¬ìš©ìê°€ ì‚­ì œí•  ê°’ ì§€ì •
+                    DeletAllePlandetail(planIdx); // í° ê³„íš ì‚­ì œ
+                    DeletePlan(userIdx, planIdx); // ì„¸ë¶€ê³„íš ì‚­ì œ
                     printf("Plan has been deleted.\n\n");
                     MakeLog(userIdx, "delete plan success");
                     break;
                 }
                 break; }
 
-            case 3 : { // °èÈ¹ ¼öÁ¤
+            case 3 : { // ê³„íš ìˆ˜ì •
                 printf("Selected Modify Plan.\n\n");
                 planLen = GetPlanLen(userIdx);
-                if (!planLen) { //°èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                if (!planLen) { //ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "modify plan fail ( no exist plan )");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen); 
                 printf("Please select the number of the plan to delete.\n--------------------------------------\n");
-                GetPlanIdx(userIdx, idxArr); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ÀÇ ÀÎµ¦½º¸¦ arr¿¡ ÀúÀå
+                GetPlanIdx(userIdx, idxArr); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íšì˜ ì¸ë±ìŠ¤ë¥¼ arrì— ì €ì¥
                 printf("--------------------------------------\nnumber(cancel : 0) : ");
-                while (1) { //¼öÁ¤ÇÒ °ÔÈ¹ ¼±ÅÃ
+                while (1) { //ìˆ˜ì •í•  ê²Œíš ì„ íƒ
                     int num;
                     scanf("%d", &num);
-                    if (num == 0) { //ÇÔ¼ö ³¡³»±â
+                    if (num == 0) { //í•¨ìˆ˜ ëë‚´ê¸°
                         printf("modify canceled.\n\n");
                         MakeLog(userIdx, "modify plan cancel");
                         break;
                     }
-                    if (num < 0 || num > planLen) { //°èÈ¹ÀÌ ¾ø´Â ÀÎµ¦½º ¼±ÅÃ½Ã
+                    if (num < 0 || num > planLen) { //ê³„íšì´ ì—†ëŠ” ì¸ë±ìŠ¤ ì„ íƒì‹œ
                         printf("Please enter a valid number.\nNumber of plan to modify : ");
                         continue;
                     }
                     --num;
-                    int planIdx = *(idxArr + num); //planIdx¿¡ »ç¿ëÀÚ°¡ »èÁ¦ÇÒ °ª ÁöÁ¤
+                    int planIdx = *(idxArr + num); //planIdxì— ì‚¬ìš©ìê°€ ì‚­ì œí•  ê°’ ì§€ì •
                     char ** arr = (char**)malloc(sizeof(char*) * 7);
                     for(int i = 0; i < 7; ++i) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
-                    GetPlan(arr, planIdx); //¸ğµç °èÈ¹ arr¿¡ ºÒ·¯¿À±â
+                    GetPlan(arr, planIdx); //ëª¨ë“  ê³„íš arrì— ë¶ˆëŸ¬ì˜¤ê¸°
                     char planName[20], explain[1024], endAt[20];
                     strcpy(planName, *(arr + 2)), strcpy(explain, *(arr + 3)), strcpy(endAt, *(arr +  6)); 
                     printf("selected %d. Choose you wan to modify.\n| 1 : planName | 2 : explain | 3 : deadline | : ", num);
                     int modifyFunc;
-                    scanf("%d", &modifyFunc); //¼öÁ¤ÇÒ ³»¿ë ¼±ÅÃ
+                    scanf("%d", &modifyFunc); //ìˆ˜ì •í•  ë‚´ìš© ì„ íƒ
                     switch (modifyFunc) {
-                        case 1 : // °èÈ¹ ÀÌ¸§ ¼öÁ¤
+                        case 1 : // ê³„íš ì´ë¦„ ìˆ˜ì •
                             printf("Please enter a plan name(20 char maximum) : ");
                             scanf("%s", planName);
                             break;
-                        case 2 : //°èÈ¹ ¼³¸í ¼öÁ¤
+                        case 2 : //ê³„íš ì„¤ëª… ìˆ˜ì •
                             printf("Please enter a description of the plan (1024 char maximum) : ");
                             scanf("%s", explain);
                             break;
-                        case 3 : //°èÈ¹ ±âÇÑ ¼öÁ¤
+                        case 3 : //ê³„íš ê¸°í•œ ìˆ˜ì •
                             printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
                             scanf("%s", endAt);
                             break;
@@ -294,31 +294,31 @@ int main(void) {
                             printf("Please check your number.\n");       
                     }
                     
-                    ModifyPlan(planIdx, planName, explain, endAt); //°èÈ¹ ¼öÁ¤
+                    ModifyPlan(planIdx, planName, explain, endAt); //ê³„íš ìˆ˜ì •
                     printf("Plan has been modified.\n\n");
                     MakeLog(userIdx, "modify plan success");
                     break;
                 }
                 break; }
 
-            case 4 : { //°èÈ¹ È®ÀÎ 
+            case 4 : { //ê³„íš í™•ì¸ 
                 printf("Selected Check Plan.\n\n");
                 planLen = GetPlanLen(userIdx);
-                if (!planLen) { //°èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                if (!planLen) { //ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check plan fail ( no exist plan )");
                     break;
                 }
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
                 char date[20];
-                scanf("%s", date); // È®ÀÎÇÒ ³¯Â¥ ¼±ÅÃ
-                int planLen = GetDayPlanLen(userIdx, date); //µ¿Àûº¯¼ö ÇÒ´ç À§ÇÑ ÇÔ¼ö
-                if (!planLen) { //³¯Â¥¿¡ °èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                scanf("%s", date); // í™•ì¸í•  ë‚ ì§œ ì„ íƒ
+                int planLen = GetDayPlanLen(userIdx, date); //ë™ì ë³€ìˆ˜ í• ë‹¹ ìœ„í•œ í•¨ìˆ˜
+                if (!planLen) { //ë‚ ì§œì— ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int * idxArr = (int*)malloc(sizeof(int) * planLen); //µ¿Àûº¯¼ö ÇÒ´ç
-                GetDayPlan(userIdx, date, idxArr); //ÀÔ·Â¹ŞÀº ³¯ÀÇ °èÈ¹ ¸®½ºÆ® Ãâ·Â, ÀÎµ¦½º ¸®ÅÏ
+                int * idxArr = (int*)malloc(sizeof(int) * planLen); //ë™ì ë³€ìˆ˜ í• ë‹¹
+                GetDayPlan(userIdx, date, idxArr); //ì…ë ¥ë°›ì€ ë‚ ì˜ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥, ì¸ë±ìŠ¤ ë¦¬í„´
                 for (int i = 0; i < planLen; ++i) { 
                     int planIdx = *(idxArr + i);
                     char ** arr = (char**)malloc(sizeof(char*) * 7); 
@@ -338,38 +338,38 @@ int main(void) {
                 MakeLog(userIdx, "check plan success");
                 break; }
 
-            case 5 : { // ¸®ºä È®ÀÎ
+            case 5 : { // ë¦¬ë·° í™•ì¸
                 printf("Seleted Check Review.\n\n");
                 planLen = GetPlanLen(userIdx);
-                if (!planLen) { //°èÈ¹ÀÌ ÇÏ³ªµµ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                if (!planLen) { //ê³„íšì´ í•˜ë‚˜ë„ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check reiew fail ( no exist plan )");
                     break;
                 }
                 printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
                 char date[20];
-                scanf("%s", date); //¸®ºä È®ÀÎÇÒ ³¯Â¥ ÀÔ·Â
-                int planLen = GetDayPlanLen(userIdx, date); // µ¿Àûº¯¼ö ÇÒ´ç À§ÇÑ ÇÔ¼ö
+                scanf("%s", date); //ë¦¬ë·° í™•ì¸í•  ë‚ ì§œ ì…ë ¥
+                int planLen = GetDayPlanLen(userIdx, date); // ë™ì ë³€ìˆ˜ í• ë‹¹ ìœ„í•œ í•¨ìˆ˜
 
-                if (!planLen) { //¼±ÅÃÇÑ ³¯Â¥¿¡ °èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                if (!planLen) { //ì„ íƒí•œ ë‚ ì§œì— ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Plan does not exist. Return to the number selection window.\n\n");
                     break;
                 }
-                int * idxArr = (int*)malloc(sizeof(int) * planLen); //µ¿Àûº¯¼ö ÇÒ´ç
-                GetDayPlan(userIdx, date, idxArr); //ÀÔ·Â¹ŞÀº ³¯ÀÇ °èÈ¹ ¸®½ºÆ® Ãâ·Â, ÀÎµ¦½º ¸®ÅÏ
-                printf("planLen : %d\n", planLen); //°èÈ¹ °³¼ö Ãâ·Â
+                int * idxArr = (int*)malloc(sizeof(int) * planLen); //ë™ì ë³€ìˆ˜ í• ë‹¹
+                GetDayPlan(userIdx, date, idxArr); //ì…ë ¥ë°›ì€ ë‚ ì˜ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥, ì¸ë±ìŠ¤ ë¦¬í„´
+                printf("planLen : %d\n", planLen); //ê³„íš ê°œìˆ˜ ì¶œë ¥
                 for (int i = 0; i < planLen; ++i) {
                     int planIdx = *(idxArr + i);
                     char ** arr = (char**)malloc(sizeof(char*) * 7);
                     for(int i = 0; i < 7; ++i) {
                         *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                     }
-                    GetPlan(arr, planIdx); //¸ğµç °èÈ¹ Ãâ·Â
+                    GetPlan(arr, planIdx); //ëª¨ë“  ê³„íš ì¶œë ¥
                     printf("\n--------------------------------------\n");
                     printf("[ Plan %d ] : %s\nexplain : %s\n\n", i + 1, *(arr + 2), *(arr + 3));
                     if (GetPlanReviewLen(planIdx)) {
                         printf("[ Plan Review ]\n"); 
-                        GetPlanReview(planIdx); //¸®ºä °¡Á®¿À±â
+                        GetPlanReview(planIdx); //ë¦¬ë·° ê°€ì ¸ì˜¤ê¸°
                     }
                     else printf("(There is no review in this plan.)\n");
                     printf("--------------------------------------\n\n");
@@ -377,65 +377,65 @@ int main(void) {
                 MakeLog(userIdx, "check review success");
                 break; }
 
-            case 6 : { // Ä£±¸ °èÈ¹ È®ÀÎ
+            case 6 : { // ì¹œêµ¬ ê³„íš í™•ì¸
                 printf("Seleted Check Friend Plan.\n\n");
-                int friendLen = GetFriendLen(userIdx); //Ä£±¸ ¼ö Ã¼Å©¿Í µ¿Àûº¯¼ö ÇÒ´ç À§ÇØ ÇÊ¿äÇÑ ÇÔ¼ö
-                if (!friendLen) { //Ä£±¸°¡ ÇÏ³ªµµ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                int friendLen = GetFriendLen(userIdx); //ì¹œêµ¬ ìˆ˜ ì²´í¬ì™€ ë™ì ë³€ìˆ˜ í• ë‹¹ ìœ„í•´ í•„ìš”í•œ í•¨ìˆ˜
+                if (!friendLen) { //ì¹œêµ¬ê°€ í•˜ë‚˜ë„ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Friend does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check friend plan fail ( no exist friend )");
                     break;
                 }
-                int * idxArr = (int*)malloc(sizeof(int) * friendLen); //µ¿Àûº¯¼ö ÇÒ´ç
+                int * idxArr = (int*)malloc(sizeof(int) * friendLen); //ë™ì ë³€ìˆ˜ í• ë‹¹
                 printf("--------------------------------------\n");
-                GetFriend(idxArr, userIdx); //Ä£±¸ ºÒ·¯¿À±â
+                GetFriend(idxArr, userIdx); //ì¹œêµ¬ ë¶ˆëŸ¬ì˜¤ê¸°
                 printf("--------------------------------------\n"); 
                 printf("Select the number : ");
                 int number;
-                scanf("%d", &number); //°èÈ¹ È®ÀÎÇÒ Ä£±¸ÀÇ idx ¼±ÅÃ
-                if (number > friendLen || number < 0) { //idx¸¦ ¹ş¾î³­ ¼ö ¼±ÅÃ½Ã
+                scanf("%d", &number); //ê³„íš í™•ì¸í•  ì¹œêµ¬ì˜ idx ì„ íƒ
+                if (number > friendLen || number < 0) { //idxë¥¼ ë²—ì–´ë‚œ ìˆ˜ ì„ íƒì‹œ
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check friend plan fail ( no exist friendIdx )");
                     break;
                 }
                 --number;
                 int friendIdx = *(idxArr + number); 
-                int planLen = GetPlanLen(friendIdx); //¼±ÅÃÇÑ Ä£±¸ÀÇ °èÈ¹ °³¼ö ºÒ·¯¿À±â
-                if (!planLen) { //Ä£±¸ÀÇ °èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                int planLen = GetPlanLen(friendIdx); //ì„ íƒí•œ ì¹œêµ¬ì˜ ê³„íš ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+                if (!planLen) { //ì¹œêµ¬ì˜ ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check friend plan fail ( no exist friend planIdx )");
                     break;
                 }
                 free(idxArr);
-                int * idxArr2 = (int*)malloc(sizeof(int) * planLen); // ¼±ÅÃÇÑ Ä£±¸ÀÇ °èÈ¹ ºÒ·¯¿Ã ÀÌÂ÷¿ø µ¿Àû¹è¿­ ÇÒ´ç
+                int * idxArr2 = (int*)malloc(sizeof(int) * planLen); // ì„ íƒí•œ ì¹œêµ¬ì˜ ê³„íš ë¶ˆëŸ¬ì˜¬ ì´ì°¨ì› ë™ì ë°°ì—´ í• ë‹¹
                 printf("\n--------------------------------------\n");
-                GetFriendPlan(userIdx, friendIdx, idxArr2); //¼±ÅÃÇÑ Ä£±¸ÀÇ °èÈ¹ ºÒ·¯¿À±â
+                GetFriendPlan(userIdx, friendIdx, idxArr2); //ì„ íƒí•œ ì¹œêµ¬ì˜ ê³„íš ë¶ˆëŸ¬ì˜¤ê¸°
                 printf("--------------------------------------\n");
                 printf("Select the number : ");
-                scanf("%d", &number); //´õ ¼¼ºÎÀûÀ¸·Î È®ÀÎÇÒ °èÈ¹ÀÇ ÀÎµ¦½º ¼±ÅÃ
-                if (number > planLen || number < 0) { //¼±ÅÃÇÑ ¹øÈ£¿¡ °èÈ¹ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                scanf("%d", &number); //ë” ì„¸ë¶€ì ìœ¼ë¡œ í™•ì¸í•  ê³„íšì˜ ì¸ë±ìŠ¤ ì„ íƒ
+                if (number > planLen || number < 0) { //ì„ íƒí•œ ë²ˆí˜¸ì— ê³„íšì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("Number does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "check friend plan fail ( wrong number )");
                     break;
                 }
                 --number;
                 int planIdx = *(idxArr2 + number); 
-                char ** arr = (char**)malloc(sizeof(char*) * 7); //¼±ÅÃÇÑ Ä£±¸ÀÇ °èÈ¹ÀÇ ¸ğµç value ºÒ·¯¿À±â À§ÇÑ ÀÌÂ÷¿ø µ¿Àû¹è¿­ ÇÒ´ç
+                char ** arr = (char**)malloc(sizeof(char*) * 7); //ì„ íƒí•œ ì¹œêµ¬ì˜ ê³„íšì˜ ëª¨ë“  value ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•œ ì´ì°¨ì› ë™ì ë°°ì—´ í• ë‹¹
                 for(int i = 0; i < 7; ++i) {
                     *(arr + i) = (char*)malloc(sizeof(char) * 1024);
                 }
-                GetPlan(arr, planIdx); //¼±ÅÃÇÑ Ä£±¸ °èÈ¹ÀÇ ¸ğµç value ºÒ·¯¿À±â
+                GetPlan(arr, planIdx); //ì„ íƒí•œ ì¹œêµ¬ ê³„íšì˜ ëª¨ë“  value ë¶ˆëŸ¬ì˜¤ê¸°
                 printf("\n-------------------------------------\n");
                 printf("[ Plan ]\n");
-                printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3)); //Ä£±¸ °èÈ¹ È®ÀÎ
-                if (GetPlanDetailLen(planIdx)) { //¼±ÅÃÇÑ Ä£±¸ °èÈ¹ÀÇ ¼¼ºÎ°èÈ¹ÀÌ ÀÖÀ¸¸é ½ÇÇà
+                printf("name : %s (~%s)\nexplain : %s\n", *(arr+2), *(arr+6), *(arr+3)); //ì¹œêµ¬ ê³„íš í™•ì¸
+                if (GetPlanDetailLen(planIdx)) { //ì„ íƒí•œ ì¹œêµ¬ ê³„íšì˜ ì„¸ë¶€ê³„íšì´ ìˆìœ¼ë©´ ì‹¤í–‰
                     printf("[ Plan Detail ]\n");
-                    GetPlanDetail(planIdx); //Ä£±¸ÀÇ ¼¼ºÎ°èÈ¹ ºÒ·¯¿À±â
+                    GetPlanDetail(planIdx); //ì¹œêµ¬ì˜ ì„¸ë¶€ê³„íš ë¶ˆëŸ¬ì˜¤ê¸°
                 } else printf("\n(There is no plan detail in this plan.)\n"); 
                 printf("--------------------------------------\n\n");
                 printf("Make review for this plan (max 100 char, exit : 'end') : ");
                 char input[100];
-                scanf("%s", input); //¸®ºä ³²±â±â
-                if (!strcmp(input, "end")) { //end ÀÔ·Â½Ã Á¾·á
+                scanf("%s", input); //ë¦¬ë·° ë‚¨ê¸°ê¸°
+                if (!strcmp(input, "end")) { //end ì…ë ¥ì‹œ ì¢…ë£Œ
                     printf("Ends review about friend's plan.\n");
                     break;
                 }
@@ -444,84 +444,84 @@ int main(void) {
                 int score;
                 while (1) {
                     printf("Please enter score (1~5) : ");
-                    scanf("%d", &score); //º°Á¡ Ãß°¡
-                    if (score > 5 || score < 0) { //¹üÀ§ ¹ş¾î³­ ¼ö ÀÔ·Â½Ã
+                    scanf("%d", &score); //ë³„ì  ì¶”ê°€
+                    if (score > 5 || score < 0) { //ë²”ìœ„ ë²—ì–´ë‚œ ìˆ˜ ì…ë ¥ì‹œ
                         printf("Invaild score.\n\n");
                         continue;
                     }
                     break;
                 }
-                MakePlanReview(planIdx, userIdx, content, score); //¸®ºä »ı¼º
+                MakePlanReview(planIdx, userIdx, content, score); //ë¦¬ë·° ìƒì„±
                 printf("successfully added a review.\n\n");
                 
                 free(idxArr2);
                 MakeLog(userIdx, "check friend plan success ");
                 break; }
 
-            case 7 : { //Ä£±¸ Ãß°¡
+            case 7 : { //ì¹œêµ¬ ì¶”ê°€
                 printf("Selected Add Friend.\n\n");
                 int friendIdx;
                 printf("Enter friend's userIdx : ");
-                scanf("%d", &friendIdx); //Ãß°¡ÇÒ Ä£±¸ ÀÎµ¦½º ÀÔ·Â
-                int check = CheckUser(friendIdx); //Ä£±¸ Á¸Àç È®ÀÎ
-                if (!check) { //Ä£±¸°¡ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§
+                scanf("%d", &friendIdx); //ì¶”ê°€í•  ì¹œêµ¬ ì¸ë±ìŠ¤ ì…ë ¥
+                int check = CheckUser(friendIdx); //ì¹œêµ¬ ì¡´ì¬ í™•ì¸
+                if (!check) { //ì¹œêµ¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šì„ ë•Œ
                     printf("userIdx not exists.\n\n");
                     break;
                 }
-                MakeFriend(userIdx, friendIdx); //Ä£±¸ Ãß°¡
+                MakeFriend(userIdx, friendIdx); //ì¹œêµ¬ ì¶”ê°€
                 printf("Successfully friend added.\n\n");
                 break; }
 
-            case 8 : { // Ã§¸°Áö ¸¸µé±â
+            case 8 : { // ì±Œë¦°ì§€ ë§Œë“¤ê¸°
                 printf("Selected Add Challenge.\n\n");
                 char depositName[20], endAt[20];
                 int money;
                 printf("Please enter a challenge name(20 char maximum) : ");
-                scanf("%s", depositName); //Ã§¸°Áö ÀÌ¸§ ¼³Á¤
+                scanf("%s", depositName); //ì±Œë¦°ì§€ ì´ë¦„ ì„¤ì •
                 printf("Please enter money to deposit : ");
-                scanf("%d", &money); //ÀÎ´ç ¸ğ±İ¾× ¼³Á¤
+                scanf("%d", &money); //ì¸ë‹¹ ëª¨ê¸ˆì•¡ ì„¤ì •
                 printf("Please enter a challenge deadline (format: yyyy-mm-dd) : ");
-                scanf("%s", endAt); //Ã§¸°Áö ±â°£ ¼³Á¤
-                MakeChallenge(depositName, money, endAt); //Ã§¸°Áö »ı¼º(ÀÌ¸§, ¸ğ±İ¾×, ±â°£ Ãß°¡)
-                int depositIdx = CheckLastDepositIdx(); //ÃÖ±Ù »ı¼ºµÈ Ã§¸°Áö idx¸¦ depositIdx¿¡ ÀúÀå
-                MakeChallengeUser(depositIdx, userIdx); //Ã§¸°Áö¿¡ À¯Àú ÀÌ¸§, À¯Àú ÀÎµ¦½º Ãß°¡
+                scanf("%s", endAt); //ì±Œë¦°ì§€ ê¸°ê°„ ì„¤ì •
+                MakeChallenge(depositName, money, endAt); //ì±Œë¦°ì§€ ìƒì„±(ì´ë¦„, ëª¨ê¸ˆì•¡, ê¸°ê°„ ì¶”ê°€)
+                int depositIdx = CheckLastDepositIdx(); //ìµœê·¼ ìƒì„±ëœ ì±Œë¦°ì§€ idxë¥¼ depositIdxì— ì €ì¥
+                MakeChallengeUser(depositIdx, userIdx); //ì±Œë¦°ì§€ì— ìœ ì € ì´ë¦„, ìœ ì € ì¸ë±ìŠ¤ ì¶”ê°€
 
                 printf("Successfully challenge added.\nif you want to join another people, take this idx : %d\n\n", depositIdx);
                 MakeLog(userIdx, "make challenge success");
                 break; }
 
-            case 9 : { // Ã§¸°Áö Âü¿©
+            case 9 : { // ì±Œë¦°ì§€ ì°¸ì—¬
                 printf("Selected Join Challenge.\n\n");
                 int depositIdx;
                 printf("Please enter idx to join : ");
-                scanf("%d", &depositIdx); // Âü¿©ÇÒ Ã§¸°Áö ÀÎµ¦½º ¼±ÅÃ
-                int userLen = GetChallengeUserLen(depositIdx); //Ã§¸°Áö Âü¿©ÁßÀÎ À¯Àú ¼ö ºÒ·¯¿À±â
-                if (!userLen) { //À¯Àú Á¸ÀçÇÏÁö ¾ÊÀ»½Ã
+                scanf("%d", &depositIdx); // ì°¸ì—¬í•  ì±Œë¦°ì§€ ì¸ë±ìŠ¤ ì„ íƒ
+                int userLen = GetChallengeUserLen(depositIdx); //ì±Œë¦°ì§€ ì°¸ì—¬ì¤‘ì¸ ìœ ì € ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
+                if (!userLen) { //ìœ ì € ì¡´ì¬í•˜ì§€ ì•Šì„ì‹œ
                     printf("Idx does not exist. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "join challenge fail ( no exist depositIdx )");
                     break;
                 }
-                int check = IsChallengeUser(depositIdx, userIdx); //À¯Àú°¡ Ã§¸°Áö Âü¿©ÁßÀÎÁö ¾Æ´ÑÁö Ã¼Å©
-                if (check) { //check = 1 ÀÏ ¶§, ÀÌ¹Ì Âü¿©ÁßÀÎ Ã§¸°Áö ÀÔ´Ï´Ù. printÈÄ ³¡³»±â
+                int check = IsChallengeUser(depositIdx, userIdx); //ìœ ì €ê°€ ì±Œë¦°ì§€ ì°¸ì—¬ì¤‘ì¸ì§€ ì•„ë‹Œì§€ ì²´í¬
+                if (check) { //check = 1 ì¼ ë•Œ, ì´ë¯¸ ì°¸ì—¬ì¤‘ì¸ ì±Œë¦°ì§€ ì…ë‹ˆë‹¤. printí›„ ëë‚´ê¸°
                     printf("You already joined this challenge. Return to the number selection window.\n\n");
                     MakeLog(userIdx, "join challenge fail ( already joined )");
                     break;
                 }
                 printf("--------------------------------------\n");
                 printf("[ %d people joined ]\n", userLen);
-                GetChallenge(depositIdx); // Ã§¸°Áö ºÒ·¯¿À±â
+                GetChallenge(depositIdx); // ì±Œë¦°ì§€ ë¶ˆëŸ¬ì˜¤ê¸°
                 printf("--------------------------------------\n");
-                MakeChallengeUser(depositIdx, userIdx); // Ã§¸°Áö Âü¿©
+                MakeChallengeUser(depositIdx, userIdx); // ì±Œë¦°ì§€ ì°¸ì—¬
                 printf("Successfully Joined.\n\n");
                 MakeLog(userIdx, "join challenge success");
                 break; }
 
-            case 10 : { // Ã§¸°Áö È®ÀÎ
+            case 10 : { // ì±Œë¦°ì§€ í™•ì¸
                 printf("Selected Check Challenge.\n\n");
-                int len = GetChallengeLen(userIdx); // Âü¿©ÁßÀÎ Ã§¸°Áö °³¼ö Ãâ·Â
-                int * idxArr = (int*)malloc(sizeof(int) * len); // Ã§¸°Áö ¹Ş¾Æ¿Ã µ¿Àû¹è¿­ÇÒ´ç
-                GetChallengeIdx(idxArr, len, userIdx); //Ã§¸°Áö ÀÎµ¦½º ¸ğµÎ ºÒ·¯¿À±â
-                for (int i = 0; i < len; ++i) { //¸ğµç Ã§¸°Áö¿Í Ã§¸°Áö Âü¿©ÁßÀÎ À¯Àú ¼ö print
+                int len = GetChallengeLen(userIdx); // ì°¸ì—¬ì¤‘ì¸ ì±Œë¦°ì§€ ê°œìˆ˜ ì¶œë ¥
+                int * idxArr = (int*)malloc(sizeof(int) * len); // ì±Œë¦°ì§€ ë°›ì•„ì˜¬ ë™ì ë°°ì—´í• ë‹¹
+                GetChallengeIdx(idxArr, len, userIdx); //ì±Œë¦°ì§€ ì¸ë±ìŠ¤ ëª¨ë‘ ë¶ˆëŸ¬ì˜¤ê¸°
+                for (int i = 0; i < len; ++i) { //ëª¨ë“  ì±Œë¦°ì§€ì™€ ì±Œë¦°ì§€ ì°¸ì—¬ì¤‘ì¸ ìœ ì € ìˆ˜ print
                     int depositIdx = *(idxArr + i);
                     int userLen = GetChallengeUserLen(depositIdx); 
                     printf("\n--------------------------------------\n");
@@ -531,7 +531,7 @@ int main(void) {
                     MakeLog(userIdx, "check challenge success");
                 }
                 break; }
-            default : // 1~10 ¿ÜÀÇ ´Ù¸¥ ¼ıÀÚ ÀÔ·Â½Ã
+            default : // 1~10 ì™¸ì˜ ë‹¤ë¥¸ ìˆ«ì ì…ë ¥ì‹œ
                 printf("Please check your number.\n\n");
                 continue;
         }
@@ -549,8 +549,8 @@ void MakeLog(int userIdx, char content[]) {
     char log[1024];
     struct tm *t;
     time_t timer;
-    timer = time(NULL);    // ÇöÀç ½Ã°¢À» ÃÊ ´ÜÀ§·Î ¾ò±â
-    t = localtime(&timer); // ÃÊ ´ÜÀ§ÀÇ ½Ã°£À» ºĞ¸®ÇÏ¿© ±¸Á¶Ã¼¿¡ ³Ö±â
+    timer = time(NULL);    // í˜„ì¬ ì‹œê°ì„ ì´ˆ ë‹¨ìœ„ë¡œ ì–»ê¸°
+    t = localtime(&timer); // ì´ˆ ë‹¨ìœ„ì˜ ì‹œê°„ì„ ë¶„ë¦¬í•˜ì—¬ êµ¬ì¡°ì²´ì— ë„£ê¸°
     char time[40];
     sprintf(time, "%04d-%02d-%02d %02d:%02d:%02d",
             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
@@ -578,21 +578,21 @@ int IsLeafYear(int year) {
 	return 0;
 }
 /*
-¤¤year : ³âµµ ¹Ş¾Æ¿È
-4, 100À¸·Î ³ª´²Áö¸é À±³â, ¾Æ´Ï¸é Æò³â
-À±³âÀÌ¸é 1¸®ÅÏ, Æò³âÀÌ¸é 0¸®ÅÏ
+ã„´year : ë…„ë„ ë°›ì•„ì˜´
+4, 100ìœ¼ë¡œ ë‚˜ëˆ ì§€ë©´ ìœ¤ë…„, ì•„ë‹ˆë©´ í‰ë…„
+ìœ¤ë…„ì´ë©´ 1ë¦¬í„´, í‰ë…„ì´ë©´ 0ë¦¬í„´
 */
 
 int getDay(int year, int month) { 
     if (month < 1 || month > 12) return 0;
     int day[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    if ((year % 4) == 0 && (year % 100) != 0 || (year % 400) == 0) day[1] = 29; //À±³âÀÌ¸é 2¿ùÀº 29ÀÏ±îÁö
+    if ((year % 4) == 0 && (year % 100) != 0 || (year % 400) == 0) day[1] = 29; //ìœ¤ë…„ì´ë©´ 2ì›”ì€ 29ì¼ê¹Œì§€
     return day[month - 1]; 
 } 
 /*
-¤¤year : ³âµµ ¹Ş¾Æ¿È
-¤¤month : ¿ù ¹Ş¾Æ¿È
-¿ù º° ³¯Â¥¼ö °è»ê ÈÄ ÇØ´ç ´Ş¿¡ ¸Â´Â ³¯Â¥¼ö ¸®ÅÏ
+ã„´year : ë…„ë„ ë°›ì•„ì˜´
+ã„´month : ì›” ë°›ì•„ì˜´
+ì›” ë³„ ë‚ ì§œìˆ˜ ê³„ì‚° í›„ í•´ë‹¹ ë‹¬ì— ë§ëŠ” ë‚ ì§œìˆ˜ ë¦¬í„´
 */
 
 int getStartDay(int year, int month) {
@@ -604,9 +604,9 @@ int getStartDay(int year, int month) {
 	return (1 + past) % 7;
 } 
 /*
-¤¤year : ³âµµ ¹Ş¾Æ¿È
-¤¤month : ¿ù ¹Ş¾Æ¿È
-¿ùÀ» ½ÃÀÛÇÏ´Â ¿äÀÏ ¸®ÅÏ
+ã„´year : ë…„ë„ ë°›ì•„ì˜´
+ã„´month : ì›” ë°›ì•„ì˜´
+ì›”ì„ ì‹œì‘í•˜ëŠ” ìš”ì¼ ë¦¬í„´
 */
 
 void printCalendar(int year, int month) {
@@ -615,162 +615,162 @@ void printCalendar(int year, int month) {
     printf("           [ %d - %d ]            \n\n", year, month);
     printf("    S    M    T    W    T    F    S\n\n");
     for(int i = 0; i < start_day; ++i) printf("     ");
-    int count = start_day; // 7ÀÏÀÌ Âû¶§¸¶´Ù ÁÖ¸¦ ¹Ù²ãÁà¾ß ÇÏ±â ¶§¹®¿¡ count¸¦ »ç¿ë
+    int count = start_day; // 7ì¼ì´ ì°°ë•Œë§ˆë‹¤ ì£¼ë¥¼ ë°”ê¿”ì¤˜ì•¼ í•˜ê¸° ë•Œë¬¸ì— countë¥¼ ì‚¬ìš©
     for (int j = 1; j <= day; ++j) {
         int check = 0;
         if (check == 0) {
             printf("%5d", j);
             count++;
         }
-        if (count == 7) { // Ä«¿îÆ®°¡ 7ÀÌ µÇ´Â ¼ø°£ ´ÙÀ½ÁÖ·Î ³Ñ¾î°¨
+        if (count == 7) { // ì¹´ìš´íŠ¸ê°€ 7ì´ ë˜ëŠ” ìˆœê°„ ë‹¤ìŒì£¼ë¡œ ë„˜ì–´ê°
             printf("\n\n");
             count = 0;
         }
     }
 }
 /*
-¤¤year : ³âµµ ¹Ş¾Æ¿È
-¤¤month : ¿ù ¹Ş¾Æ¿È
+ã„´year : ë…„ë„ ë°›ì•„ì˜´
+ã„´month : ì›” ë°›ì•„ì˜´
 
 */
 
-int SignUp(char name[]) { //À¯Àú ÀÌ¸§ ¹ŞÀ½
-    sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // UserÀ» Ãß°¡ÇÏ´Â Äõ¸®¹®
+int SignUp(char name[]) { //ìœ ì € ì´ë¦„ ë°›ìŒ
+    sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // Userì„ ì¶”ê°€í•˜ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
-    if (!query_stat) { //À¯Àú Á¸Àç ¾ÈÇÏ¸é 1 return
+    if (!query_stat) { //ìœ ì € ì¡´ì¬ ì•ˆí•˜ë©´ 1 return
         return 1;
-    } else { //À¯Àú°¡ ÀÌ¹Ì Á¸ÀçÇÏ¸é ¿¡·¯È­¸é ¶ß¸é¼­ 0 return
+    } else { //ìœ ì €ê°€ ì´ë¯¸ ì¡´ì¬í•˜ë©´ ì—ëŸ¬í™”ë©´ ëœ¨ë©´ì„œ 0 return
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
 }
 /*
-¤¤name : È¸¿ø°¡ÀÔ ÇÒ À¯Àú ÀÌ¸§
-ÀÌ¹Ì À¯Àú Á¸Àç½Ã ¸®ÅÏÇÏ¸ç ¿À·ù print, È¸¿ø°¡ÀÔ ¼º°øÇÏ¸é 1 ¸®ÅÏ
+ã„´name : íšŒì›ê°€ì… í•  ìœ ì € ì´ë¦„
+ì´ë¯¸ ìœ ì € ì¡´ì¬ì‹œ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print, íšŒì›ê°€ì… ì„±ê³µí•˜ë©´ 1 ë¦¬í„´
 
 */
 
 int CheckLastUserIdx() {
-    sprintf(query, "SELECT MAX(userIdx) FROM User"); // À¯ÀúÀÇ UserIdx Áß °¡Àå Å« ¼ö Äõ¸®¹®¿¡ ¹Ş¾Æ¿À±â
+    sprintf(query, "SELECT MAX(userIdx) FROM User"); // ìœ ì €ì˜ UserIdx ì¤‘ ê°€ì¥ í° ìˆ˜ ì¿¼ë¦¬ë¬¸ì— ë°›ì•„ì˜¤ê¸°
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0) //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     char * res;
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0]; //userIdx ¸®ÅÏÇÏ±â À§ÇØ º¯¼ö¿¡ ÀúÀå
-    return atoi(res);  //useridx ¸®ÅÏ
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0]; //userIdx ë¦¬í„´í•˜ê¸° ìœ„í•´ ë³€ìˆ˜ì— ì €ì¥
+    return atoi(res);  //useridx ë¦¬í„´
 }
 /*
-À¯ÀúÀÇ UserIdx Áß °¡Àå Å« ¼ö Äõ¸®¹®¿¡ ¹Ş¾Æ¿Í¼­ Ãâ·Â
-ºÒ·¯¿À±â ¼º°øÇÏ¸é UserIdx Áß °¡Àå Å« °ª Ãâ·Â, ¾Æ´Ï¶ó¸é ¸®ÅÏÇÏ¸ç ¿À·ù print
+ìœ ì €ì˜ UserIdx ì¤‘ ê°€ì¥ í° ìˆ˜ ì¿¼ë¦¬ë¬¸ì— ë°›ì•„ì™€ì„œ ì¶œë ¥
+ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ UserIdx ì¤‘ ê°€ì¥ í° ê°’ ì¶œë ¥, ì•„ë‹ˆë¼ë©´ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print
 */
 
 int CheckUser(int userIdx) {
-    sprintf(query, "SELECT EXISTS (SELECT 1 FROM User WHERE userIdx = %d) AS cnt", userIdx);  //useridx Å×ÀÌºí¿¡¼­ »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ useridxºÒ·¯¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT EXISTS (SELECT 1 FROM User WHERE userIdx = %d) AS cnt", userIdx);  //useridx í…Œì´ë¸”ì—ì„œ ì‚¬ìš©ìê°€ ì„ íƒí•œ useridxë¶ˆëŸ¬ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
     
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     char * a;
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ªÀÌ ¾øÀ» ¶§±îÁö ¹İÈ¯
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ì´ ì—†ì„ ë•Œê¹Œì§€ ë°˜í™˜
         a = sql_row[0];
     }
-    return atoi(a); //À¯Àú Á¸Àç½Ã useridx ¸®ÅÏ
+    return atoi(a); //ìœ ì € ì¡´ì¬ì‹œ useridx ë¦¬í„´
 }
 /*
-¤¤userIdx : Á¸Àç¿©ºÎ Ã¼Å©ÇÒ À¯ÀúÀÇ idx
-À¯Àú Á¸Àç ¾ÈÇÒ½Ã 0 ¸®ÅÏ, Á¸Àç½Ã useridx ¸®ÅÏ
+ã„´userIdx : ì¡´ì¬ì—¬ë¶€ ì²´í¬í•  ìœ ì €ì˜ idx
+ìœ ì € ì¡´ì¬ ì•ˆí• ì‹œ 0 ë¦¬í„´, ì¡´ì¬ì‹œ useridx ë¦¬í„´
 */
 
 int PrintUser() {
-    sprintf(query, "SELECT * FROM User"); // User Å×ÀÌºí ¾È¿¡ ÀÖ´Â ¸ğµç °ªÀ» °¡Á®¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT * FROM User"); // User í…Œì´ë¸” ì•ˆì— ìˆëŠ” ëª¨ë“  ê°’ì„ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
     
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     printf("\n--------------------------------------\n");
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ªÀÌ ¾øÀ» ¶§±îÁö ¹İÈ¯
-        printf("%s : %s\n", sql_row[0], sql_row[1]); //À¯Àú ÀÎµ¦½º¿Í À¯Àú print
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ì´ ì—†ì„ ë•Œê¹Œì§€ ë°˜í™˜
+        printf("%s : %s\n", sql_row[0], sql_row[1]); //ìœ ì € ì¸ë±ìŠ¤ì™€ ìœ ì € print
     }
     printf("--------------------------------------\n\n");
     return 1;
 }
 /*
-À¯ÀúÀÎµ¦½º¿Í À¯Àú print
+ìœ ì €ì¸ë±ìŠ¤ì™€ ìœ ì € print
 */
 
 int MakeFriend(int userIdx, int friendIdx) {
-    sprintf(query, "INSERT INTO Friend VALUES (%d, %d), (%d, %d)", userIdx, friendIdx, friendIdx, userIdx); //Ä£±¸ Ãß°¡ Äõ¸®
+    sprintf(query, "INSERT INTO Friend VALUES (%d, %d), (%d, %d)", userIdx, friendIdx, friendIdx, userIdx); //ì¹œêµ¬ ì¶”ê°€ ì¿¼ë¦¬
     query_stat = mysql_query(connection, query);
-    if (!query_stat) { //ºÒ·¯¿À±â ¼º°ø½Ã 1¸®ÅÏ
+    if (!query_stat) { //ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µì‹œ 1ë¦¬í„´
         return 1;
-    } else { //ºÒ·¯¿À±â ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    } else { //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
 }
 /*
-¤¤userIdx :
-¤¤friendIdx : 
+ã„´userIdx :
+ã„´friendIdx : 
 
 
 */
 
 int GetFriendLen(int userIdx) {
-    sprintf(query, "SELECT COUNT(friendIdx) FROM Friend WHERE userIdx = %d", userIdx); //À¯ÀúÀÇ Ä£±¸ ¼ö ºÒ·¯¿À±â
+    sprintf(query, "SELECT COUNT(friendIdx) FROM Friend WHERE userIdx = %d", userIdx); //ìœ ì €ì˜ ì¹œêµ¬ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0)  //ºÒ·¯¿À±â ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0)  //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     char * res; 
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0]; //Ä£±¸ ¼ö ¸®ÅÏÇÏ±â À§ÇØ º¯¼ö¿¡ ÀúÀå 
-    return atoi(res); //Ä£±¸ ¼ö ¸®ÅÏ
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0]; //ì¹œêµ¬ ìˆ˜ ë¦¬í„´í•˜ê¸° ìœ„í•´ ë³€ìˆ˜ì— ì €ì¥ 
+    return atoi(res); //ì¹œêµ¬ ìˆ˜ ë¦¬í„´
 }
 /*
-¤¤userIdx : userÀÇ Ä£±¸ ¼ö ºÒ·¯¿À±â À§ÇÑ userIdx
-À¯ÀúÀÇ Ä£±¸ ¼ö ºÒ·¯¿À±â ¼º°ø½Ã Ä£±¸ ¼ö ¸®ÅÏ, ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : userì˜ ì¹œêµ¬ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•œ userIdx
+ìœ ì €ì˜ ì¹œêµ¬ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µì‹œ ì¹œêµ¬ ìˆ˜ ë¦¬í„´, ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetFriend(int * idxArr, int userIdx) {
-    sprintf(query, "SELECT f.friendIdx, u.userName FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx); //Ä£±¸ ÀÎµ¦½º¿¡ ÇØ´çÇÏ´Â ÀÌ¸§À» ºÒ·¯¿È
+    sprintf(query, "SELECT f.friendIdx, u.userName FROM Friend f, User u WHERE f.userIdx = %d AND f.friendIdx = u.userIdx", userIdx); //ì¹œêµ¬ ì¸ë±ìŠ¤ì— í•´ë‹¹í•˜ëŠ” ì´ë¦„ì„ ë¶ˆëŸ¬ì˜´
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0)  //ºÒ·¯¿À±â ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0)  //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     int i = 0; 
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ªÀÌ ¾øÀ» ¶§±îÁö ¹İÈ¯
-        printf("[ %d ] %s ( idx : %s )\n", i+1, sql_row[1], sql_row[0]); //[Ä£±¸ÀÇ °èÈ¹ ÀÎµ¦½º] Ä£±¸ (idx : Ä£±¸ÀÇ À¯Àú ÀÎµ¦½º)
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ì´ ì—†ì„ ë•Œê¹Œì§€ ë°˜í™˜
+        printf("[ %d ] %s ( idx : %s )\n", i+1, sql_row[1], sql_row[0]); //[ì¹œêµ¬ì˜ ê³„íš ì¸ë±ìŠ¤] ì¹œêµ¬ (idx : ì¹œêµ¬ì˜ ìœ ì € ì¸ë±ìŠ¤)
         idxArr[i] = atoi(sql_row[0]);
         ++i;
     }
 }
 /*
-¤¤idxArr : À¯ÀúÀÇ friendidx ºÒ·¯¿Ã ¹è¿­
-¤¤userIdx : userÀÇ Ä£±¸ ºÒ·¯¿À±â À§ÇÑ userIdx
-¸ğµç Ä£±¸ ºÒ·¯¿À±â ¼º°øÇÏ¸é Ä£±¸¿Í Ä£±¸ÀÇ idx print, ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0¸®ÅÏ
+ã„´idxArr : ìœ ì €ì˜ friendidx ë¶ˆëŸ¬ì˜¬ ë°°ì—´
+ã„´userIdx : userì˜ ì¹œêµ¬ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•œ userIdx
+ëª¨ë“  ì¹œêµ¬ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ì¹œêµ¬ì™€ ì¹œêµ¬ì˜ idx print, ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0ë¦¬í„´
 */
 
 int IsFriend(int userIdx, int friendIdx) {
     sprintf(query, "SELECT EXISTS (SELECT * FROM Friend WHERE userIdx = %d AND friendIdx = %d)", userIdx, friendIdx);
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //Ãß°¡ ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¶”ê°€ ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
@@ -782,44 +782,44 @@ int IsFriend(int userIdx, int friendIdx) {
     }
 }
 /*
-userIdx¾È¿¡ friendIdx ÀÖ´ÂÁö È®ÀÎ, È®ÀÎ ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
-È®ÀÎ ¼º°ø½Ã ¾øÀ¸¸é 0¸®ÅÏ , ÀÖÀ¸¸é friendIdx ¸®ÅÏ
+userIdxì•ˆì— friendIdx ìˆëŠ”ì§€ í™•ì¸, í™•ì¸ ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
+í™•ì¸ ì„±ê³µì‹œ ì—†ìœ¼ë©´ 0ë¦¬í„´ , ìˆìœ¼ë©´ friendIdx ë¦¬í„´
 */
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) { //
-    sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // UserÀ» Ãß°¡ÇÏ´Â Äõ¸®¹®
+    sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // Userì„ ì¶”ê°€í•˜ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //Ãß°¡ ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¶”ê°€ ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    return 1; //Ãß°¡ ¼º°ø½Ã 1¸®ÅÏ
+    return 1; //ì¶”ê°€ ì„±ê³µì‹œ 1ë¦¬í„´
 }
 /*
-¤¤userIdx : ÀúÀåÇÒ À§Ä¡
-¤¤planName : °èÈ¹ ÀÌ¸§
-¤¤explain : °èÈ¹ ¼³¸í
-¤¤openLevel : °ø°³ ¹üÀ§
-¤¤endAt : ¸¶°¨ ±âÇÑ
-°èÈ¹ Ãß°¡ ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : ì €ì¥í•  ìœ„ì¹˜
+ã„´planName : ê³„íš ì´ë¦„
+ã„´explain : ê³„íš ì„¤ëª…
+ã„´openLevel : ê³µê°œ ë²”ìœ„
+ã„´endAt : ë§ˆê° ê¸°í•œ
+ê³„íš ì¶”ê°€ ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int CheckLastPlanIdx() {
-    sprintf(query, "SELECT MAX(planIdx) FROM Plan"); //planIdx Áß ¼ıÀÚ°¡ °¡Àå Å« idx(°¡Àå ¸¶Áö¸·¿¡ Ãß°¡µÈ idx) °¡Á®¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT MAX(planIdx) FROM Plan"); //planIdx ì¤‘ ìˆ«ìê°€ ê°€ì¥ í° idx(ê°€ì¥ ë§ˆì§€ë§‰ì— ì¶”ê°€ëœ idx) ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0)  //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0)  //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     char * res;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
 }
 /*
-°¡Àå ÃÖ±Ù¿¡ ÀúÀåµÈ planidx ºÒ·¯¿È ¼º°øÇÏ¸é °¡Àå ÃÖ±Ù ÀúÀåµÈ planidx ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ê°€ì¥ ìµœê·¼ì— ì €ì¥ëœ planidx ë¶ˆëŸ¬ì˜´ ì„±ê³µí•˜ë©´ ê°€ì¥ ìµœê·¼ ì €ì¥ëœ planidx ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanLen(int userIdx) {
@@ -836,45 +836,45 @@ int GetPlanLen(int userIdx) {
     return atoi(res);
 }
 /*
-userIdx : À¯ÀúÀÇ idx
-À¯ÀúÀÇ °èÈ¹ °³¼ö ºÒ·¯¿À±â ¼º°øÇÏ¸é °èÈ¹ °³¼ö ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+userIdx : ìœ ì €ì˜ idx
+ìœ ì €ì˜ ê³„íš ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ê³„íš ê°œìˆ˜ ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanIdx(int userIdx, int * idxArr) { 
-    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d", userIdx); //¼±ÅÃÇÑ useridx ¼Ó planIdx, planName, endAt¸¦ ¸ğµÎ ºÒ·¯¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d", userIdx); //ì„ íƒí•œ useridx ì† planIdx, planName, endAtë¥¼ ëª¨ë‘ ë¶ˆëŸ¬ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0)  //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0)  //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     int i = 0;
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ª ¾øÀ» ¶§±îÁö ºÒ·¯¿È
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ ì—†ì„ ë•Œê¹Œì§€ ë¶ˆëŸ¬ì˜´
         char *ptr = strtok(sql_row[2], " ");
-        printf("[ %d ] : %s (~%s)\n", i + 1, sql_row[1], ptr);  // [ÀÎµ¦½º] : ÀÌ¸§ (~¸¶°¨±âÇÑ) print
-        idxArr[i] = atoi(sql_row[0]); //idxArr¿¡ planIdx ÀúÀå
+        printf("[ %d ] : %s (~%s)\n", i + 1, sql_row[1], ptr);  // [ì¸ë±ìŠ¤] : ì´ë¦„ (~ë§ˆê°ê¸°í•œ) print
+        idxArr[i] = atoi(sql_row[0]); //idxArrì— planIdx ì €ì¥
         ++i;
     }
     return 1;
 }
 /*
-userIdx : plan »ı¼ºÇÒ À¯ÀúÀÇ idx
-idxArr : À¯Àú°¡ »ı¼ºÇÑ planidx¸¦ ÀúÀå
-À¯Àú°¡ ¼³Á¤ÇÑ °èÈ¹ÀÎµ¦½º, °èÈ¹¸í, ¸¶°¨±âÇÑ ¸ğµÎ ºÒ·¯¿Í¼­ print ÈÄ idxArr¿¡ planidx ÀúÀåÇÏ°í 1¸®ÅÏ
-ºÒ·¯¿À±â ½ÇÆĞ½Ã 0À» ¸®ÅÏÇÏ¸ç ¿À·ù print
+userIdx : plan ìƒì„±í•  ìœ ì €ì˜ idx
+idxArr : ìœ ì €ê°€ ìƒì„±í•œ planidxë¥¼ ì €ì¥
+ìœ ì €ê°€ ì„¤ì •í•œ ê³„íšì¸ë±ìŠ¤, ê³„íšëª…, ë§ˆê°ê¸°í•œ ëª¨ë‘ ë¶ˆëŸ¬ì™€ì„œ print í›„ idxArrì— planidx ì €ì¥í•˜ê³  1ë¦¬í„´
+ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ 0ì„ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print
 */
 
 int GetPlan(char ** arr, int planIdx) {
-    sprintf(query, "SELECT * FROM Plan WHERE planIdx = %d", planIdx); //ÀÔ·ÂÇÑ planidxÀÇ value¸¦ ºÒ·¯¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT * FROM Plan WHERE planIdx = %d", planIdx); //ì…ë ¥í•œ planidxì˜ valueë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //Á¸Àç ¾ÈÇÒ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ì¡´ì¬ ì•ˆí• ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ª ¾øÀ» ¶§±îÁö ºÒ·¯¿È
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ ì—†ì„ ë•Œê¹Œì§€ ë¶ˆëŸ¬ì˜´
         for (int i = 0; i < 7; ++i) {
             if (i == 6) {
                 char *ptr = strtok(sql_row[i], " ");
@@ -886,16 +886,16 @@ int GetPlan(char ** arr, int planIdx) {
     return 1;
 }
 /*
-¤¤**arr : plan¿¡ ÀÖ´Â µ¥ÀÌÅÍ¸¦ ¸ğµÎ °¡Á®¿À±â À§ÇÑ ÀÌÁß Æ÷ÀÎÅÍ ¹è¿­
-¤¤**planIdx : À¯Àú°¡ ¼±ÅÃÇÑ planidx
-ÀÔ·ÂÇÑ planidxÀÇ ¸ğµç value¸¦ arr·Î ºÒ·¯¿È ºÒ·¯¿À±â ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´**arr : planì— ìˆëŠ” ë°ì´í„°ë¥¼ ëª¨ë‘ ê°€ì ¸ì˜¤ê¸° ìœ„í•œ ì´ì¤‘ í¬ì¸í„° ë°°ì—´
+ã„´**planIdx : ìœ ì €ê°€ ì„ íƒí•œ planidx
+ì…ë ¥í•œ planidxì˜ ëª¨ë“  valueë¥¼ arrë¡œ ë¶ˆëŸ¬ì˜´ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     int access = IsFriend(userIdx, friendIdx);
-    if (!access) return 0; //Ä£±¸ÀÎÁö ¾Æ´ÑÁö È®ÀÎ ÈÄ Ä£±¸ ¾Æ´Ï¸é 0 ¸®ÅÏ
+    if (!access) return 0; //ì¹œêµ¬ì¸ì§€ ì•„ë‹Œì§€ í™•ì¸ í›„ ì¹œêµ¬ ì•„ë‹ˆë©´ 0 ë¦¬í„´
     /*
-    1 : ÀüÃ¼ °ø°³, 2 : Ä£±¸ °ø°³, 3 : ³ª¸¸ °ø°³
+    1 : ì „ì²´ ê³µê°œ, 2 : ì¹œêµ¬ ê³µê°œ, 3 : ë‚˜ë§Œ ê³µê°œ
     */
     sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx); 
     query_stat = mysql_query(connection, query); 
@@ -910,59 +910,59 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) {
         char *ptr = strtok(sql_row[2], " ");
         idxArr[i] = atoi(sql_row[0]);
-        printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]); //[ÀÎµ¦½º] Ä£±¸ÀÇ°èÈ¹¸í (~¸¶°¨±âÇÑ)
+        printf("[ %d ] %s (~%s)\n", i+1, sql_row[1], sql_row[2]); //[ì¸ë±ìŠ¤] ì¹œêµ¬ì˜ê³„íšëª… (~ë§ˆê°ê¸°í•œ)
         ++i;
     }
     return 1;
 }
 /*
-¤¤userIdx : À¯ÀúÀÇ idx
-¤¤friendIdx : °èÈ¹ È®ÀÎÇÒ Ä£±¸ÀÇ idx
-¤¤idxArr : Ä£±¸ÀÇ planidx ÀúÀå
-Ä£±¸ÀÎÁö, Ä£±¸ÀÇ °èÈ¹ÀÌ ÀüÃ¼°ø°³³ª Ä£±¸°ø°³ÀÎÁö È®ÀÎÇÑ µÚ, È®ÀÎ ¼º°øÇÏ¸é idxArr¿¡ Ä£±¸ÀÇ planidx ÀúÀåÇÏ°í, Ä£±¸ÀÇ °èÈ¹°ú ¼³¸í print ÇÏ¸ç 1¸®ÅÏ
-¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : ìœ ì €ì˜ idx
+ã„´friendIdx : ê³„íš í™•ì¸í•  ì¹œêµ¬ì˜ idx
+ã„´idxArr : ì¹œêµ¬ì˜ planidx ì €ì¥
+ì¹œêµ¬ì¸ì§€, ì¹œêµ¬ì˜ ê³„íšì´ ì „ì²´ê³µê°œë‚˜ ì¹œêµ¬ê³µê°œì¸ì§€ í™•ì¸í•œ ë’¤, í™•ì¸ ì„±ê³µí•˜ë©´ idxArrì— ì¹œêµ¬ì˜ planidx ì €ì¥í•˜ê³ , ì¹œêµ¬ì˜ ê³„íšê³¼ ì„¤ëª… print í•˜ë©° 1ë¦¬í„´
+ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetDayPlanLen(int userIdx, char date[]) {
-    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date); //¼±ÅÃÇÑ ³¯Â¥¿¡ ÀÖ´Â plan °³¼ö ºÒ·¯¿À±â
+    sprintf(query, "SELECT COUNT(userIdx) FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date); //ì„ íƒí•œ ë‚ ì§œì— ìˆëŠ” plan ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸°
     query_stat = mysql_query(connection, query); 
-    if (query_stat != 0) //ºÒ·¯¿À±â ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     char * res;
     while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) res = sql_row[0];
     return atoi(res);
 }
 /*
-¤¤userIdx : À¯ÀúÀÇ idx
-¤¤date : »ç¿ëÀÚ°¡ È®ÀÎÇÒ ³¯Â¥
-»ç¿ëÀÚ°¡ ¼±ÅÃÇÑ ³¯Â¥ÀÇ °èÈ¹ °³¼ö ºÒ·¯¿À±â ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : ìœ ì €ì˜ idx
+ã„´date : ì‚¬ìš©ìê°€ í™•ì¸í•  ë‚ ì§œ
+ì‚¬ìš©ìê°€ ì„ íƒí•œ ë‚ ì§œì˜ ê³„íš ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetDayPlan(int userIdx, char date[], int * idxArr) {
-    sprintf(query, "SELECT planIdx, planName, `explain` FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date); // ¼±ÅÃÇÑ ³¯Â¥¿¡ ÀÖ´Â °èÈ¹ÀÎµ¦½º, °èÈ¹¸í, °èÈ¹¼³¸í,¸¶°¨±âÇÑ ºÒ·¯¿À±â
+    sprintf(query, "SELECT planIdx, planName, `explain` FROM Plan WHERE userIdx = %d AND DATE(endAt) = '%s'", userIdx, date); // ì„ íƒí•œ ë‚ ì§œì— ìˆëŠ” ê³„íšì¸ë±ìŠ¤, ê³„íšëª…, ê³„íšì„¤ëª…,ë§ˆê°ê¸°í•œ ë¶ˆëŸ¬ì˜¤ê¸°
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0) //ºÒ·¯¿À±â ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+    if (query_stat != 0) //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
     }
-    sql_result = mysql_store_result(connection); //°á°ú ÀúÀå
+    sql_result = mysql_store_result(connection); //ê²°ê³¼ ì €ì¥
     int i = 0;
-    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //°ª ¾øÀ» ¶§±îÁö ºÒ·¯¿È
+    while ( (sql_row = mysql_fetch_row(sql_result)) != NULL ) { //ê°’ ì—†ì„ ë•Œê¹Œì§€ ë¶ˆëŸ¬ì˜´
         idxArr[i] = atoi(sql_row[0]); 
         ++i;
     }
     return 1;
 }
 /*
-¤¤userIdx : À¯ÀúÀÇ idx 
-¤¤date : À¯Àú°¡ ¼±ÅÃÇÑ ³¯Â¥
-¤¤idxArr : ¼±ÅÃÇÑ ³¯Â¥¿¡ ÀÖ´Â °èÈ¹ÀÇ idx¸¦ ÀúÀåÇÏ±â À§ÇÑ ¹è¿­
-À¯Àú°¡ ¼±ÅÃÇÑ ³¯Â¥¿¡ ÀÖ´Â °èÈ¹ÀÇ idx¸¦ idxArr¿¡ ÀúÀå ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : ìœ ì €ì˜ idx 
+ã„´date : ìœ ì €ê°€ ì„ íƒí•œ ë‚ ì§œ
+ã„´idxArr : ì„ íƒí•œ ë‚ ì§œì— ìˆëŠ” ê³„íšì˜ idxë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´
+ìœ ì €ê°€ ì„ íƒí•œ ë‚ ì§œì— ìˆëŠ” ê³„íšì˜ idxë¥¼ idxArrì— ì €ì¥ ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 
@@ -978,9 +978,9 @@ int DeletePlan(int userIdx, int planIdx) {
     return 1;
 }
 /*
-¤¤userIdx : À¯ÀúÀÇ idx
-¤¤planIdx : À¯Àú°¡ »èÁ¦ÇÒ °èÈ¹ÀÇ idx
-À¯Àú°¡ ¼±ÅÃÇÑ °èÈ¹ »èÁ¦ ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : ìœ ì €ì˜ idx
+ã„´planIdx : ìœ ì €ê°€ ì‚­ì œí•  ê³„íšì˜ idx
+ìœ ì €ê°€ ì„ íƒí•œ ê³„íš ì‚­ì œ ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
@@ -995,11 +995,11 @@ int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]) {
     return 1;
 }
 /*
-¤¤planIdx : À¯Àú°¡ ¼öÁ¤ÇÒ °èÈ¹ÀÇ idx
-¤¤planName : ¼öÁ¤µÈ ÀÌ¸§ 
-¤¤explain : ¼öÁ¤µÈ ¼³¸í
-¤¤endAt : ¼öÁ¤µÈ ±â°£
-À¯Àú°¡ ¼öÁ¤ÇÒ °èÈ¹À» ¹Ş¾Æ¼­ ÀÌ¸§, ¼³¸í, ±â°£ ¼öÁ¤ ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planIdx : ìœ ì €ê°€ ìˆ˜ì •í•  ê³„íšì˜ idx
+ã„´planName : ìˆ˜ì •ëœ ì´ë¦„ 
+ã„´explain : ìˆ˜ì •ëœ ì„¤ëª…
+ã„´endAt : ìˆ˜ì •ëœ ê¸°ê°„
+ìœ ì €ê°€ ìˆ˜ì •í•  ê³„íšì„ ë°›ì•„ì„œ ì´ë¦„, ì„¤ëª…, ê¸°ê°„ ìˆ˜ì • ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 
@@ -1014,18 +1014,18 @@ int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[
     return 1;
 }
 /*
-¤¤planIdx : ¼¼ºÎ°èÈ¹ Ãß°¡ÇÒ Å« °èÈ¹ÀÇ idx
-¤¤datailName : ¼¼ºÎ°èÈ¹¸í
-¤¤startedAt : ¼¼ºÎ°èÈ¹ ½ÃÀÛ ³¯Â¥
-¤¤endAt : ¼¼ºÎ°èÈ¹ ¸¶°¨ ³¯Â¥
-¤¤where : ¼¼ºÎ°èÈ¹ ½ÇÇà À§Ä¡
-¼¼ºÎ°èÈ¹ »ı¼º ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planIdx : ì„¸ë¶€ê³„íš ì¶”ê°€í•  í° ê³„íšì˜ idx
+ã„´datailName : ì„¸ë¶€ê³„íšëª…
+ã„´startedAt : ì„¸ë¶€ê³„íš ì‹œì‘ ë‚ ì§œ
+ã„´endAt : ì„¸ë¶€ê³„íš ë§ˆê° ë‚ ì§œ
+ã„´where : ì„¸ë¶€ê³„íš ì‹¤í–‰ ìœ„ì¹˜
+ì„¸ë¶€ê³„íš ìƒì„± ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int CheckLastDetailIdx() { 
-    sprintf(query, "SELECT MAX(detailIdx) FROM Plandetail"); //DetailIdx Áß ¼ıÀÚ°¡ °¡Àå Å« idx(°¡Àå ¸¶Áö¸·¿¡ Ãß°¡µÈ idx) °¡Á®¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT MAX(detailIdx) FROM Plandetail"); //DetailIdx ì¤‘ ìˆ«ìê°€ ê°€ì¥ í° idx(ê°€ì¥ ë§ˆì§€ë§‰ì— ì¶”ê°€ëœ idx) ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0) //ºÒ·¯¿À±â ½ÇÆĞ½Ã 0 ¸®ÅÏÇÏ¸ç ¿À·ù
+    if (query_stat != 0) //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ 0 ë¦¬í„´í•˜ë©° ì˜¤ë¥˜
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
@@ -1036,7 +1036,7 @@ int CheckLastDetailIdx() {
     return atoi(res);
 }
 /*
-°¡Àå ÃÖ±Ù¿¡ ÀúÀåµÈ DetailIdx ºÒ·¯¿À±â ¼º°øÇÏ¸é °¡Àå ÃÖ±Ù ÀúÀåµÈ DetailIdx ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ê°€ì¥ ìµœê·¼ì— ì €ì¥ëœ DetailIdx ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ê°€ì¥ ìµœê·¼ ì €ì¥ëœ DetailIdx ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanDetailLen(int planIdx) {
@@ -1053,8 +1053,8 @@ int GetPlanDetailLen(int planIdx) {
     return atoi(res);
 }
 /*
-planIdx : À¯Àú°¡ ¼±ÅÃÇÑ °èÈ¹
-À¯Àú°¡ ¼±ÅÃÇÑ °èÈ¹ ¼Ó ¼¼ºÎ°èÈ¹ °³¼ö ºÒ·¯¿À±â ¼º°øÇÏ¸é ¼¼ºÎ°èÈ¹ ¼ö ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+planIdx : ìœ ì €ê°€ ì„ íƒí•œ ê³„íš
+ìœ ì €ê°€ ì„ íƒí•œ ê³„íš ì† ì„¸ë¶€ê³„íš ê°œìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ì„¸ë¶€ê³„íš ìˆ˜ ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanDetail(int planIdx) {
@@ -1076,9 +1076,9 @@ int GetPlanDetail(int planIdx) {
     return 1;
 }
 /*
-¤¤**planIdx : À¯Àú°¡ ¼±ÅÃÇÑ planidx
-ÀÔ·ÂÇÑ planidxÀÇ ¸ğµç detailplan¸¦ ºÒ·¯¿È ºÒ·¯¿À±â ¼º°øÇÏ¸é ¼¼ºÎ°èÈ¹ÀÌ¸§, ½ÃÀÛ½Ã°£, ¸¶°¨½Ã°£, Àå¼Ò print ÈÄ 1¸®ÅÏ
-¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´**planIdx : ìœ ì €ê°€ ì„ íƒí•œ planidx
+ì…ë ¥í•œ planidxì˜ ëª¨ë“  detailplanë¥¼ ë¶ˆëŸ¬ì˜´ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ì„¸ë¶€ê³„íšì´ë¦„, ì‹œì‘ì‹œê°„, ë§ˆê°ì‹œê°„, ì¥ì†Œ print í›„ 1ë¦¬í„´
+ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int DeletAllePlandetail(int planIdx) {
@@ -1093,8 +1093,8 @@ int DeletAllePlandetail(int planIdx) {
     return 1;
 }
 /*
-¤¤planIdx : plandetailÀ» °¡Á®¿À±â À§ÇÑ planIdx
-À¯Àú°¡ ¼±ÅÃÇÑ plan¼Ó ¸ğµç plandetail»èÁ¦ ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planIdx : plandetailì„ ê°€ì ¸ì˜¤ê¸° ìœ„í•œ planIdx
+ìœ ì €ê°€ ì„ íƒí•œ planì† ëª¨ë“  plandetailì‚­ì œ ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 void DeletePlandetail(int detailIdx) {
@@ -1109,8 +1109,8 @@ void DeletePlandetail(int detailIdx) {
     printf("successfully deleted.");
 }
 /*
-¤¤detailIdx : À¯Àú°¡ »èÁ¦ÇÏ±â·Î ¼±ÅÃÇÑ detailIdx
-¼±ÅÃÇÑ ¼¼ºÎ°èÈ¹ »èÁ¦ ¼º°øÇÏ¸é »èÁ¦ ¼º°ø print , ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç ¸®ÅÏ
+ã„´detailIdx : ìœ ì €ê°€ ì‚­ì œí•˜ê¸°ë¡œ ì„ íƒí•œ detailIdx
+ì„ íƒí•œ ì„¸ë¶€ê³„íš ì‚­ì œ ì„±ê³µí•˜ë©´ ì‚­ì œ ì„±ê³µ print , ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° ë¦¬í„´
 */
 
 void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]) {
@@ -1125,12 +1125,12 @@ void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char e
     printf("successfully modified.");
 }
 /*
-¤¤detailIdx : À¯Àú°¡ ¼öÁ¤ÇÒ ¼¼ºÎ°èÈ¹ÀÇ Idx
-¤¤detailName : ¼¼ºÎ°èÈ¹¸í
-¤¤startedAt : ¼¼ºÎ°èÈ¹ ½ÃÀÛ ³¯Â¥
-¤¤endAt : ¼¼ºÎ°èÈ¹ ¸¶°¨ ³¯Â¥
-¤¤where : ¼¼ºÎ°èÈ¹ ½ÇÇà À§Ä¡
-À¯Àú°¡ ¼öÁ¤ÇÒ ¼¼ºÎ°èÈ¹À» ¹Ş¾Æ¼­ ÀÌ¸§, ½ÃÀÛ³¯Â¥, ¸¶°¨³¯Â¥, À§Ä¡ ¼öÁ¤ ¼º°øÇÏ¸é ¼öÁ¤ ¼º°ø print, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç ¸®ÅÏ
+ã„´detailIdx : ìœ ì €ê°€ ìˆ˜ì •í•  ì„¸ë¶€ê³„íšì˜ Idx
+ã„´detailName : ì„¸ë¶€ê³„íšëª…
+ã„´startedAt : ì„¸ë¶€ê³„íš ì‹œì‘ ë‚ ì§œ
+ã„´endAt : ì„¸ë¶€ê³„íš ë§ˆê° ë‚ ì§œ
+ã„´where : ì„¸ë¶€ê³„íš ì‹¤í–‰ ìœ„ì¹˜
+ìœ ì €ê°€ ìˆ˜ì •í•  ì„¸ë¶€ê³„íšì„ ë°›ì•„ì„œ ì´ë¦„, ì‹œì‘ë‚ ì§œ, ë§ˆê°ë‚ ì§œ, ìœ„ì¹˜ ìˆ˜ì • ì„±ê³µí•˜ë©´ ìˆ˜ì • ì„±ê³µ print, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° ë¦¬í„´
 */
 
 //reviewIdx, planIdx, userIdx, content, score, createdAt
@@ -1145,11 +1145,11 @@ int MakePlanReview(int planIdx, int userIdx, char content[], int score) {
     return 1;
 }
 /*
-¤¤planIdx : ¸®ºä Ãß°¡ÇÒ planÀÇ idx
-¤¤userIdx : ¸®ºä Ãß°¡ÇÑ userÀÇ idx
-¤¤content : ³»¿ë
-¤¤score : º°Á¡
-Ä£±¸ °èÈ¹¿¡ ¸®ºä »ı¼º ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planIdx : ë¦¬ë·° ì¶”ê°€í•  planì˜ idx
+ã„´userIdx : ë¦¬ë·° ì¶”ê°€í•œ userì˜ idx
+ã„´content : ë‚´ìš©
+ã„´score : ë³„ì 
+ì¹œêµ¬ ê³„íšì— ë¦¬ë·° ìƒì„± ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanReviewLen(int planIdx) {
@@ -1167,8 +1167,8 @@ int GetPlanReviewLen(int planIdx) {
     return atoi(res);
 }
 /*
-¤¤planIdx : À¯Àú°¡ ¼±ÅÃÇÑ ¸®ºä °¡Á®¿Ã °èÈ¹ÀÇ idx
-¸®ºä °³¼ö °¡Á®¿À±â ¼º°øÇÏ¸é ¸®ºä °³¼ö ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planIdx : ìœ ì €ê°€ ì„ íƒí•œ ë¦¬ë·° ê°€ì ¸ì˜¬ ê³„íšì˜ idx
+ë¦¬ë·° ê°œìˆ˜ ê°€ì ¸ì˜¤ê¸° ì„±ê³µí•˜ë©´ ë¦¬ë·° ê°œìˆ˜ ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetPlanReview(int planIdx) {
@@ -1190,8 +1190,8 @@ int GetPlanReview(int planIdx) {
     return 1;
 }
 /*
-¤¤planidx : À¯Àú°¡ ¼±ÅÃÇÑ ¸®ºä °¡Á®¿Ã °èÈ¹ÀÇ idx
-¸®ºä¿¡ ÀÖ´Â userIdx, content, score, createdAt ¸ğµÎ °¡Á®¿À±â ¼º°øÇÏ¸é print ÇÏ¸ç 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´planidx : ìœ ì €ê°€ ì„ íƒí•œ ë¦¬ë·° ê°€ì ¸ì˜¬ ê³„íšì˜ idx
+ë¦¬ë·°ì— ìˆëŠ” userIdx, content, score, createdAt ëª¨ë‘ ê°€ì ¸ì˜¤ê¸° ì„±ê³µí•˜ë©´ print í•˜ë©° 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 void DeletePlanReview(int planreviewIdx) {
@@ -1206,8 +1206,8 @@ void DeletePlanReview(int planreviewIdx) {
     printf("successfully deleted.");
 }
 /*
-¤¤planreviewIdx : À¯Àú°¡ »èÁ¦ÇÏ±â·Î ¼±ÅÃÇÑ ¸®ºäÀÇ idx
-¼±ÅÃÇÑ ¸®ºä »èÁ¦ ¼º°øÇÏ¸é »èÁ¦ ¼º°ø print, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç ¸®ÅÏ
+ã„´planreviewIdx : ìœ ì €ê°€ ì‚­ì œí•˜ê¸°ë¡œ ì„ íƒí•œ ë¦¬ë·°ì˜ idx
+ì„ íƒí•œ ë¦¬ë·° ì‚­ì œ ì„±ê³µí•˜ë©´ ì‚­ì œ ì„±ê³µ print, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° ë¦¬í„´
 */
 
 void ModifyPlanReview(int planreviewIdx, char content[], int score) {
@@ -1222,10 +1222,10 @@ void ModifyPlanReview(int planreviewIdx, char content[], int score) {
     printf("successfully modified.");
 }
 /*
-¤¤planreviewIdx : À¯Àú°¡ ¼öÁ¤ÇÒ ¸®ºäÀÇ Idx
-¤¤content : ¸®ºä ³»¿ë
-¤¤score : º°Á¡
-À¯Àú°¡ ¼öÁ¤ÇÒ ¸®ºä¸¦ ¹Ş¾Æ¼­ ¸®ºä³»¿ë, º°Á¡ ¼öÁ¤ ¼º°øÇÏ¸é ¼öÁ¤ ¼º°ø print, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç ¸®ÅÏ
+ã„´planreviewIdx : ìœ ì €ê°€ ìˆ˜ì •í•  ë¦¬ë·°ì˜ Idx
+ã„´content : ë¦¬ë·° ë‚´ìš©
+ã„´score : ë³„ì 
+ìœ ì €ê°€ ìˆ˜ì •í•  ë¦¬ë·°ë¥¼ ë°›ì•„ì„œ ë¦¬ë·°ë‚´ìš©, ë³„ì  ìˆ˜ì • ì„±ê³µí•˜ë©´ ìˆ˜ì • ì„±ê³µ print, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° ë¦¬í„´
 */
 
 int MakeChallenge(char depositName[], int money, char endAt[]) {
@@ -1239,10 +1239,10 @@ int MakeChallenge(char depositName[], int money, char endAt[]) {
     return 1;
 }
 /*
-¤¤depositName : Ã§¸°Áö ¸í
-¤¤money : ¸ğ±İ¾×
-¤¤endAt : ¸¶°¨±âÇÑ
-Ã§¸°Áö »ı¼º ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´depositName : ì±Œë¦°ì§€ ëª…
+ã„´money : ëª¨ê¸ˆì•¡
+ã„´endAt : ë§ˆê°ê¸°í•œ
+ì±Œë¦°ì§€ ìƒì„± ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int MakeChallengeUser(int depositIdx, int userIdx) {
@@ -1256,15 +1256,15 @@ int MakeChallengeUser(int depositIdx, int userIdx) {
     return 1;
 }
 /*
-¤¤ depositIdx : Ã§¸°Áö¸¦ ºÒ·¯¿Ã idx
-¤¤ userIdx : Ã§¸°Áö¿¡ Âü¿©ÇÒ À¯ÀúÀÇ idx
-> Ã§¸°Áö¿¡ À¯Àú Âü¿© ¼º°øÇÏ¸é 1¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´ depositIdx : ì±Œë¦°ì§€ë¥¼ ë¶ˆëŸ¬ì˜¬ idx
+ã„´ userIdx : ì±Œë¦°ì§€ì— ì°¸ì—¬í•  ìœ ì €ì˜ idx
+> ì±Œë¦°ì§€ì— ìœ ì € ì°¸ì—¬ ì„±ê³µí•˜ë©´ 1ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int CheckLastDepositIdx() { 
-    sprintf(query, "SELECT MAX(depositIdx) FROM Deposit"); //DepositIdx Áß ¼ıÀÚ°¡ °¡Àå Å« idx(°¡Àå ¸¶Áö¸·¿¡ Ãß°¡µÈ idx) °¡Á®¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT MAX(depositIdx) FROM Deposit"); //DepositIdx ì¤‘ ìˆ«ìê°€ ê°€ì¥ í° idx(ê°€ì¥ ë§ˆì§€ë§‰ì— ì¶”ê°€ëœ idx) ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
-    if (query_stat != 0) //ºÒ·¯¿À±â ½ÇÆĞ½Ã 0 ¸®ÅÏÇÏ¸ç ¿À·ù
+    if (query_stat != 0) //ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ 0 ë¦¬í„´í•˜ë©° ì˜¤ë¥˜
     {
         fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
         return 0;
@@ -1275,7 +1275,7 @@ int CheckLastDepositIdx() {
     return atoi(res);
 }
 /*
-°¡Àå ÃÖ±Ù¿¡ ÀúÀåµÈ Ã§¸°ÁöÀÇ idxºÒ·¯¿È Ã§¸°Áö idx¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ê°€ì¥ ìµœê·¼ì— ì €ì¥ëœ ì±Œë¦°ì§€ì˜ idxë¶ˆëŸ¬ì˜´ ì±Œë¦°ì§€ idxë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int IsChallengeUser(int depositIdx, int userIdx) {
@@ -1293,9 +1293,9 @@ int IsChallengeUser(int depositIdx, int userIdx) {
     }
 }
 /*
-¤¤depositIdx : Âü¿© ¿©ºÎ È®ÀÎÇÒ Ã§¸°Áö idx
-¤¤userIdx : Âü¿© ¿©ºÎ È®ÀÎÇÒ À¯Àú idx
-Ã§¸°Áö Âü¿© ¿©ºÎ È®ÀÎ ¼º°øÇÏ¸é À¯Àú idx ¸®ÅÏ, ¾Æ´Ï¶ó¸é ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´depositIdx : ì°¸ì—¬ ì—¬ë¶€ í™•ì¸í•  ì±Œë¦°ì§€ idx
+ã„´userIdx : ì°¸ì—¬ ì—¬ë¶€ í™•ì¸í•  ìœ ì € idx
+ì±Œë¦°ì§€ ì°¸ì—¬ ì—¬ë¶€ í™•ì¸ ì„±ê³µí•˜ë©´ ìœ ì € idx ë¦¬í„´, ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetChallengeLen(int userIdx) {
@@ -1313,8 +1313,8 @@ int GetChallengeLen(int userIdx) {
     return atoi(res);
 }
 /*
-¤¤userIdx : userÀÇ Ä£±¸ ¼ö ºÒ·¯¿À±â À§ÇÑ userIdx
-Ã§¸°Áö ¼ö ºÒ·¯¿À±â ¼º°ø½Ã Ä£±¸ ¼ö ¸®ÅÏ, ½ÇÆĞ½Ã ¿À·ù Ãâ·ÂÇÏ¸ç 0 ¸®ÅÏ
+ã„´userIdx : userì˜ ì¹œêµ¬ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•œ userIdx
+ì±Œë¦°ì§€ ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µì‹œ ì¹œêµ¬ ìˆ˜ ë¦¬í„´, ì‹¤íŒ¨ì‹œ ì˜¤ë¥˜ ì¶œë ¥í•˜ë©° 0 ë¦¬í„´
 */
 
 int GetChallengeUserLen(int depositIdx) {
@@ -1332,8 +1332,8 @@ int GetChallengeUserLen(int depositIdx) {
     return atoi(res);
 }
 /*
-¤¤ depositIdx : Ã§¸°Áö¿¡ Âü¿©ÇÑ user ¼ö ºÒ·¯¿À±â À§ÇÑ idx
-> À¯Àú ¼ö ºÒ·¯¿À±â ¼º°øÇÏ¸é À¯Àú ¼ö ¸®ÅÏ, ¾Æ´Ï¶ó¸é 0À» ¸®ÅÏÇÏ¸ç ¿À·ù print 
+ã„´ depositIdx : ì±Œë¦°ì§€ì— ì°¸ì—¬í•œ user ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•œ idx
+> ìœ ì € ìˆ˜ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ ìœ ì € ìˆ˜ ë¦¬í„´, ì•„ë‹ˆë¼ë©´ 0ì„ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print 
 */
 
 
@@ -1354,10 +1354,10 @@ int GetChallengeIdx(int *idxArr, int len, int userIdx) {
     return 1;
 }
 /*
-idxArr : À¯Àú°¡ Âü¿©ÁßÀÎ challengeIdx¸¦ ÀúÀå
-len : Âü¿©ÁßÀÎ Ã§¸°Áö °³¼ö
-userIdx : À¯ÀúÀÇ idx
-À¯Àú°¡ Âü¿©ÁßÀÎ challengeidx ¸ğµÎ ºÒ·¯¿Í¼­ idxArr¿¡ ÀúÀåÇÏ°í 1¸®ÅÏ, ºÒ·¯¿À±â ½ÇÆĞ½Ã 0À» ¸®ÅÏÇÏ¸ç ¿À·ù print
+idxArr : ìœ ì €ê°€ ì°¸ì—¬ì¤‘ì¸ challengeIdxë¥¼ ì €ì¥
+len : ì°¸ì—¬ì¤‘ì¸ ì±Œë¦°ì§€ ê°œìˆ˜
+userIdx : ìœ ì €ì˜ idx
+ìœ ì €ê°€ ì°¸ì—¬ì¤‘ì¸ challengeidx ëª¨ë‘ ë¶ˆëŸ¬ì™€ì„œ idxArrì— ì €ì¥í•˜ê³  1ë¦¬í„´, ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ì‹œ 0ì„ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print
 */
 
 int GetChallenge(int depositIdx) {
@@ -1375,6 +1375,6 @@ int GetChallenge(int depositIdx) {
     return 1;
 }
 /*
-¤¤ depositIdx : Ã§¸°Áö¸¦ ºÒ·¯¿Ã idx
-> ºÒ·¯¿À±â ¼º°øÇÏ¸é 1 ¸®ÅÏ, ¾Æ´Ï¶ó¸é 0À» ¸®ÅÏÇÏ¸ç ¿À·ù print 
+ã„´ depositIdx : ì±Œë¦°ì§€ë¥¼ ë¶ˆëŸ¬ì˜¬ idx
+> ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µí•˜ë©´ 1 ë¦¬í„´, ì•„ë‹ˆë¼ë©´ 0ì„ ë¦¬í„´í•˜ë©° ì˜¤ë¥˜ print 
 */
