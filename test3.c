@@ -545,7 +545,9 @@ int main(void) {
 }
 
 void MakeLog(FILE * fp, char time[], int userIdx, char content[]) {
-    fputs("[%s] %d : %s\n", fp, time, userIdx, content);
+    char log[1024];
+    sprintf("[%s] %d : %s\n", time, userIdx, content);
+    fputs(log, fp);
 }
 
 char GetISOTime() {
