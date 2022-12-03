@@ -18,7 +18,7 @@ int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 void MakeLog(FILE* fp, char time[], int userIdx, char content[]);
-void GetISOTime();
+chars GetISOTime();
 
 // [ 달력 출력 관련 함수]
 int IsLeafYear(int year); // 윤년인지 체크
