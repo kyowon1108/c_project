@@ -103,21 +103,7 @@ int main(void) {
                     userIdx = a;
                     printf("Success Signin userIdx : %d\n", userIdx);
                     FILE* fp = fopen("log.txt","a");
-                    printf("file open");
-                    char log[200];
-                    struct tm *t;
-                    time_t timer;
-                    timer = time(NULL);    // 현재 시각을 초 단위로 얻기
-                    t = localtime(&timer); // 초 단위의 시간을 분리하여 구조체에 넣기
-                    char time[40];
-                    sprintf(time, "%04d-%02d-%02d %02d:%02d:%02d",
-                            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-                            t->tm_hour, t->tm_min, t->tm_sec
-                            );
-                    printf("sprintf");
-                    sprintf(log, "[%s] %d : %s\n", time, userIdx, "content");
-                    printf("sprintf2");
-                    fputs(log, fp);
+                    fputs("asdf", fp);
                     fclose(fp);
                     //MakeLog(userIdx, "signin");
                     break;
