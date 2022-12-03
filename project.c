@@ -204,7 +204,7 @@ int main(void) {
                     continue;
                 }
                 printf("%s has been added to %s.\n\n", planName, endAt);
-                MakeLog( userIdx, "add plan success");
+                MakeLog(userIdx, "add plan success");
                 break; }
 
             case 2 : { //계획 삭제
@@ -544,8 +544,21 @@ int main(void) {
     return 0;
 }
 
-void MakeLog(FILE * fp, int userIdx, char content[]) {
-    fputs("[%s] %d : %s\n", time, userIdx, content, fp);
+void MakeLog(int userIdx, char content[]) {
+    FILE* fp = fopen("/home/kapr/c_project/logging.txt","a");
+    char log[1024];
+    struct tm *t;
+    time_t timer;
+    timer = time(NULL);    // 현재 시각을 초 단위로 얻기
+    t = localtime(&timer); // 초 단위의 시간을 분리하여 구조체에 넣기
+    char time[40];
+    sprintf(time, "%04d-%02d-%02d %02d:%02d:%02d",
+            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+            t->tm_hour, t->tm_min, t->tm_sec
+            );
+    sprintf(log, "[%s] %d : %s\n", time, userIdx, content);
+    fputs(log, fp);
+    fclose(fp);
 }
 
 char* GetISOTime(struct tm *t) {
@@ -554,7 +567,7 @@ char* GetISOTime(struct tm *t) {
             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
             t->tm_hour, t->tm_min, t->tm_sec
             );
-  return s;
+    return s;
 }
 
 int IsLeafYear(int year) { 
