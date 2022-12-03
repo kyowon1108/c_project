@@ -545,7 +545,11 @@ int main(void) {
 }
 
 void MakeLog(FILE * fp, int userIdx, char content[]) {
-    fputs("[%s] %d : %s\n", time, userIdx, content, fp);
+    char log[1024];
+    struct tm *t;
+    char time[40] = GetISOTime(t);
+    sprintf(log, "[%s] %d : %s\n", time, userIdx, content,)
+    fputs(log, fp);
 }
 
 char* GetISOTime(struct tm *t) {
@@ -554,7 +558,7 @@ char* GetISOTime(struct tm *t) {
             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
             t->tm_hour, t->tm_min, t->tm_sec
             );
-  return s;
+    return s;
 }
 
 int IsLeafYear(int year) { 
