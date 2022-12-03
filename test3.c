@@ -102,10 +102,7 @@ int main(void) {
                 if (CheckUser(a)) { //회원가입 되어있는 유저인지 확인
                     userIdx = a;
                     printf("Success Signin userIdx : %d\n", userIdx);
-                    FILE* fp = fopen("/home/kapr/c_project/logging.txt","a");
-                    fputs("asdf", fp);
-                    fclose(fp);
-                    //MakeLog(userIdx, "signin");
+                    MakeLog(userIdx, "signin");
                     break;
                 }
                 else { //회원가입 안되어 있을 때
@@ -548,7 +545,7 @@ int main(void) {
 }
 
 void MakeLog(int userIdx, char content[]) {
-    FILE* fp = fopen("log.txt","a");
+    FILE* fp = fopen("/home/kapr/c_project/logging.txt","a");
     char log[1024];
     struct tm *t;
     time_t timer;
