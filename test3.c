@@ -18,7 +18,7 @@ int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 void MakeLog(FILE* fp, int userIdx, char content[]);
-void GetISOTime();
+char GetISOTime(struct tm *t);
 
 // [ 달력 출력 관련 함수]
 int IsLeafYear(int year); // 윤년인지 체크
@@ -181,7 +181,7 @@ int main(void) {
                 printf("Please enter a plan deadline (format: yyyy-mm-dd) : ");
                 scanf("%s", endAt); //계획 마감 날짜
                 MakePlan(userIdx, planName, explain, openLevel, endAt); // 계획 생성
-                int plan Idx = CheckLastPlanIdx(); //세부계획 추가 위치를 정하기 위함
+                int planIdx = CheckLastPlanIdx(); //세부계획 추가 위치를 정하기 위함
                 printf("Plan has been saved.\n");
                 while (1) { //세부계획 추가
                     printf("Please enter a detail plan name(if want end enter 'end') : ");
@@ -548,16 +548,13 @@ void MakeLog(FILE * fp, int userIdx, char content[]) {
     fputs("[%s] %d : %s\n", time, userIdx, content, fp);
 }
 
-char GetISOTime() {
-    struct tm t;
-    time_t timer;
-
-    timer = time(NULL);    // 현재 시각을 초 단위로 얻기
-    localtime_s(&t, &timer); // 초 단위의 시간을 분리하여 구조체에 넣기
-
-    return ("%04d-%02d-%02d %02d:%02d:%02d",
-              t.tm_year + 1900, t.tm_mon + 1, t.tm_mday,
-              t.tm_hour, t.tm_min, t.tm_sec);
+char GetISOTime(struct tm *t) {
+    static char s[20];
+    sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d",
+            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+            t->tm_hour, t->tm_min, t->tm_sec
+            );
+  return s;
 }
 
 int IsLeafYear(int year) { 
