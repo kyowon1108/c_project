@@ -17,7 +17,7 @@ MYSQL_ROW sql_row;
 int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
-void MakeLog(FILE* fp, int userIdx, char content[]);
+void MakeLog(int userIdx, char content[]);
 char* GetISOTime(struct tm *t);
 
 // [ 달력 출력 관련 함수]
@@ -102,7 +102,7 @@ int main(void) {
                 if (CheckUser(a)) { //회원가입 되어있는 유저인지 확인
                     userIdx = a;
                     printf("Success Signin userIdx : %d\n", userIdx);
-                    //MakeLog(fp, userIdx, "signin");
+                    MakeLog(userIdx, "signin");
                     break;
                 }
                 else { //회원가입 안되어 있을 때
@@ -118,7 +118,7 @@ int main(void) {
                 if (sign) {
                     int idx = CheckLastUserIdx(); //최근 추가한 유저의 인덱스 불러오기
                     printf("successfully registered.\nuserIdx : %d (SignIn to userIdx)\n", idx);
-                    MakeLog(fp, idx, "signup");
+                    MakeLog(idx, "signup");
                     continue;
                 } else {
                     printf("error");
@@ -157,7 +157,7 @@ int main(void) {
         scanf("%d", &function);
         if (function == 0) {  //종료
             printf("Bye.");
-            MakeLog(fp, userIdx, "signout");
+            MakeLog(userIdx, "signout");
             break;
         }
         switch (function) {
@@ -204,7 +204,7 @@ int main(void) {
                     continue;
                 }
                 printf("%s has been added to %s.\n\n", planName, endAt);
-                MakeLog(fp,  userIdx, "add plan success");
+                MakeLog( userIdx, "add plan success");
                 break; }
 
             case 2 : { //계획 삭제
@@ -212,7 +212,7 @@ int main(void) {
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) { //계획이 존재하지 않을 때
                     printf("Plan does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "delete plan fail ( no exist plan )");
+                    MakeLog(userIdx, "delete plan fail ( no exist plan )");
                     break;
                 } //이전화면으로 돌아감
                 idxArr = (int*)malloc(sizeof(int) * planLen); 
@@ -224,7 +224,7 @@ int main(void) {
                     scanf("%d", &num); //삭제할 게획 선택
                     if (num == 0) { //함수 끝내기
                         printf("delete canceled.\n\n");
-                        MakeLog(fp, userIdx, "delete plan cancel");
+                        MakeLog(userIdx, "delete plan cancel");
                         break;
                     }
                     if (num < 0 || num > planLen) { //계획 안에 있는 수 외에 다른 수를 선택했을 때
@@ -236,7 +236,7 @@ int main(void) {
                     DeletAllePlandetail(planIdx); // 큰 계획 삭제
                     DeletePlan(userIdx, planIdx); // 세부계획 삭제
                     printf("Plan has been deleted.\n\n");
-                    MakeLog(fp, userIdx, "delete plan success");
+                    MakeLog(userIdx, "delete plan success");
                     break;
                 }
                 break; }
@@ -246,7 +246,7 @@ int main(void) {
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) { //계획이 존재하지 않을 때
                     printf("Plan does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "modify plan fail ( no exist plan )");
+                    MakeLog(userIdx, "modify plan fail ( no exist plan )");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen); 
@@ -258,7 +258,7 @@ int main(void) {
                     scanf("%d", &num);
                     if (num == 0) { //함수 끝내기
                         printf("modify canceled.\n\n");
-                        MakeLog(fp, userIdx, "modify plan cancel");
+                        MakeLog(userIdx, "modify plan cancel");
                         break;
                     }
                     if (num < 0 || num > planLen) { //계획이 없는 인덱스 선택시
@@ -296,7 +296,7 @@ int main(void) {
                     
                     ModifyPlan(planIdx, planName, explain, endAt); //계획 수정
                     printf("Plan has been modified.\n\n");
-                    MakeLog(fp, userIdx, "modify plan success");
+                    MakeLog(userIdx, "modify plan success");
                     break;
                 }
                 break; }
@@ -306,7 +306,7 @@ int main(void) {
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) { //계획이 존재하지 않을 때
                     printf("Plan does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check plan fail ( no exist plan )");
+                    MakeLog(userIdx, "check plan fail ( no exist plan )");
                     break;
                 }
                 printf("Please select the date of the plan to check (format : yyyy-mm-dd) : ");
@@ -335,7 +335,7 @@ int main(void) {
                     else printf("(There is no plan detail in this plan.)\n");
                     printf("--------------------------------------\n");
                 }
-                MakeLog(fp, userIdx, "check plan success");
+                MakeLog(userIdx, "check plan success");
                 break; }
 
             case 5 : { // 리뷰 확인
@@ -343,7 +343,7 @@ int main(void) {
                 planLen = GetPlanLen(userIdx);
                 if (!planLen) { //계획이 하나도 존재하지 않을 때
                     printf("Plan does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check reiew fail ( no exist plan )");
+                    MakeLog(userIdx, "check reiew fail ( no exist plan )");
                     break;
                 }
                 printf("Please select the date of the review to check (format : yyyy-mm-dd) : ");
@@ -374,7 +374,7 @@ int main(void) {
                     else printf("(There is no review in this plan.)\n");
                     printf("--------------------------------------\n\n");
                 }
-                MakeLog(fp, userIdx, "check review success");
+                MakeLog(userIdx, "check review success");
                 break; }
 
             case 6 : { // 친구 계획 확인
@@ -382,7 +382,7 @@ int main(void) {
                 int friendLen = GetFriendLen(userIdx); //친구 수 체크와 동적변수 할당 위해 필요한 함수
                 if (!friendLen) { //친구가 하나도 존재하지 않을 때
                     printf("Friend does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check friend plan fail ( no exist friend )");
+                    MakeLog(userIdx, "check friend plan fail ( no exist friend )");
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * friendLen); //동적변수 할당
@@ -394,7 +394,7 @@ int main(void) {
                 scanf("%d", &number); //계획 확인할 친구의 idx 선택
                 if (number > friendLen || number < 0) { //idx를 벗어난 수 선택시
                     printf("Number does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check friend plan fail ( no exist friendIdx )");
+                    MakeLog(userIdx, "check friend plan fail ( no exist friendIdx )");
                     break;
                 }
                 --number;
@@ -402,7 +402,7 @@ int main(void) {
                 int planLen = GetPlanLen(friendIdx); //선택한 친구의 계획 개수 불러오기
                 if (!planLen) { //친구의 계획이 존재하지 않을 때
                     printf("Friend's plan does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check friend plan fail ( no exist friend planIdx )");
+                    MakeLog(userIdx, "check friend plan fail ( no exist friend planIdx )");
                     break;
                 }
                 free(idxArr);
@@ -414,7 +414,7 @@ int main(void) {
                 scanf("%d", &number); //더 세부적으로 확인할 계획의 인덱스 선택
                 if (number > planLen || number < 0) { //선택한 번호에 계획이 존재하지 않을 때
                     printf("Number does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "check friend plan fail ( wrong number )");
+                    MakeLog(userIdx, "check friend plan fail ( wrong number )");
                     break;
                 }
                 --number;
@@ -455,7 +455,7 @@ int main(void) {
                 printf("successfully added a review.\n\n");
                 
                 free(idxArr2);
-                MakeLog(fp, userIdx, "check friend plan success ");
+                MakeLog(userIdx, "check friend plan success ");
                 break; }
 
             case 7 : { //친구 추가
@@ -487,7 +487,7 @@ int main(void) {
                 MakeChallengeUser(depositIdx, userIdx); //챌린지에 유저 이름, 유저 인덱스 추가
 
                 printf("Successfully challenge added.\nif you want to join another people, take this idx : %d\n\n", depositIdx);
-                MakeLog(fp, userIdx, "make challenge success");
+                MakeLog(userIdx, "make challenge success");
                 break; }
 
             case 9 : { // 챌린지 참여
@@ -498,13 +498,13 @@ int main(void) {
                 int userLen = GetChallengeUserLen(depositIdx); //챌린지 참여중인 유저 수 불러오기
                 if (!userLen) { //유저 존재하지 않을시
                     printf("Idx does not exist. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "join challenge fail ( no exist depositIdx )");
+                    MakeLog(userIdx, "join challenge fail ( no exist depositIdx )");
                     break;
                 }
                 int check = IsChallengeUser(depositIdx, userIdx); //유저가 챌린지 참여중인지 아닌지 체크
                 if (check) { //check = 1 일 때, 이미 참여중인 챌린지 입니다. print후 끝내기
                     printf("You already joined this challenge. Return to the number selection window.\n\n");
-                    MakeLog(fp, userIdx, "join challenge fail ( already joined )");
+                    MakeLog(userIdx, "join challenge fail ( already joined )");
                     break;
                 }
                 printf("--------------------------------------\n");
@@ -513,7 +513,7 @@ int main(void) {
                 printf("--------------------------------------\n");
                 MakeChallengeUser(depositIdx, userIdx); // 챌린지 참여
                 printf("Successfully Joined.\n\n");
-                MakeLog(fp, userIdx, "join challenge success");
+                MakeLog(userIdx, "join challenge success");
                 break; }
 
             case 10 : { // 챌린지 확인
@@ -528,7 +528,7 @@ int main(void) {
                     printf("[ %d people joined ]\n", userLen); 
                     GetChallenge(depositIdx); 
                     printf("--------------------------------------\n");
-                    MakeLog(fp, userIdx, "check challenge success");
+                    MakeLog(userIdx, "check challenge success");
                 }
                 break; }
             default : // 1~10 외의 다른 숫자 입력시
@@ -544,7 +544,8 @@ int main(void) {
     return 0;
 }
 
-void MakeLog(FILE * fp, int userIdx, char content[]) {
+void MakeLog(int userIdx, char content[]) {
+    FILE* fp = fopen("log.txt","a");
     char log[1024];
     struct tm *t;
     char time[40];
@@ -554,6 +555,7 @@ void MakeLog(FILE * fp, int userIdx, char content[]) {
             );
     sprintf(log, "[%s] %d : %s\n", time, userIdx, content);
     fputs(log, fp);
+    fclose(fp);
 }
 
 char* GetISOTime(struct tm *t) {
