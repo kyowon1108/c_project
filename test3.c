@@ -18,7 +18,7 @@ int query_stat;
 char query[255]; // 입력할 mysql 쿼리문이 들어갈 변수
 
 void MakeLog(FILE* fp, int userIdx, char content[]);
-char GetISOTime(struct tm *t);
+char* GetISOTime(struct tm *t);
 
 // [ 달력 출력 관련 함수]
 int IsLeafYear(int year); // 윤년인지 체크
@@ -548,7 +548,7 @@ void MakeLog(FILE * fp, int userIdx, char content[]) {
     fputs("[%s] %d : %s\n", time, userIdx, content, fp);
 }
 
-char GetISOTime(struct tm *t) {
+char* GetISOTime(struct tm *t) {
     static char s[20];
     sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d",
             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
