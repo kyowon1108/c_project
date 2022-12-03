@@ -102,7 +102,7 @@ int main(void) {
                 if (CheckUser(a)) { //회원가입 되어있는 유저인지 확인
                     userIdx = a;
                     printf("Success Signin userIdx : %d\n", userIdx);
-                    MakeLog(fp, userIdx, "signin");
+                    //MakeLog(fp, userIdx, "signin");
                     break;
                 }
                 else { //회원가입 안되어 있을 때
