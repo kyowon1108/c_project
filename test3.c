@@ -250,7 +250,7 @@ int main(void) {
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen); 
-                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
+                printf("Please select the number of the plan to modify.\n--------------------------------------\n");
                 GetPlanIdx(userIdx, idxArr); // 유저가 생성한 계획의 인덱스를 arr에 저장
                 printf("--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) { //수정할 게획 선택
