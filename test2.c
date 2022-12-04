@@ -15,46 +15,46 @@ MYSQL *connection = NULL, conn;
 MYSQL_RES *sql_result;
 MYSQL_ROW sql_row;\
 int query_stat;
-char query[255]; // ÀÔ·ÂÇÒ mysql Äõ¸®¹®ÀÌ µé¾î°¥ º¯¼ö
+char query[255]; // ì…ë ¥í•  mysql ì¿¼ë¦¬ë¬¸ì´ ë“¤ì–´ê°ˆ ë³€ìˆ˜
 
-// [ ´Ş·Â Ãâ·Â °ü·Ã ÇÔ¼ö]
-int IsLeafYear(int year); // À±³âÀÎÁö Ã¼Å©
-int getDay(int year, int month); // ¿ùº° ³¯Â¥ ¼ö°¡ ¸îÀÎÁö ¸®ÅÏ
-int getStartDay(int year, int month); // ´Ş·Â¿¡¼­ 1ÀÏÀÎ ¿äÀÏ ¸®ÅÏ
-void printCalendar(int year, int month); // ´Ş·Â Ãâ·Â
+// [ ë‹¬ë ¥ ì¶œë ¥ ê´€ë ¨ í•¨ìˆ˜]
+int IsLeafYear(int year); // ìœ¤ë…„ì¸ì§€ ì²´í¬
+int getDay(int year, int month); // ì›”ë³„ ë‚ ì§œ ìˆ˜ê°€ ëª‡ì¸ì§€ ë¦¬í„´
+int getStartDay(int year, int month); // ë‹¬ë ¥ì—ì„œ 1ì¼ì¸ ìš”ì¼ ë¦¬í„´
+void printCalendar(int year, int month); // ë‹¬ë ¥ ì¶œë ¥
 
-// [ À¯Àú °ü·Ã ÇÔ¼ö ]
-int SignUp(char name[]); // È¸¿ø°¡ÀÔ
+// [ ìœ ì € ê´€ë ¨ í•¨ìˆ˜ ]
+int SignUp(char name[]); // íšŒì›ê°€ì…
 int CheckLastUserIdx();
 int CheckUser(int userIdx);
-int printUser(); // À¯Àú ¸®½ºÆ® Ãâ·Â
-int MakeFriend(int userIdx, int friendIdx); // Ä£±¸ Ãß°¡
+int printUser(); // ìœ ì € ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int MakeFriend(int userIdx, int friendIdx); // ì¹œêµ¬ ì¶”ê°€
 int GetFriendLen(int userIdx);
 int GetFriend(int * idxArr, int userIdx);
-int IsFriend(int userIdx, int friendIdx); // Ä£±¸ÀÎÁö È®ÀÎ
+int IsFriend(int userIdx, int friendIdx); // ì¹œêµ¬ì¸ì§€ í™•ì¸
 
-// [ °èÈ¹ °ü·Ã ÇÔ¼ö ]
-int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // °èÈ¹ »ı¼º
+// [ ê³„íš ê´€ë ¨ í•¨ìˆ˜ ]
+int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]); // ê³„íš ìƒì„±
 int CheckLastPlanIdx();
-int GetPlanLen(int userIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ÀÇ ¼ö ¸®ÅÏ
-int GetPlanIdx(int userIdx, int * idxArr); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ÀÇ ÀÎµ¦½º¸¦ arr¿¡ ÀúÀå
-int GetPlan(char ** arr, int userIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ ¸®½ºÆ® Ãâ·Â
-int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // Ä£±¸°¡ »ı¼ºÇÑ °èÈ¹ ¸®½ºÆ® Ãâ·Â
+int GetPlanLen(int userIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íšì˜ ìˆ˜ ë¦¬í„´
+int GetPlanIdx(int userIdx, int * idxArr); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íšì˜ ì¸ë±ìŠ¤ë¥¼ arrì— ì €ì¥
+int GetPlan(char ** arr, int userIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
+int GetFriendPlan(int userIdx, int friendIdx, int * idxArr); // ì¹œêµ¬ê°€ ìƒì„±í•œ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 int GetDayPlanLen(int userIdx, char date[]);
-int GetDayPlan(int userIdx, char date[], int * idxArr); // Æ¯Á¤ ³¯ÀÇ °èÈ¹ ¸®½ºÆ® Ãâ·Â ¹× ÀÎµ¦½º ¸®ÅÏ
-int DeletePlan(int userIdx, int planIdx); // °èÈ¹ »èÁ¦
-int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // °èÈ¹ ¼öÁ¤
+int GetDayPlan(int userIdx, char date[], int * idxArr); // íŠ¹ì • ë‚ ì˜ ê³„íš ë¦¬ìŠ¤íŠ¸ ì¶œë ¥ ë° ì¸ë±ìŠ¤ ë¦¬í„´
+int DeletePlan(int userIdx, int planIdx); // ê³„íš ì‚­ì œ
+int ModifyPlan(int planIdx, char planName[], char explain[], char endAt[]); // ê³„íš ìˆ˜ì •
 
-// [ ¼¼ºÎ °èÈ¹ °ü·Ã ÇÔ¼ö ]
-int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // °èÈ¹ µğÅ×ÀÏ »ı¼º
+// [ ì„¸ë¶€ ê³„íš ê´€ë ¨ í•¨ìˆ˜ ]
+int MakePlanDetail(int planIdx, char detailName[], char startedAt[], char endAt[], char where[]); // ê³„íš ë””í…Œì¼ ìƒì„±
 int CheckLastDetailIdx();
-int GetPlanDetailLen(int planIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ µğÅ×ÀÏÀÇ ¼ö ¸®ÅÏ
-int GetPlanDetail(int planIdx); // À¯Àú°¡ »ı¼ºÇÑ °èÈ¹ µğÅ×ÀÏ ¸®½ºÆ® Ãâ·Â
+int GetPlanDetailLen(int planIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë””í…Œì¼ì˜ ìˆ˜ ë¦¬í„´
+int GetPlanDetail(int planIdx); // ìœ ì €ê°€ ìƒì„±í•œ ê³„íš ë””í…Œì¼ ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 int DeletAllePlandetail(int planIdx);
-void DeletePlandetail(int detailIdx); // °èÈ¹ µğÅ×ÀÏ »èÁ¦
-void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // °èÈ¹ µğÅ×ÀÏ ¼öÁ¤
+void DeletePlandetail(int detailIdx); // ê³„íš ë””í…Œì¼ ì‚­ì œ
+void ModifyPlanDetail(int detailIdx, char detailName[], char startedAt[], char endAt[], char where[]); // ê³„íš ë””í…Œì¼ ìˆ˜ì •
 
-// [ °èÈ¹ ¸®ºä °ü·Ã ÇÔ¼ö ]
+// [ ê³„íš ë¦¬ë·° ê´€ë ¨ í•¨ìˆ˜ ]
 int MakePlanReview(int planIdx, int userIdx, char content[], int score);
 int GetPlanReviewLen(int planIdx);
 int GetPlanReview(int planIdx);
@@ -77,7 +77,7 @@ int main(void) {
     
     mysql_init(&conn);
 
-    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // ¼­¹ö¿Í Åë½Å ½ÃÀÛ
+    connection = mysql_real_connect(&conn, HOST, USER, PASSWORD, DB, 3306, NULL, 0); // ì„œë²„ì™€ í†µì‹  ì‹œì‘
 
     if (connection == NULL) {
         fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
@@ -236,7 +236,7 @@ int main(void) {
                     break;
                 }
                 int * idxArr = (int*)malloc(sizeof(int) * planLen);
-                printf("Please select the number of the plan to delete.\n--------------------------------------\n");
+                printf("Please select the number of the plan to modify.\n--------------------------------------\n");
                 GetPlanIdx(userIdx, idxArr);
                 printf("--------------------------------------\nnumber(cancel : 0) : ");
                 while (1) {
@@ -543,14 +543,14 @@ void printCalendar(int year, int month) {
     printf("           [ %d - %d ]            \n\n", year, month);
     printf("    S    M    T    W    T    F    S\n\n");
     for(int i = 0; i < start_day; ++i) printf("     ");
-    int count = start_day; // 7ÀÏÀÌ Âû¶§¸¶´Ù ÁÖ¸¦ ¹Ù²ãÁà¾ß ÇÏ±â ¶§¹®¿¡ count¸¦ »ç¿ë
+    int count = start_day; // 7ì¼ì´ ì°°ë•Œë§ˆë‹¤ ì£¼ë¥¼ ë°”ê¿”ì¤˜ì•¼ í•˜ê¸° ë•Œë¬¸ì— countë¥¼ ì‚¬ìš©
     for (int j = 1; j <= day; ++j) {
         int check = 0;
         if (check == 0) {
             printf("%5d", j);
             count++;
         }
-        if (count == 7) { // Ä«¿îÆ®°¡ 7ÀÌ µÇ´Â ¼ø°£ ´ÙÀ½ÁÖ·Î ³Ñ¾î°¨
+        if (count == 7) { // ì¹´ìš´íŠ¸ê°€ 7ì´ ë˜ëŠ” ìˆœê°„ ë‹¤ìŒì£¼ë¡œ ë„˜ì–´ê°
             printf("\n\n");
             count = 0;
         }
@@ -559,7 +559,7 @@ void printCalendar(int year, int month) {
 
 
 int SignUp(char name[]) {
-    sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // UserÀ» Ãß°¡ÇÏ´Â Äõ¸®¹®
+    sprintf(query, "INSERT INTO User VALUES (0, '%s')", name); // Userì„ ì¶”ê°€í•˜ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
     if (!query_stat) {
         return 1;
@@ -601,7 +601,7 @@ int CheckUser(int userIdx) {
 }
 
 int PrintUser() {
-    sprintf(query, "SELECT * FROM User"); // User Å×ÀÌºí ¾È¿¡ ÀÖ´Â ¸ğµç °ªÀ» °¡Á®¿À´Â Äõ¸®¹®
+    sprintf(query, "SELECT * FROM User"); // User í…Œì´ë¸” ì•ˆì— ìˆëŠ” ëª¨ë“  ê°’ì„ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query); 
     if (query_stat != 0)
     {
@@ -677,7 +677,7 @@ int IsFriend(int userIdx, int friendIdx) {
 
 
 int MakePlan(int userIdx, char planName[], char explain[], int openLevel, char endAt[]) {
-    sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // UserÀ» Ãß°¡ÇÏ´Â Äõ¸®¹®
+    sprintf(query, "INSERT INTO Plan VALUES (0, '%d', '%s', '%s', '%d', now(), '%s')", userIdx, planName, explain, openLevel, endAt); // Userì„ ì¶”ê°€í•˜ëŠ” ì¿¼ë¦¬ë¬¸
     query_stat = mysql_query(connection, query);
     if (query_stat != 0)
     {
@@ -759,7 +759,7 @@ int GetFriendPlan(int userIdx, int friendIdx, int * idxArr) {
     int access = IsFriend(userIdx, friendIdx);
     if (!access) return 0;
     /*
-    1 : ÀüÃ¼ °ø°³, 2 : Ä£±¸ °ø°³, 3 : ³ª¸¸ °ø°³
+    1 : ì „ì²´ ê³µê°œ, 2 : ì¹œêµ¬ ê³µê°œ, 3 : ë‚˜ë§Œ ê³µê°œ
     */
     sprintf(query, "SELECT planIdx, planName, endAt FROM Plan WHERE userIdx = %d AND openLevel < 3", friendIdx);
     query_stat = mysql_query(connection, query); 
