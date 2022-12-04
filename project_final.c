@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "/usr/include/mysql/mysql.h"
-#include "test2_struct.h"
+#include "func_struct.h"
 
 #define HOST "localhost"
 #define USER "kapr"
