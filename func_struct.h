@@ -1,4 +1,4 @@
-#ifndef __STRUCT__
+ㄷㄷㄷㄷ#ifndef __STRUCT__
 #define __STRUCT__
 
 typedef struct User {
