@@ -3,32 +3,59 @@ CREATE TABLE Users (
     Username VARCHAR(50) NOT NULL,
     Email VARCHAR(100) NOT NULL,
     Password VARCHAR(100) NOT NULL,
-    ProfileImage VARCHAR(255),
+    ProfilePicture VARCHAR(255),
     Gender ENUM('Male', 'Female', 'Other')
+);
+CREATE TABLE Calendar (
+    CalendarID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    EventID INT,
+    Date DATE,
+    Title VARCHAR(100),
+    Description TEXT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (EventID) REFERENCES Events(EventID)
 );
 
 CREATE TABLE Events (
     EventID INT AUTO_INCREMENT PRIMARY KEY,
-    EventName VARCHAR(255) NOT NULL,
-    EventDate DATE NOT NULL,
-    AddedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Location VARCHAR(100),
-    Description TEXT,
-    CreatorUserID INT,
-    FOREIGN KEY (CreatorUserID) REFERENCES Users(UserID)
+    EventName VARCHAR(100) NOT NULL,
+    EventDescription TEXT,
+    EventDate DATE,
+    CreatorID INT,
+    FOREIGN KEY (CreatorID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE Shares (
+    ShareID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    EventID INT,
+    ShareType ENUM('Public', 'Private'),
+    SharedWithUserID INT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (EventID) REFERENCES Events(EventID),
+    FOREIGN KEY (SharedWithUserID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE Statistics (
+    StatID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    EventID INT,
+    TaskID INT,
+    ActivityType VARCHAR(50),
+    ActivityDate DATE,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (EventID) REFERENCES Events(EventID),
+    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
 );
 
 CREATE TABLE Tasks (
     TaskID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    Title VARCHAR(255) NOT NULL,
-    Description TEXT,
-    DueDate DATE,
-    Priority INT,
-    Status VARCHAR(50),
-    Tags VARCHAR(100),
-    AddedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    TaskName VARCHAR(100) NOT NULL,
+    TaskDescription TEXT,
+    Deadline DATE,
+    CreatorID INT,
+    FOREIGN KEY (CreatorID) REFERENCES Users(UserID)
 );
 
 CREATE TABLE EventParticipants (
@@ -39,94 +66,14 @@ CREATE TABLE EventParticipants (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
-CREATE TABLE EventReviews (
+CREATE TABLE Reviews (
     ReviewID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
     EventID INT,
-    ReviewerUserID INT,
+    TaskID INT,
     ReviewText TEXT,
-    Rating DECIMAL(3,2),
-    ReviewDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (EventID) REFERENCES Events(EventID),
-    FOREIGN KEY (ReviewerUserID) REFERENCES Users(UserID)
-);
-
-CREATE TABLE TaskReviews (
-    ReviewID INT AUTO_INCREMENT PRIMARY KEY,
-    TaskID INT,
-    ReviewerUserID INT,
-    ReviewText TEXT,
-    Rating DECIMAL(3,2),
-    ReviewDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID),
-    FOREIGN KEY (ReviewerUserID) REFERENCES Users(UserID)
-);
-
-CREATE TABLE Friendships (
-    FriendshipID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID1 INT,
-    UserID2 INT,
-    Status ENUM('Pending', 'Accepted') DEFAULT 'Pending',
-    FOREIGN KEY (UserID1) REFERENCES Users(UserID),
-    FOREIGN KEY (UserID2) REFERENCES Users(UserID),
-    CHECK (UserID1 < UserID2)
-);
-
-CREATE TABLE Calendar (
-    CalendarID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    EventID INT,
-    TaskID INT,
-    Date DATE,
-    Title VARCHAR(255),
-    Description TEXT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (EventID) REFERENCES Events(EventID),
-    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
-);
-
-CREATE TABLE Shares (
-    ShareID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    EventID INT,
-    TaskID INT,
-    SharedWithUserID INT,
-    ShareType ENUM('Public', 'Private'),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (EventID) REFERENCES Events(EventID),
-    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID),
-    FOREIGN KEY (SharedWithUserID) REFERENCES Users(UserID)
-);
-
-CREATE TABLE Statistics (
-    StatID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    EventID INT,
-    TaskID INT,
-    ActivityType ENUM('CompletedTask', 'JoinedEvent'),
-    ActivityDate DATE,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (EventID) REFERENCES Events(EventID),
-    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
-);
-
-CREATE TABLE Feeds (
-    FeedID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    EventID INT,
-    TaskID INT,
-    FeedContent TEXT,
-    FeedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (EventID) REFERENCES Events(EventID),
-    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
-);
-
-CREATE TABLE Labels (
-    LabelID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    EventID INT,
-    TaskID INT,
-    LabelName VARCHAR(50),
+    Rating DECIMAL(3, 2),
+    ReviewDate DATE,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (EventID) REFERENCES Events(EventID),
     FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
